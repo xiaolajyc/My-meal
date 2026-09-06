@@ -182,7 +182,7 @@ function parseRecipeText(text){
 function openTextImport(){
  showModal(`<h2>🪄 文本自动识别</h2>
  <p class="hint">把菜谱整段粘贴进来。建议第一行写菜名，后面可以写配料、备菜、做法、备注等。识别后会进入编辑页面，你可以校对后再保存。</p>
- <textarea id="recipeText" rows="14" placeholder="例如：
+ <textarea id="recipeText" rows="14" spellcheck="false" autocapitalize="off" autocorrect="off" style="white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;-webkit-user-select:text;user-select:text;" placeholder="例如：
 可乐鸡翅
 鸡翅310g，生抽18g，老抽6g，红糖18g，白醋9g，水18g
 桂皮两点点，陈皮一点点
@@ -194,9 +194,11 @@ function openTextImport(){
 加入调料，小火煮15分钟
 最后大火收汁"></textarea>
  <div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="parseText">识别并校对</button></div>`);
+ const recipeTextEl=document.getElementById('recipeText');
+ recipeTextEl.addEventListener('paste',e=>{ e.stopPropagation(); });
  document.getElementById('parseText').onclick=()=>{
-   const text=document.getElementById('recipeText').value.trim();
-   if(!text){toast('请先粘贴菜谱文字');return}
+   const text=document.getElementById('recipeText').value;
+   if(!text.trim()){toast('请先粘贴菜谱文字');return}
    const r=parseRecipeText(text);
    closeModal();
    openEditorFromParsed(r);
