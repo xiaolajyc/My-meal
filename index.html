@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>我的食谱 App</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:#f6f7f9;color:#202124}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
+.app{display:flex;height:100vh;overflow:hidden}.sidebar{width:330px;background:#fff;border-right:1px solid #e4e6eb;display:flex;flex-direction:column}.brand{padding:22px 20px 12px;font-size:22px;font-weight:700}.search{margin:8px 16px 12px;padding:11px 13px;border:1px solid #ddd;border-radius:10px;outline:none;width:calc(100% - 32px)}.search:focus{border-color:#777}.filters{display:flex;gap:7px;padding:0 16px 12px;overflow:auto}.chip{padding:7px 10px;border-radius:999px;background:#f0f1f3;white-space:nowrap;font-size:13px}.chip.active{background:#202124;color:white}.recipe-list{overflow:auto;flex:1;padding:0 8px 14px}.recipe-item{padding:12px;border-radius:10px;margin:2px 0;cursor:pointer}.recipe-item:hover{background:#f5f5f5}.recipe-item.active{background:#eceff3}.recipe-name{font-weight:600}.recipe-meta{font-size:12px;color:#777;margin-top:4px}.side-actions{padding:12px;border-top:1px solid #eee;display:grid;grid-template-columns:1fr 1fr;gap:8px}.primary{background:#202124;color:#fff;border-radius:9px;padding:10px 12px}.secondary{background:#eef0f3;color:#202124;border-radius:9px;padding:10px 12px}.content{flex:1;overflow:auto}.topbar{height:64px;border-bottom:1px solid #e4e6eb;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:2}.topbar-actions{display:flex;gap:8px}.page{max-width:1000px;margin:0 auto;padding:30px 28px 60px}.empty{height:80vh;display:flex;align-items:center;justify-content:center;color:#777}.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.title{font-size:32px;font-weight:750;margin:0}.badges{display:flex;gap:7px;margin-top:10px}.badge{font-size:12px;padding:5px 9px;background:#eef0f3;border-radius:999px;color:#555}.section{margin-top:28px}.section h2{font-size:19px;margin:0 0 13px}.ingredient-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e6e7ea;border-radius:12px;overflow:hidden}.ingredient-table th,.ingredient-table td{text-align:left;padding:11px 13px;border-bottom:1px solid #eee}.ingredient-table th{font-size:12px;color:#777;background:#fafafa}.ingredient-table tr:last-child td{border-bottom:0}.amount{font-weight:700}.step{background:#fff;border:1px solid #e6e7ea;border-radius:10px;padding:13px 15px;margin:8px 0;display:flex;gap:12px}.num{width:25px;height:25px;border-radius:50%;background:#202124;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}.notes{background:#fff8df;border:1px solid #f0df9d;border-radius:10px;padding:14px;white-space:pre-wrap}.scale-bar{margin-top:18px;padding:12px;background:#fff;border:1px solid #e1e3e6;border-radius:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.scale-pill{padding:6px 10px;background:#eef0f3;border-radius:8px}.scale-pill.active{background:#202124;color:#fff}.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}.modal{width:min(900px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:16px;padding:22px}.modal h2{margin-top:0}.form-row{display:flex;gap:8px;margin:8px 0}.form-row>*{min-width:0}.form-row input,.form-row select,.form-row textarea,.modal input,.modal select,.modal textarea{border:1px solid #d9dce1;border-radius:8px;padding:9px;width:100%;outline:none}.ing-row{display:grid;grid-template-columns:1.4fr .8fr .7fr 1.3fr auto;gap:7px;margin:7px 0}.steps-editor textarea{min-height:44px;resize:vertical}.editor-section{margin:18px 0}.editor-section h3{margin-bottom:8px}.mini{padding:7px 9px;border-radius:7px;background:#eef0f3}.danger{background:#ffe9e9;color:#a11}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.step-edit{display:grid;grid-template-columns:30px 1fr auto;gap:7px;align-items:start;margin:7px 0}.move{display:flex;flex-direction:column;gap:4px}.hint{font-size:12px;color:#777}.scale-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.scale-box{border:1px solid #e1e3e6;border-radius:10px;padding:12px}.scale-result{font-size:20px;font-weight:700;margin-top:5px}.toast{position:fixed;right:20px;bottom:20px;background:#202124;color:white;padding:10px 14px;border-radius:9px;z-index:30;opacity:0;transform:translateY(8px);transition:.2s}.toast.show{opacity:1;transform:none}@media(max-width:800px){.modal [style*='grid-template-columns:1fr 1fr']{grid-template-columns:1fr!important}.sidebar{width:100%;height:45vh;border-right:0;border-bottom:1px solid #ddd}.app{flex-direction:column;height:auto;min-height:100vh}.content{min-height:55vh}.topbar{padding:0 14px}.page{padding:22px 15px 50px}.title{font-size:27px}.ing-row{grid-template-columns:1.3fr .7fr .7fr 1fr auto}.scale-grid{grid-template-columns:1fr}.side-actions{position:sticky;bottom:0;background:#fff}}
+</style>
+</head>
+<body>
+<div id="app"></div><div id="toast" class="toast"></div>
+<script>
+const DEFAULT_RECIPES = [{"name": "大龙糊糊", "category": "汤/火锅", "type": "菜谱", "ingredients": [["绿豆", "200", "g", ""], ["火腿肠", "600", "g", ""], ["蔬菜", "1050", "g", ""], ["葱", "65", "g", ""], ["胡萝卜", "35", "g", ""], ["芹菜", "50", "g", ""], ["面包", "200", "g", ""]], "prep": ["绿豆提前浸泡一天。", "火腿肠切好，分成600g×2袋冷冻。", "绿豆高压锅按“牛羊肉，软烂70”，35分钟。冷却后分装冷冻。备注：1kg干豆约变成3kg熟豆。", "需要焯水的蔬菜焯水后挤干。青菜、白菜焯3分钟；萝卜缨焯6分钟。", "葱、胡萝卜、芹菜切好，用少量油炒香。"], "cook": ["加入火腿肠翻炒。", "加入鸡汤。", "加入大量热水，煮10分钟。", "加入熟绿豆，再煮5分钟。", "加入蔬菜，煮至合适状态。", "使用后清洁工具。"], "notes": ""}, {"name": "大吉利火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["蒜泥", "3", "份", ""], ["小米辣", "1", "份", ""], ["菌菇酱", "1", "份", ""], ["牛肉酱", "2", "份", ""], ["韭花酱", "0.5", "份", ""], ["榨菜", "1", "份", ""], ["芝麻酱", "0.5", "份", ""], ["香油", "1", "份", ""], ["青椒酱", "2", "份", ""], ["香菜", "2", "份", ""]], "prep": [], "cook": ["将所有配料混合均匀。"], "notes": ""}, {"name": "咸肉菜饭", "category": "主食", "type": "菜谱", "ingredients": [["咸肉", "800", "g", "切0.5×0.5×2cm丁，肥瘦分开"], ["青白菜", "1200", "g", "切1×1cm丁，焯水3分钟并挤干"], ["大米", "600", "g", ""]], "prep": ["咸肉切0.5×0.5×2cm丁，肥瘦分开。", "青白菜洗净，切1×1cm丁，焯水3分钟，挤干。", "青菜加入0.75%的盐和味精。"], "cook": ["肥咸肉煸油。", "瘦肉加入少量料酒和姜去腥。", "咸肉煸好后加入米饭。", "放入高压锅压熟。", "拌入青菜。"], "notes": "原记录未明确青菜中盐和味精的具体克数，因此保留0.75%的原始记录。"}, {"name": "烤南瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["南瓜", "600", "g", "切三角片，能立住"], ["糖", "20", "g", ""], ["水", "10", "g", ""], ["黄油", "", "适量", ""]], "prep": ["南瓜切成能立住的三角片。", "糖20g加水10g调成糖水。"], "cook": ["200°C烤至开始焦边。", "翻面并刷两面糖水。", "继续烤10分钟。", "正反面再次刷糖水，继续烤10分钟。", "最后仅正面刷黄油。"], "notes": ""}, {"name": "酸奶研究方案", "category": "其他/实验", "type": "实验", "ingredients": [["全脂奶粉", "105", "g", "现方案"], ["水", "750", "g", "现方案"], ["酸奶", "150", "g", "现方案"], ["糖", "7", "%", "现方案"], ["脱脂奶粉", "105", "g", "方案1"]], "prep": [], "cook": ["发酵12小时。"], "notes": "现方案：全脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。方案1：脱脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。"}, {"name": "Risotto", "category": "主食", "type": "菜谱", "ingredients": [["蘑菇片", "500", "g", ""], ["黄油", "95", "g", ""], ["白葡萄酒", "65", "ml", ""], ["帕马森芝士", "50", "g", ""], ["蒜泥", "1", "勺", ""], ["洋葱碎", "1", "个", ""], ["奶油", "125", "ml", ""], ["米饭", "300", "g", ""], ["鸡精", "1", "勺", ""]], "prep": [], "cook": ["热锅，加入小块黄油。", "加入蒜泥、洋葱。", "加入蘑菇、白葡萄酒、鸡精并混匀。", "关火，加入芝士。", "加入黄油和奶油。", "加入米饭搅匀。", "静置5分钟后上桌。"], "notes": ""}, {"name": "蛋挞", "category": "烘焙", "type": "菜谱", "ingredients": [["奶", "70", "g", ""], ["淡奶油", "60", "g", ""], ["鸡蛋", "1", "个", ""], ["糖", "30", "g", ""], ["炼乳", "15", "g", ""]], "prep": ["使用大塑料杯。"], "cook": [], "notes": "原记录未提供具体烘烤温度和时间。"}, {"name": "肯德基香辣鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "1000", "g", ""], ["盐", "10", "g", "腌料"], ["鸡精", "6.25", "g", "腌料"], ["辣椒粉", "17.5", "g", "腌料"], ["蒜粉", "1.25", "g", "腌料"], ["小苏打", "4", "g", "腌料"], ["水", "75", "g", "腌料"], ["自发粉", "300", "g", "裹粉"], ["盐", "3", "g", "裹粉"], ["鸡精", "1.875", "g", "裹粉"], ["蒜粉", "0.75", "g", "裹粉"], ["自发粉", "167", "g", "裹糊"], ["水", "250", "g", "裹糊"], ["盐", "4.17", "g", "裹糊"], ["鸡精", "2.6", "g", "裹糊"], ["蒜粉", "1.04", "g", "裹糊"]], "prep": ["鸡肉按腌料配方腌制。", "将裹粉材料混合。", "将裹糊材料混合。"], "cook": ["165°C预炸2分钟。", "复炸2分钟。"], "notes": ""}, {"name": "派克鸡排", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "600", "g", ""], ["水", "200", "g", "腌料"], ["盐", "10", "g", "腌料"], ["甜椒粉", "7.5", "g", "腌料"], ["辣椒粉", "7.5", "g", "腌料"], ["蒜粉", "5", "g", "腌料"], ["糖", "100", "g", "腌料"], ["自发粉", "100", "g", "粉浆"], ["太白粉", "70", "g", "粉浆"], ["水", "170", "g", "粉浆"], ["盐", "", "少量", "粉浆"]], "prep": ["按腌料配方混合鸡肉。", "粉浆材料混合。"], "cook": [], "notes": "原记录未提供具体烹饪温度和时间。"}, {"name": "腌咸鸭蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1500", "g", ""], ["盐", "650", "g", ""]], "prep": [], "cook": ["腌制40天。"], "notes": ""}, {"name": "腌皮蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1000", "g", ""], ["盐", "50", "g", ""], ["NaOH", "50", "g", ""]], "prep": [], "cook": ["腌制14天。"], "notes": "记录另注：六月底七月初，10°C室温20天。"}, {"name": "巴沙鱼片腌制", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "1000", "g", "先左右分开再切中等厚片"], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["盐", "5", "g", ""], ["味精", "3", "g", ""], ["水", "50-100", "g", ""]], "prep": ["巴沙鱼先左右分开，再切中等厚片。", "腌料先混匀。"], "cook": ["将腌料与鱼片混合。"], "notes": ""}, {"name": "鸡肉片腌制", "category": "肉类", "type": "配方", "ingredients": [["鸡腿肉片", "1000", "g", ""], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["鸡精", "3", "g", ""], ["盐", "5", "g", ""], ["小苏打", "4", "g", ""], ["水", "50-100", "g", ""]], "prep": ["腌料混匀。"], "cook": ["将腌料与鸡肉片混合。"], "notes": ""}, {"name": "虾滑", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "500", "g", ""], ["虾仁", "500", "g", "其中333g切小块"], ["木薯粉", "50", "g", ""], ["水", "50", "g", ""], ["盐", "5", "g", ""], ["味精", "5", "g", ""], ["鸡蛋", "1", "个", ""]], "prep": ["虾仁中333g切小块。", "调料混匀。"], "cook": ["将调料与虾滑材料混合。"], "notes": ""}, {"name": "齐齐哈尔烤肉", "category": "肉类", "type": "菜谱", "ingredients": [["牛肉", "800", "g", ""], ["洋葱", "160", "g", ""], ["香菜", "50", "g", ""], ["蚝油", "50", "g", ""], ["盐", "8", "g", "适合配菜"], ["孜然", "23", "g", ""], ["红椒粉", "2", "g", ""], ["油", "64", "g", ""]], "prep": [], "cook": ["按配方混合并烤制。"], "notes": "原记录未提供更具体烤制时间和温度。"}, {"name": "自制蚝油", "category": "酱料", "type": "配方", "ingredients": [["生抽", "15", "g", "不是鲜酱油"], ["糖", "6", "g", ""], ["鸡精", "5", "g", ""], ["水", "15", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "莫吉托", "category": "饮料", "type": "配方", "ingredients": [["薄荷叶", "10", "g", ""], ["糖", "6", "g", ""], ["青柠汁", "10", "g", ""], ["雪碧", "250", "g", ""]], "prep": [], "cook": ["混合饮用。"], "notes": ""}, {"name": "药膳鸡火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["生抽", "50", "g", "不是鲜酱油"], ["醋", "10-15", "g", ""], ["糖", "5", "g", ""], ["鸡精", "5", "g", ""], ["高汤/水", "15", "g", ""], ["小米辣", "4", "个", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "希腊酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["脱脂奶粉", "45", "g", ""], ["全脂奶粉", "119", "g", ""], ["水", "900", "g", ""], ["酸奶", "200", "g", ""], ["奶油", "100", "g", ""], ["糖", "95-109", "g", "7%-8%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["全脂奶粉", "140", "g", ""], ["水", "1000", "g", ""], ["酸奶", "200", "g", ""], ["糖", "94", "g", "7%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "红枣酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["无糖酸奶", "", "", ""], ["红枣浓缩液", "10", "%", ""], ["糖", "1", "%", ""], ["红糖", "", "", ""]], "prep": [], "cook": [], "notes": "红糖记录：白糖300g + 红印黑糖1 tbsp。"}, {"name": "可乐鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅", "310", "g", ""], ["生抽", "18", "g", ""], ["老抽", "6", "g", ""], ["红糖", "18", "g", ""], ["白醋", "9", "g", ""], ["水", "18", "g", ""], ["桂皮", "", "两点点", ""], ["陈皮", "", "一点点", ""]], "prep": [], "cook": ["按配方烹制至熟透并收汁。"], "notes": ""}, {"name": "寿司米饭", "category": "主食", "type": "菜谱", "ingredients": [["寿司米", "300", "g", ""], ["水", "400", "g", ""], ["寿司醋", "50", "g", ""]], "prep": [], "cook": ["按米饭方式煮熟。", "拌入寿司醋。"], "notes": ""}, {"name": "寿司醋", "category": "酱料", "type": "配方", "ingredients": [["白醋", "200", "g", ""], ["糖", "100", "g", ""], ["盐", "10", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "烟熏三文鱼", "category": "海鲜", "type": "配方", "ingredients": [["三文鱼", "100", "g", "去皮后重量"], ["水", "100", "g", "基础卤水"], ["红糖", "3", "g", "基础卤水"], ["盐", "3", "g", "基础卤水"], ["红糖", "3", "g", ""], ["盐", "3", "g", ""], ["烟熏液", "1", "g", ""], ["盐糖水", "1", "g", ""], ["红糖", "3", "g", ""]], "prep": ["三文鱼去皮后称100g。", "基础卤水：水100g、红糖3g、盐3g。", "腌48小时，期间翻2次。", "加入烟熏液、盐糖水、红糖等继续处理，腌24小时，期间翻2次。"], "cook": [], "notes": ""}, {"name": "剁椒蒸鱼", "category": "海鲜", "type": "菜谱", "ingredients": [["鱼肉", "500", "g", "整鱼重900g"], ["葱姜水", "10", "g", "腌制"], ["蒸鱼豉油", "10", "g", "腌制"], ["味精", "2", "g", "腌制"], ["糖", "2", "g", "腌制"], ["料酒", "10", "g", "腌制"], ["盐", "2", "g", "腌制；下饭吃再加1g"], ["蒸鱼豉油", "5", "g", "炒料"], ["剁椒+泡椒", "75", "g", "炒料"], ["豆豉", "5", "g", "炒料"], ["大蒜", "15", "g", "炒料"], ["青红椒", "50", "g", "炒料"], ["葱", "5", "g", "炒料"], ["姜", "5", "g", "炒料"], ["糖", "5", "g", "炒料"], ["味精", "2", "g", "炒料"], ["油", "20", "g", ""]], "prep": ["用葱姜水等腌料腌鱼。", "炒料按配方准备。", "葱姜水：葱50g、姜25g、水200g。"], "cook": ["开水下锅。", "鱼身蒸4分钟，焖1分钟；鱼头蒸6分钟，焖1-2分钟；整鱼蒸6分钟，焖1-2分钟。", "出锅加葱花。", "淋油。"], "notes": ""}, {"name": "狮子头", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉末", "165", "g", ""], ["猪肥肉沫", "35", "g", ""], ["盐", "1", "g", ""], ["味精", "1", "g", ""], ["生抽", "5", "g", ""], ["面粉", "12", "g", ""], ["葱姜水", "12", "g", ""], ["水", "24", "g", ""], ["料酒", "6", "g", ""], ["马蹄", "50", "g", "切丁"]], "prep": ["马蹄切丁。", "按配方混合肉馅。"], "cook": ["油炸3分钟。", "高压锅25分钟。", "浸泡3小时。"], "notes": ""}, {"name": "巴斯克蛋糕", "category": "烘焙", "type": "菜谱", "ingredients": [["奶油奶酪", "375", "g", ""], ["糖", "90", "g", ""], ["鸡蛋", "3", "个", ""], ["蛋黄", "1.5", "个", ""], ["淡奶油", "180", "g", ""], ["面粉", "15", "g", ""]], "prep": ["使用8寸模具。"], "cook": ["220°C烤20-25分钟。"], "notes": ""}, {"name": "农家一碗香", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉片", "400", "g", ""], ["生抽", "10", "g", ""], ["老抽", "5", "g", ""], ["料酒", "5", "g", ""], ["豆豉", "10", "g", ""], ["蚝油", "10", "g", ""], ["味精", "2", "g", ""], ["辣椒粉", "2", "g", ""], ["小苏打", "1.6", "g", ""], ["青椒", "600", "g", ""], ["盐", "8", "g", "青椒部分"], ["味精", "3", "g", "青椒部分"], ["辣椒粉", "5", "g", "青椒部分"], ["鸡蛋", "4", "个", ""], ["盐", "2", "g", "鸡蛋部分"], ["味精", "1", "g", "鸡蛋部分"]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "馅料调味", "category": "主食", "type": "配方", "ingredients": [["猪肉碎", "400", "g", ""], ["蔬菜", "1200", "g", ""], ["盐", "12+3", "g", ""], ["味精", "9", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "黑胡椒酱汁", "category": "酱料", "type": "配方", "ingredients": [["洋葱", "150", "g", ""], ["大蒜", "40", "g", ""], ["黄油", "40", "g", ""], ["老抽", "5", "g", ""], ["生抽", "20", "g", ""], ["蚝油", "24", "g", ""], ["蕃茄酱", "20", "g", ""], ["糖", "10", "g", ""], ["盐", "2", "g", ""], ["面粉", "4", "g", ""], ["黑胡椒", "10", "g", ""], ["奶粉", "28", "g", ""], ["水", "200", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "牛排", "category": "肉类", "type": "菜谱", "ingredients": [["牛排", "400", "g", ""], ["盐", "3", "g", ""], ["小苏打", "1.6", "g", ""], ["黑胡椒", "0.5", "g", ""]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "咖啡", "category": "饮料", "type": "配方", "ingredients": [["咖啡粉", "3", "g", ""], ["脱脂奶粉", "14", "g", ""], ["全脂奶粉", "7", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "快速饺子", "category": "主食", "type": "菜谱", "ingredients": [["蔬菜", "1200", "g", "搅碎、拧干"], ["肉碎", "400", "g", ""], ["盐", "9+3", "g", ""], ["味精", "6", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": ["1200g蔬菜搅碎并拧干，有时焯水；蔬菜汁收集。", "肉碎加入盐、味精、白糖、蔬菜汁、面粉，搅拌上劲。"], "cook": ["肉蔬菜混合，搓成丸子下锅。"], "notes": "原记录标题为“快速饺子”，但步骤中记录的是搓成丸子下锅。按原记录保留。"}, {"name": "烤地瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["地瓜", "", "", "去芽洗净"]], "prep": ["去芽、洗净，沿纵轴切两半。"], "cook": ["放烤箱最下层和蛋糕一起烤。"], "notes": ""}, {"name": "煮玉米", "category": "蔬菜", "type": "菜谱", "ingredients": [["玉米", "", "", ""]], "prep": [], "cook": ["沸水煮5分钟。", "焖2分钟。"], "notes": ""}, {"name": "卤菜", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅尖", "", "", ""], ["鸡脚", "", "", ""], ["鸭翅", "", "", ""]], "prep": [], "cook": ["鸡翅尖：3分钟后浸泡4-6小时。", "鸡脚：8分钟后浸泡4小时。", "鸭翅：20分钟，焖5分钟，再浸泡6小时。"], "notes": ""}];
+const KEY='my_recipe_app_v2';
+let recipes=load(); let selected=recipes[0]?.name||null; let query=''; let category='全部'; let scale=1; let searchComposing=false;
+
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));return Array.isArray(x)?x:structuredClone(DEFAULT_RECIPES)}catch(e){return structuredClone(DEFAULT_RECIPES)}}
+function save(){localStorage.setItem(KEY,JSON.stringify(recipes));}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function num(x){let s=String(x??'').trim(); if(!s||!/^-?\d+(?:\.\d+)?$/.test(s))return null;return Number(s)}
+function fmt(n){return Number.isInteger(n)?String(n):String(Math.round(n*100)/100)}
+function scaledAmount(amount,factor){let n=num(amount);return n===null?amount:fmt(n*factor)}
+function filtered(){let q=query.trim().toLowerCase();return recipes.filter(r=>(category==='全部'||r.category===category)&&(!q||r.name.toLowerCase().includes(q)||r.ingredients.some(i=>i[0].toLowerCase().includes(q))))}
+function render(){
+ const cats=['全部',...new Set(recipes.map(r=>r.category))];
+ const list=filtered();
+ document.getElementById('app').innerHTML=`<div class="app">
+ <aside class="sidebar">
+  <div class="brand">🍳 我的食谱</div>
+  <input class="search" id="search" placeholder="搜索菜名 / 食材" value="${esc(query)}">
+  <div class="filters">${cats.map(c=>`<button class="chip ${category===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+  <div class="recipe-list">${list.length?list.map(r=>`<div class="recipe-item ${selected===r.name?'active':''}" data-name="${esc(r.name)}"><div class="recipe-name">${esc(r.name)}</div><div class="recipe-meta">${esc(r.category)} · ${esc(r.type)}</div></div>`).join(''):`<div style="padding:25px;color:#777">没有找到匹配菜谱</div>`}</div>
+  <div class="side-actions"><button class="primary" id="new">＋ 新增菜谱</button><button class="secondary" id="backup" title="导出或导入 JSON 备份">⇅ 数据备份</button></div>
+ </aside>
+ <main class="content">
+  <div class="topbar"><strong>食谱库 · ${recipes.length} 个配方</strong><div class="topbar-actions">${selected?`<button class="secondary" id="edit">编辑</button><button class="secondary" id="del">删除</button>`:''}</div></div>
+  ${renderDetail()}
+ </main></div>`;
+ bind();
+}
+function renderDetail(){
+ const r=recipes.find(x=>x.name===selected); if(!r)return '<div class="empty">选择一个菜谱开始</div>';
+ const scaled=scale!==1;
+ return `<div class="page"><div class="title-row"><div><h1 class="title">${esc(r.name)}</h1><div class="badges"><span class="badge">${esc(r.category)}</span><span class="badge">${esc(r.type)}</span>${scaled?`<span class="badge">当前 ${fmt(scale)}×</span>`:''}</div></div></div>
+ <div class="scale-bar"><strong>配方调整：</strong>${[0.5,1,1.5,2,3].map(v=>`<button class="scale-pill ${scale===v?'active':''}" data-scale="${v}">${v}×</button>`).join('')}<button class="scale-pill" id="customScale">自定义</button><button class="scale-pill" id="baseScale">按主材料</button>${scaled?'<button class="scale-pill" id="resetScale">恢复原配方</button>':''}</div>
+ <div class="section"><h2>🧂 配料 ${scaled?`<span class="hint">（原始配方 × ${fmt(scale)}）</span>`:''}</h2><table class="ingredient-table"><thead><tr><th>食材</th><th>数量</th><th>单位</th><th>备注</th></tr></thead><tbody>${r.ingredients.map(i=>`<tr><td>${esc(i[0])}</td><td class="amount">${esc(scaledAmount(i[1],scale))}</td><td>${esc(i[2])}</td><td>${esc(i[3])}</td></tr>`).join('')}</tbody></table></div>
+ ${renderSteps('🔪 备菜',r.prep)}${renderSteps('🍳 烹饪',r.cook)}${r.notes?`<div class="section"><h2>📝 备注</h2><div class="notes">${esc(r.notes)}</div></div>`:''}
+ </div>`;
+}
+function renderSteps(title,arr){if(!arr?.length)return '';return `<div class="section"><h2>${title}</h2>${arr.map((s,i)=>`<div class="step"><div class="num">${i+1}</div><div>${esc(s)}</div></div>`).join('')}</div>`}
+
+function refreshSearchResults(){
+ const current=selected;
+ const list=filtered();
+ const listEl=document.querySelector('.recipe-list');
+ if(listEl){
+   listEl.innerHTML=list.length?list.map(r=>`<div class="recipe-item ${selected===r.name?'active':''}" data-name="${esc(r.name)}"><div class="recipe-name">${esc(r.name)}</div><div class="recipe-meta">${esc(r.category)} · ${esc(r.type)}</div></div>`).join(''):`<div style="padding:25px;color:#777">没有找到匹配菜谱</div>`;
+   document.querySelectorAll('.recipe-item[data-name]').forEach(b=>b.onclick=()=>{selected=b.dataset.name;scale=1;render()});
+ }
+}
+function bind(){
+ const searchEl=document.getElementById('search');
+ if(searchEl){
+   searchEl.addEventListener('compositionstart',()=>{searchComposing=true});
+   searchEl.addEventListener('compositionend',e=>{
+     searchComposing=false;
+     query=e.target.value;
+     refreshSearchResults();
+   });
+   searchEl.addEventListener('input',e=>{
+     query=e.target.value;
+     if(!searchComposing) refreshSearchResults();
+   });
+   searchEl.addEventListener('keydown',e=>{
+     if(e.key==='Escape'){
+       e.preventDefault();
+       query='';
+       refreshSearchResults();
+       document.getElementById('search')?.focus();
+     }
+   });
+ }
+ document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{category=b.dataset.cat;render()});
+ document.querySelectorAll('[data-name]').forEach(b=>b.onclick=()=>{selected=b.dataset.name;scale=1;render()});
+ document.querySelectorAll('[data-scale]').forEach(b=>b.onclick=()=>{scale=Number(b.dataset.scale);render()});
+ document.getElementById('resetScale')?.addEventListener('click',()=>{scale=1;render()});
+ document.getElementById('customScale')?.addEventListener('click',()=>{let x=prompt('请输入调整倍数，例如 2.5');let n=Number(x);if(n>0){scale=n;render()}});
+ document.getElementById('baseScale')?.addEventListener('click',()=>openScaleModal());
+ document.getElementById('edit')?.addEventListener('click',()=>openEditor(selected));
+ document.getElementById('del')?.addEventListener('click',()=>deleteRecipe(selected));
+ document.getElementById('new')?.addEventListener('click',()=>newRecipeChooser());
+ document.getElementById('backup')?.addEventListener('click',()=>backupModal());
+}
+function openScaleModal(){
+ const r=recipes.find(x=>x.name===selected); const opts=r.ingredients.map((i,idx)=>{let n=num(i[1]);return n!==null?`<option value="${idx}">${esc(i[0])}（${esc(i[1])}${esc(i[2])}）</option>`:''}).join('');
+ if(!opts){toast('这个菜谱没有可计算的数字配料');return}
+ showModal(`<h2>⚖️ 按主材料调整配方</h2><p class="hint">可以任选一个有明确数字数量的配料作为基准。原始配方不会被修改。</p><div class="scale-grid"><div class="scale-box"><label>基准食材</label><select id="baseIng">${opts}</select></div><div class="scale-box"><label>目标数量</label><input id="targetAmt" type="number" step="any" placeholder="输入目标数量"><div id="ratio" class="scale-result">—</div></div></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="applyBase">应用调整</button></div>`);
+ const update=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);document.getElementById('ratio').textContent=(t>0?`调整比例：${fmt(t/Number(i[1]))}×`:'—')};document.getElementById('baseIng').onchange=update;document.getElementById('targetAmt').oninput=update;
+ document.getElementById('applyBase').onclick=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);if(!(t>0)){toast('请输入有效目标数量');return}scale=t/Number(i[1]);closeModal();render()};
+}
+
+function newRecipeChooser(){
+ showModal(`<h2>＋ 新增菜谱</h2>
+ <p class="hint">可以手动逐项填写，也可以直接粘贴一整段菜谱文字，让 App 自动识别后再校对。</p>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px">
+   <button class="secondary" style="padding:20px;text-align:left" id="manualNew"><strong>✏️ 手动填写</strong><br><span class="hint">自己填写菜名、配料和步骤</span></button>
+   <button class="secondary" style="padding:20px;text-align:left" id="textNew"><strong>🪄 文本自动识别</strong><br><span class="hint">粘贴已有菜谱文字，自动整理</span></button>
+ </div>
+ <div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button></div>`);
+ document.getElementById('manualNew').onclick=()=>{closeModal();openEditor(null)};
+ document.getElementById('textNew').onclick=()=>openTextImport();
+}
+
+function parseRecipeText(text){
+ const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ let name=lines[0]||'新菜谱', category='其他/实验', type='菜谱';
+ if(/配方|酱料|腌制|蘸料/.test(name)) type='配方';
+ if(/实验|研究|方案/.test(name)) type='实验';
+ if(/蛋糕|烘焙|蛋挞/.test(name)) category='烘焙';
+ else if(/鱼|虾|蟹|海鲜|三文鱼|螺/.test(name)) category='海鲜';
+ else if(/鸡|牛|猪|羊|肉|排|翅|肚|肥肠/.test(name)) category='肉类';
+ else if(/饭|面|饺子|米饭|粥/.test(name)) category='主食';
+ else if(/汤|火锅/.test(name)) category='汤/火锅';
+ else if(/酱|蘸料|醋|蚝油/.test(name)) category='酱料';
+ else if(/咖啡|饮料|莫吉托/.test(name)) category='饮料';
+ const ingredients=[], prep=[], cook=[], notes=[];
+ let section='ingredients';
+ const headers={
+   '配料':'ingredients','材料':'ingredients','食材':'ingredients','原料':'ingredients','用料':'ingredients',
+   '备菜':'prep','准备':'prep','准备工作':'prep','备料':'prep','腌制':'prep',
+   '做法':'cook','步骤':'cook','烹饪':'cook','烹制':'cook','制作':'cook','烹饪步骤':'cook',
+   '烹饪过程':'cook','制作步骤':'cook','制作过程':'cook','烹调':'cook','烹调步骤':'cook',
+   '备注':'notes','说明':'notes','注意':'notes','注意事项':'notes'
+ };
+ const unitRe=/(-?\d+(?:\.\d+)?(?:\s*-\s*\d+(?:\.\d+)?)?)\s*(kg|g|ml|l|L|个|份|勺|tbsp|tsp|%)(?!\w)/i;
+ const specialRe=/^(适量|少量|一点点|两点点|若干)\b/;
+ for(let idx=1;idx<lines.length;idx++){
+   let line=lines[idx].replace(/^[\-\*•·\d]+[.)、:：]?\s*/,'').trim();
+   let h=line.replace(/[：:]\s*$/,'').trim();
+   let normalizedHeader=h.replace(/[\s（）()【】\[\]、.。:：_-]+/g,'');
+   let headerKey=Object.keys(headers).find(k=>normalizedHeader===k || normalizedHeader.startsWith(k));
+   if(headerKey){section=headers[headerKey];continue}
+   let m=line.match(/^(.+?)[：:]\s*(.+)$/);
+   if(m){
+      let mk=m[1].trim().replace(/[\s（）()【】\[\]、.。:：_-]+/g,'');
+      let mkKey=Object.keys(headers).find(k=>mk===k || mk.startsWith(k) || k.startsWith(mk));
+      if(mkKey){
+         section=headers[mkKey];
+         if(m[2].trim()){
+            if(section==='prep') prep.push(m[2].trim());
+            else if(section==='cook') cook.push(m[2].trim());
+            else if(section==='ingredients'){
+               let rest=m[2].trim();
+               let rm=rest.match(/^(.+?)\s*(-?\d+(?:\.\d+)?(?:\s*-\s*\d+)?)\s*(kg|g|ml|l|L|个|份|勺|tbsp|tsp|%)/i);
+               if(rm) ingredients.push([rm[1].trim(),rm[2].replace(/\s+/g,''),rm[3],'']);
+               else notes.push(rest);
+            } else notes.push(m[2].trim());
+         }
+         continue
+      }
+   }
+   let matches=[...line.matchAll(/([^，,；;]+?)\s*(-?\d+(?:\.\d+)?(?:\s*-\s*\d+(?:\.\d+)?)?)\s*(kg|g|ml|l|L|个|份|勺|tbsp|tsp|%)/gi)];
+   if(section==='ingredients' && (matches.length || specialRe.test(line))){
+      if(matches.length){
+        matches.forEach(mm=>{
+          let rawName=mm[1].trim().replace(/^(需要|加入|放入|用|取)\s*/,'').trim();
+          ingredients.push([rawName,mm[2].replace(/\s+/g,''),mm[3], '']);
+        });
+      }else{
+        let sm=line.match(/^(.+?)[：:]\s*(适量|少量|一点点|两点点|若干)$/);
+        if(sm) ingredients.push([sm[1].trim(),'',sm[2],'']);
+      }
+   }else if(section==='prep') prep.push(line);
+   else if(section==='cook') cook.push(line);
+   else notes.push(line);
+ }
+ return {name,category,type,ingredients,prep,cook,notes:notes.join('\n')};
+}
+function openTextImport(){
+ showModal(`<h2>🪄 文本自动识别</h2>
+ <p class="hint">把菜谱整段粘贴进来。建议第一行写菜名，后面可以写配料、备菜、做法、备注等。识别后会进入编辑页面，你可以校对后再保存。</p>
+ <textarea id="recipeText" rows="14" placeholder="例如：
+可乐鸡翅
+鸡翅310g，生抽18g，老抽6g，红糖18g，白醋9g，水18g
+桂皮两点点，陈皮一点点
+
+备菜
+鸡翅洗净
+
+做法
+加入调料，小火煮15分钟
+最后大火收汁"></textarea>
+ <div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="parseText">识别并校对</button></div>`);
+ document.getElementById('parseText').onclick=()=>{
+   const text=document.getElementById('recipeText').value.trim();
+   if(!text){toast('请先粘贴菜谱文字');return}
+   const r=parseRecipeText(text);
+   closeModal();
+   openEditorFromParsed(r);
+ };
+}
+function openEditorFromParsed(r){
+ openEditorData(r);
+}
+function openEditorData(r){
+ const ingRows=r.ingredients.map((i,idx)=>ingRow(i,idx)).join('');
+ const prepRows=r.prep.map((x,i)=>stepRow('prep',x,i)).join('');
+ const cookRows=r.cook.map((x,i)=>stepRow('cook',x,i)).join('');
+ showModal(`<h2>🔎 识别结果 · 请校对</h2>
+ <p class="hint">自动识别只负责整理格式，不会把缺失信息当成事实补出来。确认无误后再保存。</p>
+ <div class="form-row"><input id="rName" placeholder="菜谱名称" value="${esc(r.name)}"><select id="rCat">${['主食','肉类','海鲜','蔬菜','汤/火锅','烘焙','饮料','酱料','其他/实验'].map(x=>`<option ${x===r.category?'selected':''}>${x}</option>`).join('')}</select><select id="rType">${['菜谱','配方','实验'].map(x=>`<option ${x===r.type?'selected':''}>${x}</option>`).join('')}</select></div>
+ <div class="editor-section"><h3>🧂 配料</h3><div id="ings">${ingRows}</div><button class="mini" id="addIng">＋ 添加配料</button></div>
+ <div class="editor-section steps-editor"><h3>🔪 备菜</h3><div id="prep">${prepRows}</div><button class="mini" id="addPrep">＋ 添加步骤</button></div>
+ <div class="editor-section steps-editor"><h3>🍳 烹饪</h3><div id="cook">${cookRows}</div><button class="mini" id="addCook">＋ 添加步骤</button></div>
+ <div class="editor-section"><h3>📝 备注</h3><textarea id="rNotes" rows="4">${esc(r.notes||'')}</textarea></div>
+ <div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="saveParsed">确认保存</button></div>`);
+ document.getElementById('addIng').onclick=()=>document.getElementById('ings').insertAdjacentHTML('beforeend',ingRow(['','','',''],Date.now()));
+ document.getElementById('addPrep').onclick=()=>document.getElementById('prep').insertAdjacentHTML('beforeend',stepRow('prep','',Date.now()));
+ document.getElementById('addCook').onclick=()=>document.getElementById('cook').insertAdjacentHTML('beforeend',stepRow('cook','',Date.now()));
+ document.getElementById('saveParsed').onclick=()=>saveEditor(null);
+}
+function openEditor(name){
+ const r=name?recipes.find(x=>x.name===name):{name:'',category:'其他',type:'菜谱',ingredients:[],prep:[],cook:[],notes:''};
+ const ingRows=r.ingredients.map((i,idx)=>ingRow(i,idx)).join('');
+ const prepRows=r.prep.map((s,i)=>stepRow('prep',s,i)).join('');
+ const cookRows=r.cook.map((s,i)=>stepRow('cook',s,i)).join('');
+ showModal(`<h2>${name?'✏️ 编辑菜谱':'＋ 新增菜谱'}</h2>
+ <div class="form-row"><input id="rName" placeholder="菜谱名称" value="${esc(r.name)}"><select id="rCat">${['主食','肉类','海鲜','蔬菜','汤/火锅','烘焙','饮料','酱料','其他/实验'].map(x=>`<option ${x===r.category?'selected':''}>${x}</option>`).join('')}</select><select id="rType">${['菜谱','配方','实验'].map(x=>`<option ${x===r.type?'selected':''}>${x}</option>`).join('')}</select></div>
+ <div class="editor-section"><h3>🧂 配料</h3><div id="ings">${ingRows}</div><button class="mini" id="addIng">＋ 添加配料</button></div>
+ <div class="editor-section steps-editor"><h3>🔪 备菜</h3><div id="prep">${prepRows}</div><button class="mini" id="addPrep">＋ 添加步骤</button></div>
+ <div class="editor-section steps-editor"><h3>🍳 烹饪</h3><div id="cook">${cookRows}</div><button class="mini" id="addCook">＋ 添加步骤</button></div>
+ <div class="editor-section"><h3>📝 备注</h3><textarea id="rNotes" rows="4" placeholder="备注、原始记录说明等">${esc(r.notes)}</textarea></div>
+ <div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="saveRecipe">保存</button></div>`);
+ document.getElementById('addIng').onclick=()=>{document.getElementById('ings').insertAdjacentHTML('beforeend',ingRow(['','','',''],Date.now()))};
+ document.getElementById('addPrep').onclick=()=>{let c=document.getElementById('prep');c.insertAdjacentHTML('beforeend',stepRow('prep','',Date.now()))};
+ document.getElementById('addCook').onclick=()=>{let c=document.getElementById('cook');c.insertAdjacentHTML('beforeend',stepRow('cook','',Date.now()))};
+ document.getElementById('saveRecipe').onclick=()=>saveEditor(name);
+}
+function ingRow(i,idx){return `<div class="ing-row" data-ing="${idx}"><input placeholder="食材" value="${esc(i[0])}"><input placeholder="数量" value="${esc(i[1])}"><input placeholder="单位" value="${esc(i[2])}"><input placeholder="备注" value="${esc(i[3])}"><button class="mini danger" onclick="this.parentElement.remove()">×</button></div>`}
+function stepRow(kind,s,idx){return `<div class="step-edit" data-step="${kind}"><div class="move"><button class="mini" onclick="moveStep(this,-1)">↑</button><button class="mini" onclick="moveStep(this,1)">↓</button></div><textarea placeholder="输入步骤">${esc(s)}</textarea><button class="mini danger" onclick="this.parentElement.remove()">×</button></div>`}
+function moveStep(btn,d){let el=btn.closest('.step-edit'),sib=d<0?el.previousElementSibling:el.nextElementSibling;if(sib) d<0?sib.before(el):sib.after(el)}
+function saveEditor(oldName){
+ const name=document.getElementById('rName').value.trim();if(!name){toast('请输入菜谱名称');return}
+ const ingredients=[...document.querySelectorAll('#ings .ing-row')].map(x=>[...x.querySelectorAll('input')].map(i=>i.value.trim())).filter(i=>i[0]);
+ const getSteps=id=>[...document.querySelectorAll(id+' .step-edit textarea')].map(x=>x.value.trim()).filter(Boolean);
+ const r={name,category:document.getElementById('rCat').value,type:document.getElementById('rType').value,ingredients,prep:getSteps('#prep'),cook:getSteps('#cook'),notes:document.getElementById('rNotes').value.trim()};
+ if(oldName){
+   let idx=recipes.findIndex(x=>x.name===oldName);
+   if(idx>=0){
+     let duplicate=recipes.findIndex((x,j)=>j!==idx && x.name===name);
+     if(duplicate>=0){toast('已有同名菜谱，请修改菜名');return}
+     recipes[idx]=r;
+   }
+ }else{
+   if(recipes.some(x=>x.name===name)){toast('已有同名菜谱，请修改菜名');return}
+   recipes.push(r);
+ }
+ selected=name;scale=1;save();closeModal();render();toast('已保存');
+}
+function deleteRecipe(name){
+ const r=recipes.find(x=>x.name===name);
+ if(!r){toast('未找到要删除的菜谱');return}
+ showModal(`<h2>🗑️ 删除菜谱</h2>
+ <p>确定要删除「<strong>${esc(name)}</strong>」吗？</p>
+ <p class="hint">删除后不会影响其他菜谱；如果之前导出过 JSON 备份，可以从备份恢复。</p>
+ <div class="modal-actions"><button class="secondary" id="cancelDelete">取消</button><button class="primary danger" id="confirmDelete">确认删除</button></div>`);
+ document.getElementById('cancelDelete').onclick=closeModal;
+ document.getElementById('confirmDelete').onclick=()=>{
+   recipes=recipes.filter(x=>x.name!==name);
+   selected=recipes[0]?.name||null;
+   scale=1;
+   save();
+   closeModal();
+   render();
+   toast('已删除');
+ };
+}
+function backupModal(){
+ const isFilePage=location.protocol==='file:';
+ const canSaveAs=typeof window.showSaveFilePicker==='function' && window.isSecureContext;
+ const saveAsTitle=canSaveAs?'💾 另存为...':'💾 另存为（当前环境不可用）';
+ const envHint=isFilePage
+   ? '你现在是直接双击 HTML 文件打开的（file://）。Chrome 不允许这种本地页面使用系统“另存为”文件选择器，这是浏览器安全限制，不是菜谱数据的问题。'
+   : (!window.isSecureContext
+      ? '当前页面不是安全上下文，浏览器不会开放系统“另存为”接口。'
+      : '当前浏览器支持系统文件保存。');
+
+ showModal(`<h2>💾 数据备份</h2>
+ <p>当前共有 <strong>${recipes.length}</strong> 个菜谱。</p>
+ <div style="background:#fff7df;border:1px solid #ead79a;border-radius:10px;padding:12px;line-height:1.6;font-size:13px">
+   <strong>为什么“另存为”会失败？</strong><br>${envHint}
+ </div>
+ <div style="background:#f5f6f8;border-radius:9px;padding:12px 13px;margin:12px 0">
+   <div style="font-size:12px;color:#777">备份文件名</div>
+   <strong>我的食谱备份.json</strong>
+ </div>
+ <div class="modal-actions" style="flex-wrap:wrap">
+   ${canSaveAs?'<button class="primary" id="saveAs">💾 另存为...</button>':'<button class="secondary" id="saveAs" disabled title="直接打开HTML时浏览器不支持系统另存为">💾 另存为（不可用）</button>'}
+   <button class="primary" id="export">⬇️ 导出备份文件</button>
+   <button class="secondary" id="copyBackup">📋 复制备份</button>
+   <button class="secondary" id="importBtn">📥 导入 JSON</button>
+   <button class="secondary" onclick="closeModal()">关闭</button>
+ </div>
+ <div class="hint" style="margin-top:12px">
+   <strong>最稳妥：</strong>点击“导出备份文件”，然后打开浏览器右上角“下载”记录（Ctrl+J）查看文件实际保存位置。
+   <br>如果浏览器设置了“下载前询问保存位置”，会直接弹出保存窗口。
+ </div>
+ <input type="file" id="fileInput" accept=".json,application/json" style="display:none">
+ <textarea id="backupText" style="position:fixed;left:-99999px;top:-99999px;width:1px;height:1px"></textarea>`);
+
+ const backupString=()=>JSON.stringify(recipes,null,2);
+ const makeBlob=()=>new Blob([backupString()],{type:'application/json'});
+
+ if(canSaveAs){
+   document.getElementById('saveAs').onclick=async()=>{
+     try{
+       const handle=await window.showSaveFilePicker({
+         suggestedName:'我的食谱备份.json',
+         types:[{description:'JSON 备份文件',accept:{'application/json':['.json']}}]
+       });
+       const writable=await handle.createWritable();
+       await writable.write(makeBlob());
+       await writable.close();
+       toast('备份已保存到你选择的位置');
+     }catch(e){
+       if(e?.name!=='AbortError') toast('另存为失败：请改用“导出备份文件”');
+     }
+   };
+ }
+
+ document.getElementById('export').onclick=()=>{
+   const blob=makeBlob();
+   const url=URL.createObjectURL(blob);
+   const a=document.createElement('a');
+   a.href=url;
+   a.download='我的食谱备份.json';
+   a.rel='noopener';
+   a.style.display='none';
+   document.body.appendChild(a);
+   a.click();
+   setTimeout(()=>{
+     a.remove();
+     URL.revokeObjectURL(url);
+   },2000);
+   toast('备份文件已生成，请按 Ctrl+J 查看下载位置');
+ };
+
+ document.getElementById('copyBackup').onclick=async()=>{
+   const text=backupString();
+   try{
+     await navigator.clipboard.writeText(text);
+     toast('备份内容已复制');
+   }catch(e){
+     const ta=document.getElementById('backupText');
+     ta.style.position='fixed';
+     ta.style.left='12px';
+     ta.style.top='12px';
+     ta.style.width='calc(100% - 24px)';
+     ta.style.height='45vh';
+     ta.style.zIndex='9999';
+     ta.style.background='#fff';
+     ta.style.border='2px solid #202124';
+     ta.style.padding='10px';
+     ta.value=text;
+     ta.focus();
+     ta.select();
+     toast('自动复制被浏览器阻止，请按 Ctrl+C');
+   }
+ };
+
+ document.getElementById('importBtn').onclick=()=>document.getElementById('fileInput').click();
+ document.getElementById('fileInput').onchange=e=>{
+   const f=e.target.files[0];
+   if(!f)return;
+   const rd=new FileReader();
+   rd.onload=()=>{
+     try{
+       const x=JSON.parse(rd.result);
+       if(!Array.isArray(x))throw new Error('invalid');
+       if(!confirm(`准备导入 ${x.length} 个菜谱。导入会替换当前食谱库，是否继续？`))return;
+       recipes=x;
+       selected=recipes[0]?.name||null;
+       category='全部';
+       query='';
+       scale=1;
+       save();
+       closeModal();
+       render();
+       toast('导入成功');
+     }catch{
+       toast('JSON 文件格式不正确，未导入');
+     }
+   };
+   rd.readAsText(f,'utf-8');
+ };
+}
+function showModal(content){let d=document.createElement('div');d.className='modal-back';d.id='modal';d.innerHTML='<div class="modal">'+content+'</div>';document.body.appendChild(d)}
+function closeModal(){document.getElementById('modal')?.remove()}
+function toast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+render();
+</script>
+</body>
+</html>
