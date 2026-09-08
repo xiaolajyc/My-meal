@@ -115,74 +115,40 @@ function newRecipeChooser(){
 }
 
 function parseRecipeText(text){
- const lines=text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
- let name=lines[0]||'新菜谱', category='其他/实验', type='菜谱';
- if(/配方|酱料|腌制|蘸料/.test(name)) type='配方';
- if(/实验|研究|方案/.test(name)) type='实验';
- if(/蛋糕|烘焙|蛋挞/.test(name)) category='烘焙';
- else if(/鱼|虾|蟹|海鲜|三文鱼|螺/.test(name)) category='海鲜';
- else if(/鸡|牛|猪|羊|肉|排|翅|肚|肥肠/.test(name)) category='肉类';
- else if(/饭|面|饺子|米饭|粥/.test(name)) category='主食';
- else if(/汤|火锅/.test(name)) category='汤/火锅';
- else if(/酱|蘸料|醋|蚝油/.test(name)) category='酱料';
- else if(/咖啡|饮料|莫吉托/.test(name)) category='饮料';
- const ingredients=[], prep=[], cook=[], notes=[];
- let section='ingredients';
- const headers={
-   '配料':'ingredients','材料':'ingredients','食材':'ingredients','原料':'ingredients','用料':'ingredients',
-   '备菜':'prep','准备':'prep','准备工作':'prep','备料':'prep','腌制':'prep',
-   '做法':'cook','步骤':'cook','烹饪':'cook','烹制':'cook','制作':'cook','烹饪步骤':'cook',
-   '烹饪过程':'cook','制作步骤':'cook','制作过程':'cook','烹调':'cook','烹调步骤':'cook',
-   '备注':'notes','说明':'notes','注意':'notes','注意事项':'notes'
- };
- const unitRe=/(-?\d+(?:\.\d+)?(?:\s*-\s*\d+(?:\.\d+)?)?)\s*(kg|g|ml|l|L|个|份|勺|tbsp|tsp|%)(?!\w)/i;
- const specialRe=/^(适量|少量|一点点|两点点|若干)\b/;
- for(let idx=1;idx<lines.length;idx++){
-   let line=lines[idx].replace(/^[\-\*•·\d]+[.)、:：]?\s*/,'').trim();
-   let h=line.replace(/[：:]\s*$/,'').trim();
-   let normalizedHeader=h.replace(/[\s（）()【】\[\]、.。:：_-]+/g,'');
-   let headerKey=Object.keys(headers).find(k=>normalizedHeader===k || normalizedHeader.startsWith(k));
-   if(headerKey){section=headers[headerKey];continue}
-   let m=line.match(/^(.+?)[：:]\s*(.+)$/);
-   if(m){
-      let mk=m[1].trim().replace(/[\s（）()【】\[\]、.。:：_-]+/g,'');
-      let mkKey=Object.keys(headers).find(k=>mk===k || mk.startsWith(k) || k.startsWith(mk));
-      if(mkKey){
-         section=headers[mkKey];
-         if(m[2].trim()){
-            if(section==='prep') prep.push(m[2].trim());
-            else if(section==='cook') cook.push(m[2].trim());
-            else if(section==='ingredients'){
-               let rest=m[2].trim();
-               let rm=rest.match(/^(.+?)\s*(-?\d+(?:\.\d+)?(?:\s*-\s*\d+)?)\s*(kg|g|ml|l|L|个|份|勺|tbsp|tsp|%)/i);
-               if(rm) ingredients.push([rm[1].trim(),rm[2].replace(/\s+/g,''),rm[3],'']);
-               else notes.push(rest);
-            } else notes.push(m[2].trim());
-         }
-         continue
-      }
-   }
-   let matches=[...line.matchAll(/([^，,；;]+?)\s*(-?\d+(?:\.\d+)?(?:\s*-\s*\d+(?:\.\d+)?)?)\s*(kg|g|ml|l|L|个|份|勺|tbsp|tsp|%)/gi)];
-   if(section==='ingredients' && (matches.length || specialRe.test(line))){
-      if(matches.length){
-        matches.forEach(mm=>{
-          let rawName=mm[1].trim().replace(/^(需要|加入|放入|用|取)\s*/,'').trim();
-          ingredients.push([rawName,mm[2].replace(/\s+/g,''),mm[3], '']);
-        });
-      }else{
-        let sm=line.match(/^(.+?)[：:]\s*(适量|少量|一点点|两点点|若干)$/);
-        if(sm) ingredients.push([sm[1].trim(),'',sm[2],'']);
-      }
-   }else if(section==='prep') prep.push(line);
-   else if(section==='cook') cook.push(line);
-   else notes.push(line);
+ text=String(text||'').replace(/\u2029/g,'\n').replace(/\u2028/g,'\n').replace(/\r\n?/g,'\n').replace(/\u00a0/g,' ');
+ const lines=text.split('\n').map(x=>x.trim()).filter(Boolean);
+ let name=lines[0]||'新菜谱',category='其他/实验',type='菜谱';
+ if(/配方|酱料|腌制|蘸料/.test(name)) type='配方'; if(/实验|研究|方案/.test(name)) type='实验';
+ if(/蛋糕|烘焙|蛋挞/.test(name)) category='烘焙'; else if(/鱼|虾|蟹|海鲜|三文鱼|螺/.test(name)) category='海鲜'; else if(/鸡|牛|猪|羊|肉|排|翅|肚|肥肠/.test(name)) category='肉类'; else if(/饭|面|饺子|米饭|粥/.test(name)) category='主食'; else if(/汤|火锅/.test(name)) category='汤/火锅'; else if(/酱|蘸料|醋|蚝油/.test(name)) category='酱料'; else if(/咖啡|饮料|莫吉托/.test(name)) category='饮料';
+ const ingredients=[],prep=[],cook=[],notes=[]; let section='auto', sawExplicit=false;
+ const headers={'配料':'ingredients','材料':'ingredients','食材':'ingredients','原料':'ingredients','用料':'ingredients','备菜':'prep','准备':'prep','准备工作':'prep','备料':'prep','腌制':'prep','做法':'cook','步骤':'cook','烹饪':'cook','烹制':'cook','制作':'cook','烹饪步骤':'cook','烹饪过程':'cook','制作步骤':'cook','制作过程':'cook','烹调':'cook','烹调步骤':'cook','备注':'notes','说明':'notes','注意':'notes','注意事项':'notes'};
+ const norm=x=>String(x||'').replace(/[\s（）()【】\[\]、.。:：_\-—]+/g,'');
+ const findHeader=x=>{const n=norm(x);return Object.keys(headers).find(k=>n===k||n.startsWith(k)||k.startsWith(n))};
+ const add=(n,a,u,note='')=>{n=String(n||'').trim();if(n){ingredients.push([n,String(a||'').trim(),String(u||'').trim(),note]);return true}return false};
+ const units='kg|g|mg|ml|l|L|个|只|份|勺|汤匙|茶匙|tbsp|tsp|%';
+ const pre=new RegExp('^([0-9]+(?:\\.[0-9]+)?(?:\\s*-\\s*[0-9]+(?:\\.[0-9]+)?)?)\\s*('+units+')\\s*(.+?)$','i');
+ const suf=new RegExp('^(.+?)\\s*([0-9]+(?:\\.[0-9]+)?(?:\\s*-\\s*[0-9]+(?:\\.[0-9]+)?)?)\\s*('+units+')\\s*(.*)$','i');
+ const special=/^(.+?)[：:]\s*(适量|少量|一点点|两点点|若干)$/;
+ function parseIng(line){
+   const parts=line.split(/[，,；;、]+/).map(x=>x.trim()).filter(Boolean); if(parts.length>1){let n=0;parts.forEach(x=>{if(parseIng(x))n++});return n>0}
+   let m=line.match(pre); if(m){add(m[3],m[1].replace(/\s+/g,''),m[2]);return true}
+   m=line.match(suf); if(m){add(m[1],m[2].replace(/\s+/g,''),m[3],m[4]||'');return true}
+   m=line.match(special); if(m){add(m[1],'',m[2]);return true}
+   return false;
+ }
+ for(let i=1;i<lines.length;i++){
+   const raw=lines[i], h=raw.replace(/[：:]\s*$/,'').trim(), hk=findHeader(h);
+   if(hk){section=headers[hk];sawExplicit=true;continue}
+   const colon=raw.match(/^(.+?)[：:]\s*(.+)$/);
+   if(colon){const ck=findHeader(colon[1]);if(ck){section=headers[ck];sawExplicit=true;const rest=colon[2].trim();if(rest){if(section==='ingredients')parseIng(rest);else if(section==='prep')prep.push(rest);else if(section==='cook')cook.push(rest);else notes.push(rest)}continue}}
+   if(section==='ingredients'){if(parseIng(raw))continue;if(!sawExplicit&&ingredients.length){section='cook';cook.push(raw)}else notes.push(raw)} else if(section==='prep')prep.push(raw); else if(section==='cook')cook.push(raw); else notes.push(raw);
  }
  return {name,category,type,ingredients,prep,cook,notes:notes.join('\n')};
 }
 function openTextImport(){
  showModal(`<h2>🪄 文本自动识别</h2>
  <p class="hint">把菜谱整段粘贴进来。建议第一行写菜名，后面可以写配料、备菜、做法、备注等。识别后会进入编辑页面，你可以校对后再保存。</p>
- <textarea id="recipeText" rows="14" spellcheck="false" autocapitalize="off" autocorrect="off" style="white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;-webkit-user-select:text;user-select:text;" placeholder="例如：
+ <textarea id="recipeText" rows="14" placeholder="例如：
 可乐鸡翅
 鸡翅310g，生抽18g，老抽6g，红糖18g，白醋9g，水18g
 桂皮两点点，陈皮一点点
@@ -194,11 +160,9 @@ function openTextImport(){
 加入调料，小火煮15分钟
 最后大火收汁"></textarea>
  <div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="parseText">识别并校对</button></div>`);
- const recipeTextEl=document.getElementById('recipeText');
- recipeTextEl.addEventListener('paste',e=>{ e.stopPropagation(); });
  document.getElementById('parseText').onclick=()=>{
-   const text=document.getElementById('recipeText').value;
-   if(!text.trim()){toast('请先粘贴菜谱文字');return}
+   const text=document.getElementById('recipeText').value.trim();
+   if(!text){toast('请先粘贴菜谱文字');return}
    const r=parseRecipeText(text);
    closeModal();
    openEditorFromParsed(r);
