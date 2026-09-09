@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;background:#f6f7f9;color:#202124}
 button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
-.app{display:flex;height:100vh;overflow:hidden}.sidebar{width:330px;background:#fff;border-right:1px solid #e4e6eb;display:flex;flex-direction:column}.brand{padding:22px 20px 12px;font-size:22px;font-weight:700}.search{margin:8px 16px 12px;padding:11px 13px;border:1px solid #ddd;border-radius:10px;outline:none;width:calc(100% - 32px)}.search:focus{border-color:#777}.filters{display:flex;gap:7px;padding:0 16px 12px;overflow:auto}.chip{padding:7px 10px;border-radius:999px;background:#f0f1f3;white-space:nowrap;font-size:13px}.chip.active{background:#202124;color:white}.recipe-list{overflow:auto;flex:1;padding:0 8px 14px}.recipe-item{padding:12px;border-radius:10px;margin:2px 0;cursor:pointer}.recipe-item:hover{background:#f5f5f5}.recipe-item.active{background:#eceff3}.recipe-name{font-weight:600}.recipe-meta{font-size:12px;color:#777;margin-top:4px}.side-actions{padding:12px;border-top:1px solid #eee;display:grid;grid-template-columns:1fr 1fr;gap:8px}.primary{background:#202124;color:#fff;border-radius:9px;padding:10px 12px}.secondary{background:#eef0f3;color:#202124;border-radius:9px;padding:10px 12px}.content{flex:1;overflow:auto}.topbar{height:64px;border-bottom:1px solid #e4e6eb;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:2}.topbar-actions{display:flex;gap:8px}.page{max-width:1000px;margin:0 auto;padding:30px 28px 60px}.empty{height:80vh;display:flex;align-items:center;justify-content:center;color:#777}.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.title{font-size:32px;font-weight:750;margin:0}.badges{display:flex;gap:7px;margin-top:10px}.badge{font-size:12px;padding:5px 9px;background:#eef0f3;border-radius:999px;color:#555}.section{margin-top:28px}.section h2{font-size:19px;margin:0 0 13px}.ingredient-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e6e7ea;border-radius:12px;overflow:hidden}.ingredient-table th,.ingredient-table td{text-align:left;padding:11px 13px;border-bottom:1px solid #eee}.ingredient-table th{font-size:12px;color:#777;background:#fafafa}.ingredient-table tr:last-child td{border-bottom:0}.amount{font-weight:700}.step{background:#fff;border:1px solid #e6e7ea;border-radius:10px;padding:13px 15px;margin:8px 0;display:flex;gap:12px}.num{width:25px;height:25px;border-radius:50%;background:#202124;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}.notes{background:#fff8df;border:1px solid #f0df9d;border-radius:10px;padding:14px;white-space:pre-wrap}.scale-bar{margin-top:18px;padding:12px;background:#fff;border:1px solid #e1e3e6;border-radius:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.scale-pill{padding:6px 10px;background:#eef0f3;border-radius:8px}.scale-pill.active{background:#202124;color:#fff}.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}.modal{width:min(900px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:16px;padding:22px}.modal h2{margin-top:0}.form-row{display:flex;gap:8px;margin:8px 0}.form-row>*{min-width:0}.form-row input,.form-row select,.form-row textarea,.modal input,.modal select,.modal textarea{border:1px solid #d9dce1;border-radius:8px;padding:9px;width:100%;outline:none}.ing-row{display:grid;grid-template-columns:1.4fr .8fr .7fr 1.3fr auto;gap:7px;margin:7px 0}.steps-editor textarea{min-height:44px;resize:vertical}.editor-section{margin:18px 0}.editor-section h3{margin-bottom:8px}.mini{padding:7px 9px;border-radius:7px;background:#eef0f3}.danger{background:#ffe9e9;color:#a11}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.step-edit{display:grid;grid-template-columns:30px 1fr auto;gap:7px;align-items:start;margin:7px 0}.move{display:flex;flex-direction:column;gap:4px}.hint{font-size:12px;color:#777}.scale-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.scale-box{border:1px solid #e1e3e6;border-radius:10px;padding:12px}.scale-result{font-size:20px;font-weight:700;margin-top:5px}.toast{position:fixed;right:20px;bottom:20px;background:#202124;color:white;padding:10px 14px;border-radius:9px;z-index:30;opacity:0;transform:translateY(8px);transition:.2s}.toast.show{opacity:1;transform:none}@media(max-width:800px){.modal [style*='grid-template-columns:1fr 1fr']{grid-template-columns:1fr!important}.sidebar{width:100%;height:45vh;border-right:0;border-bottom:1px solid #ddd}.app{flex-direction:column;height:auto;min-height:100vh}.content{min-height:55vh}.topbar{padding:0 14px}.page{padding:22px 15px 50px}.title{font-size:27px}.ing-row{grid-template-columns:1.3fr .7fr .7fr 1fr auto}.scale-grid{grid-template-columns:1fr}.side-actions{position:sticky;bottom:0;background:#fff}}
+.app{display:flex;height:100vh;overflow:hidden}.sidebar{width:330px;background:#fff;border-right:1px solid #e4e6eb;display:flex;flex-direction:column}.brand{padding:22px 20px 12px;font-size:22px;font-weight:700}.search{margin:8px 16px 12px;padding:11px 13px;border:1px solid #ddd;border-radius:10px;outline:none;width:calc(100% - 32px)}.search:focus{border-color:#777}.filters{display:flex;gap:7px;padding:0 16px 12px;overflow:auto}.chip{padding:7px 10px;border-radius:999px;background:#f0f1f3;white-space:nowrap;font-size:13px}.chip.active{background:#202124;color:white}.recipe-list{overflow:auto;flex:1;padding:0 8px 14px}.recipe-item{padding:12px;border-radius:10px;margin:2px 0;cursor:pointer}.recipe-item:hover{background:#f5f5f5}.recipe-item.active{background:#eceff3}.recipe-name{font-weight:600}.recipe-meta{font-size:12px;color:#777;margin-top:4px}.side-actions{padding:12px;border-top:1px solid #eee;display:grid;grid-template-columns:1fr 1fr;gap:8px}.primary{background:#202124;color:#fff;border-radius:9px;padding:10px 12px}.secondary{background:#eef0f3;color:#202124;border-radius:9px;padding:10px 12px}.content{flex:1;overflow:auto}.topbar{height:64px;border-bottom:1px solid #e4e6eb;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:2}.topbar-actions{display:flex;gap:8px}.page{max-width:1000px;margin:0 auto;padding:30px 28px 60px}.empty{height:80vh;display:flex;align-items:center;justify-content:center;color:#777}.title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.title{font-size:32px;font-weight:750;margin:0}.badges{display:flex;gap:7px;margin-top:10px}.badge{font-size:12px;padding:5px 9px;background:#eef0f3;border-radius:999px;color:#555}.section{margin-top:28px}.section h2{font-size:19px;margin:0 0 13px}.ingredient-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e6e7ea;border-radius:12px;overflow:hidden}.check-col{width:42px;text-align:center!important}.ingredient-check{width:20px;height:20px;cursor:pointer}.ingredient-row.checked td{text-decoration:line-through;opacity:.55}.check-progress{float:right;margin-right:8px;font-size:12px;color:#777}.ingredient-table th,.ingredient-table td{text-align:left;padding:11px 13px;border-bottom:1px solid #eee}.ingredient-table th{font-size:12px;color:#777;background:#fafafa}.ingredient-table tr:last-child td{border-bottom:0}.amount{font-weight:700}.step{background:#fff;border:1px solid #e6e7ea;border-radius:10px;padding:13px 15px;margin:8px 0;display:flex;gap:12px}.num{width:25px;height:25px;border-radius:50%;background:#202124;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:none}.notes{background:#fff8df;border:1px solid #f0df9d;border-radius:10px;padding:14px;white-space:pre-wrap}.scale-bar{margin-top:18px;padding:12px;background:#fff;border:1px solid #e1e3e6;border-radius:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.scale-pill{padding:6px 10px;background:#eef0f3;border-radius:8px}.scale-pill.active{background:#202124;color:#fff}.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}.modal{width:min(900px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:16px;padding:22px}.modal h2{margin-top:0}.form-row{display:flex;gap:8px;margin:8px 0}.form-row>*{min-width:0}.form-row input,.form-row select,.form-row textarea,.modal input,.modal select,.modal textarea{border:1px solid #d9dce1;border-radius:8px;padding:9px;width:100%;outline:none}.ing-row{display:grid;grid-template-columns:1.4fr .8fr .7fr 1.3fr auto;gap:7px;margin:7px 0}.steps-editor textarea{min-height:44px;resize:vertical}.editor-section{margin:18px 0}.editor-section h3{margin-bottom:8px}.mini{padding:7px 9px;border-radius:7px;background:#eef0f3}.danger{background:#ffe9e9;color:#a11}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.step-edit{display:grid;grid-template-columns:30px 1fr auto;gap:7px;align-items:start;margin:7px 0}.move{display:flex;flex-direction:column;gap:4px}.hint{font-size:12px;color:#777}.scale-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.scale-box{border:1px solid #e1e3e6;border-radius:10px;padding:12px}.scale-result{font-size:20px;font-weight:700;margin-top:5px}.toast{position:fixed;right:20px;bottom:20px;background:#202124;color:white;padding:10px 14px;border-radius:9px;z-index:30;opacity:0;transform:translateY(8px);transition:.2s}.toast.show{opacity:1;transform:none}@media(max-width:800px){.modal [style*='grid-template-columns:1fr 1fr']{grid-template-columns:1fr!important}.sidebar{width:100%;height:45vh;border-right:0;border-bottom:1px solid #ddd}.app{flex-direction:column;height:auto;min-height:100vh}.content{min-height:55vh}.topbar{padding:0 14px}.page{padding:22px 15px 50px}.title{font-size:27px}.ing-row{grid-template-columns:1.3fr .7fr .7fr 1fr auto}.scale-grid{grid-template-columns:1fr}.side-actions{position:sticky;bottom:0;background:#fff}}
 </style>
 </head>
 <body>
@@ -16,6 +16,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 const DEFAULT_RECIPES = [{"name": "大龙糊糊", "category": "汤/火锅", "type": "菜谱", "ingredients": [["绿豆", "200", "g", ""], ["火腿肠", "600", "g", ""], ["蔬菜", "1050", "g", ""], ["葱", "65", "g", ""], ["胡萝卜", "35", "g", ""], ["芹菜", "50", "g", ""], ["面包", "200", "g", ""]], "prep": ["绿豆提前浸泡一天。", "火腿肠切好，分成600g×2袋冷冻。", "绿豆高压锅按“牛羊肉，软烂70”，35分钟。冷却后分装冷冻。备注：1kg干豆约变成3kg熟豆。", "需要焯水的蔬菜焯水后挤干。青菜、白菜焯3分钟；萝卜缨焯6分钟。", "葱、胡萝卜、芹菜切好，用少量油炒香。"], "cook": ["加入火腿肠翻炒。", "加入鸡汤。", "加入大量热水，煮10分钟。", "加入熟绿豆，再煮5分钟。", "加入蔬菜，煮至合适状态。", "使用后清洁工具。"], "notes": ""}, {"name": "大吉利火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["蒜泥", "3", "份", ""], ["小米辣", "1", "份", ""], ["菌菇酱", "1", "份", ""], ["牛肉酱", "2", "份", ""], ["韭花酱", "0.5", "份", ""], ["榨菜", "1", "份", ""], ["芝麻酱", "0.5", "份", ""], ["香油", "1", "份", ""], ["青椒酱", "2", "份", ""], ["香菜", "2", "份", ""]], "prep": [], "cook": ["将所有配料混合均匀。"], "notes": ""}, {"name": "咸肉菜饭", "category": "主食", "type": "菜谱", "ingredients": [["咸肉", "800", "g", "切0.5×0.5×2cm丁，肥瘦分开"], ["青白菜", "1200", "g", "切1×1cm丁，焯水3分钟并挤干"], ["大米", "600", "g", ""]], "prep": ["咸肉切0.5×0.5×2cm丁，肥瘦分开。", "青白菜洗净，切1×1cm丁，焯水3分钟，挤干。", "青菜加入0.75%的盐和味精。"], "cook": ["肥咸肉煸油。", "瘦肉加入少量料酒和姜去腥。", "咸肉煸好后加入米饭。", "放入高压锅压熟。", "拌入青菜。"], "notes": "原记录未明确青菜中盐和味精的具体克数，因此保留0.75%的原始记录。"}, {"name": "烤南瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["南瓜", "600", "g", "切三角片，能立住"], ["糖", "20", "g", ""], ["水", "10", "g", ""], ["黄油", "", "适量", ""]], "prep": ["南瓜切成能立住的三角片。", "糖20g加水10g调成糖水。"], "cook": ["200°C烤至开始焦边。", "翻面并刷两面糖水。", "继续烤10分钟。", "正反面再次刷糖水，继续烤10分钟。", "最后仅正面刷黄油。"], "notes": ""}, {"name": "酸奶研究方案", "category": "其他/实验", "type": "实验", "ingredients": [["全脂奶粉", "105", "g", "现方案"], ["水", "750", "g", "现方案"], ["酸奶", "150", "g", "现方案"], ["糖", "7", "%", "现方案"], ["脱脂奶粉", "105", "g", "方案1"]], "prep": [], "cook": ["发酵12小时。"], "notes": "现方案：全脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。方案1：脱脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。"}, {"name": "Risotto", "category": "主食", "type": "菜谱", "ingredients": [["蘑菇片", "500", "g", ""], ["黄油", "95", "g", ""], ["白葡萄酒", "65", "ml", ""], ["帕马森芝士", "50", "g", ""], ["蒜泥", "1", "勺", ""], ["洋葱碎", "1", "个", ""], ["奶油", "125", "ml", ""], ["米饭", "300", "g", ""], ["鸡精", "1", "勺", ""]], "prep": [], "cook": ["热锅，加入小块黄油。", "加入蒜泥、洋葱。", "加入蘑菇、白葡萄酒、鸡精并混匀。", "关火，加入芝士。", "加入黄油和奶油。", "加入米饭搅匀。", "静置5分钟后上桌。"], "notes": ""}, {"name": "蛋挞", "category": "烘焙", "type": "菜谱", "ingredients": [["奶", "70", "g", ""], ["淡奶油", "60", "g", ""], ["鸡蛋", "1", "个", ""], ["糖", "30", "g", ""], ["炼乳", "15", "g", ""]], "prep": ["使用大塑料杯。"], "cook": [], "notes": "原记录未提供具体烘烤温度和时间。"}, {"name": "肯德基香辣鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "1000", "g", ""], ["盐", "10", "g", "腌料"], ["鸡精", "6.25", "g", "腌料"], ["辣椒粉", "17.5", "g", "腌料"], ["蒜粉", "1.25", "g", "腌料"], ["小苏打", "4", "g", "腌料"], ["水", "75", "g", "腌料"], ["自发粉", "300", "g", "裹粉"], ["盐", "3", "g", "裹粉"], ["鸡精", "1.875", "g", "裹粉"], ["蒜粉", "0.75", "g", "裹粉"], ["自发粉", "167", "g", "裹糊"], ["水", "250", "g", "裹糊"], ["盐", "4.17", "g", "裹糊"], ["鸡精", "2.6", "g", "裹糊"], ["蒜粉", "1.04", "g", "裹糊"]], "prep": ["鸡肉按腌料配方腌制。", "将裹粉材料混合。", "将裹糊材料混合。"], "cook": ["165°C预炸2分钟。", "复炸2分钟。"], "notes": ""}, {"name": "派克鸡排", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "600", "g", ""], ["水", "200", "g", "腌料"], ["盐", "10", "g", "腌料"], ["甜椒粉", "7.5", "g", "腌料"], ["辣椒粉", "7.5", "g", "腌料"], ["蒜粉", "5", "g", "腌料"], ["糖", "100", "g", "腌料"], ["自发粉", "100", "g", "粉浆"], ["太白粉", "70", "g", "粉浆"], ["水", "170", "g", "粉浆"], ["盐", "", "少量", "粉浆"]], "prep": ["按腌料配方混合鸡肉。", "粉浆材料混合。"], "cook": [], "notes": "原记录未提供具体烹饪温度和时间。"}, {"name": "腌咸鸭蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1500", "g", ""], ["盐", "650", "g", ""]], "prep": [], "cook": ["腌制40天。"], "notes": ""}, {"name": "腌皮蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1000", "g", ""], ["盐", "50", "g", ""], ["NaOH", "50", "g", ""]], "prep": [], "cook": ["腌制14天。"], "notes": "记录另注：六月底七月初，10°C室温20天。"}, {"name": "巴沙鱼片腌制", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "1000", "g", "先左右分开再切中等厚片"], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["盐", "5", "g", ""], ["味精", "3", "g", ""], ["水", "50-100", "g", ""]], "prep": ["巴沙鱼先左右分开，再切中等厚片。", "腌料先混匀。"], "cook": ["将腌料与鱼片混合。"], "notes": ""}, {"name": "鸡肉片腌制", "category": "肉类", "type": "配方", "ingredients": [["鸡腿肉片", "1000", "g", ""], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["鸡精", "3", "g", ""], ["盐", "5", "g", ""], ["小苏打", "4", "g", ""], ["水", "50-100", "g", ""]], "prep": ["腌料混匀。"], "cook": ["将腌料与鸡肉片混合。"], "notes": ""}, {"name": "虾滑", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "500", "g", ""], ["虾仁", "500", "g", "其中333g切小块"], ["木薯粉", "50", "g", ""], ["水", "50", "g", ""], ["盐", "5", "g", ""], ["味精", "5", "g", ""], ["鸡蛋", "1", "个", ""]], "prep": ["虾仁中333g切小块。", "调料混匀。"], "cook": ["将调料与虾滑材料混合。"], "notes": ""}, {"name": "齐齐哈尔烤肉", "category": "肉类", "type": "菜谱", "ingredients": [["牛肉", "800", "g", ""], ["洋葱", "160", "g", ""], ["香菜", "50", "g", ""], ["蚝油", "50", "g", ""], ["盐", "8", "g", "适合配菜"], ["孜然", "23", "g", ""], ["红椒粉", "2", "g", ""], ["油", "64", "g", ""]], "prep": [], "cook": ["按配方混合并烤制。"], "notes": "原记录未提供更具体烤制时间和温度。"}, {"name": "自制蚝油", "category": "酱料", "type": "配方", "ingredients": [["生抽", "15", "g", "不是鲜酱油"], ["糖", "6", "g", ""], ["鸡精", "5", "g", ""], ["水", "15", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "莫吉托", "category": "饮料", "type": "配方", "ingredients": [["薄荷叶", "10", "g", ""], ["糖", "6", "g", ""], ["青柠汁", "10", "g", ""], ["雪碧", "250", "g", ""]], "prep": [], "cook": ["混合饮用。"], "notes": ""}, {"name": "药膳鸡火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["生抽", "50", "g", "不是鲜酱油"], ["醋", "10-15", "g", ""], ["糖", "5", "g", ""], ["鸡精", "5", "g", ""], ["高汤/水", "15", "g", ""], ["小米辣", "4", "个", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "希腊酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["脱脂奶粉", "45", "g", ""], ["全脂奶粉", "119", "g", ""], ["水", "900", "g", ""], ["酸奶", "200", "g", ""], ["奶油", "100", "g", ""], ["糖", "95-109", "g", "7%-8%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["全脂奶粉", "140", "g", ""], ["水", "1000", "g", ""], ["酸奶", "200", "g", ""], ["糖", "94", "g", "7%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "红枣酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["无糖酸奶", "", "", ""], ["红枣浓缩液", "10", "%", ""], ["糖", "1", "%", ""], ["红糖", "", "", ""]], "prep": [], "cook": [], "notes": "红糖记录：白糖300g + 红印黑糖1 tbsp。"}, {"name": "可乐鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅", "310", "g", ""], ["生抽", "18", "g", ""], ["老抽", "6", "g", ""], ["红糖", "18", "g", ""], ["白醋", "9", "g", ""], ["水", "18", "g", ""], ["桂皮", "", "两点点", ""], ["陈皮", "", "一点点", ""]], "prep": [], "cook": ["按配方烹制至熟透并收汁。"], "notes": ""}, {"name": "寿司米饭", "category": "主食", "type": "菜谱", "ingredients": [["寿司米", "300", "g", ""], ["水", "400", "g", ""], ["寿司醋", "50", "g", ""]], "prep": [], "cook": ["按米饭方式煮熟。", "拌入寿司醋。"], "notes": ""}, {"name": "寿司醋", "category": "酱料", "type": "配方", "ingredients": [["白醋", "200", "g", ""], ["糖", "100", "g", ""], ["盐", "10", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "烟熏三文鱼", "category": "海鲜", "type": "配方", "ingredients": [["三文鱼", "100", "g", "去皮后重量"], ["水", "100", "g", "基础卤水"], ["红糖", "3", "g", "基础卤水"], ["盐", "3", "g", "基础卤水"], ["红糖", "3", "g", ""], ["盐", "3", "g", ""], ["烟熏液", "1", "g", ""], ["盐糖水", "1", "g", ""], ["红糖", "3", "g", ""]], "prep": ["三文鱼去皮后称100g。", "基础卤水：水100g、红糖3g、盐3g。", "腌48小时，期间翻2次。", "加入烟熏液、盐糖水、红糖等继续处理，腌24小时，期间翻2次。"], "cook": [], "notes": ""}, {"name": "剁椒蒸鱼", "category": "海鲜", "type": "菜谱", "ingredients": [["鱼肉", "500", "g", "整鱼重900g"], ["葱姜水", "10", "g", "腌制"], ["蒸鱼豉油", "10", "g", "腌制"], ["味精", "2", "g", "腌制"], ["糖", "2", "g", "腌制"], ["料酒", "10", "g", "腌制"], ["盐", "2", "g", "腌制；下饭吃再加1g"], ["蒸鱼豉油", "5", "g", "炒料"], ["剁椒+泡椒", "75", "g", "炒料"], ["豆豉", "5", "g", "炒料"], ["大蒜", "15", "g", "炒料"], ["青红椒", "50", "g", "炒料"], ["葱", "5", "g", "炒料"], ["姜", "5", "g", "炒料"], ["糖", "5", "g", "炒料"], ["味精", "2", "g", "炒料"], ["油", "20", "g", ""]], "prep": ["用葱姜水等腌料腌鱼。", "炒料按配方准备。", "葱姜水：葱50g、姜25g、水200g。"], "cook": ["开水下锅。", "鱼身蒸4分钟，焖1分钟；鱼头蒸6分钟，焖1-2分钟；整鱼蒸6分钟，焖1-2分钟。", "出锅加葱花。", "淋油。"], "notes": ""}, {"name": "狮子头", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉末", "165", "g", ""], ["猪肥肉沫", "35", "g", ""], ["盐", "1", "g", ""], ["味精", "1", "g", ""], ["生抽", "5", "g", ""], ["面粉", "12", "g", ""], ["葱姜水", "12", "g", ""], ["水", "24", "g", ""], ["料酒", "6", "g", ""], ["马蹄", "50", "g", "切丁"]], "prep": ["马蹄切丁。", "按配方混合肉馅。"], "cook": ["油炸3分钟。", "高压锅25分钟。", "浸泡3小时。"], "notes": ""}, {"name": "巴斯克蛋糕", "category": "烘焙", "type": "菜谱", "ingredients": [["奶油奶酪", "375", "g", ""], ["糖", "90", "g", ""], ["鸡蛋", "3", "个", ""], ["蛋黄", "1.5", "个", ""], ["淡奶油", "180", "g", ""], ["面粉", "15", "g", ""]], "prep": ["使用8寸模具。"], "cook": ["220°C烤20-25分钟。"], "notes": ""}, {"name": "农家一碗香", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉片", "400", "g", ""], ["生抽", "10", "g", ""], ["老抽", "5", "g", ""], ["料酒", "5", "g", ""], ["豆豉", "10", "g", ""], ["蚝油", "10", "g", ""], ["味精", "2", "g", ""], ["辣椒粉", "2", "g", ""], ["小苏打", "1.6", "g", ""], ["青椒", "600", "g", ""], ["盐", "8", "g", "青椒部分"], ["味精", "3", "g", "青椒部分"], ["辣椒粉", "5", "g", "青椒部分"], ["鸡蛋", "4", "个", ""], ["盐", "2", "g", "鸡蛋部分"], ["味精", "1", "g", "鸡蛋部分"]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "馅料调味", "category": "主食", "type": "配方", "ingredients": [["猪肉碎", "400", "g", ""], ["蔬菜", "1200", "g", ""], ["盐", "12+3", "g", ""], ["味精", "9", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "黑胡椒酱汁", "category": "酱料", "type": "配方", "ingredients": [["洋葱", "150", "g", ""], ["大蒜", "40", "g", ""], ["黄油", "40", "g", ""], ["老抽", "5", "g", ""], ["生抽", "20", "g", ""], ["蚝油", "24", "g", ""], ["蕃茄酱", "20", "g", ""], ["糖", "10", "g", ""], ["盐", "2", "g", ""], ["面粉", "4", "g", ""], ["黑胡椒", "10", "g", ""], ["奶粉", "28", "g", ""], ["水", "200", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "牛排", "category": "肉类", "type": "菜谱", "ingredients": [["牛排", "400", "g", ""], ["盐", "3", "g", ""], ["小苏打", "1.6", "g", ""], ["黑胡椒", "0.5", "g", ""]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "咖啡", "category": "饮料", "type": "配方", "ingredients": [["咖啡粉", "3", "g", ""], ["脱脂奶粉", "14", "g", ""], ["全脂奶粉", "7", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "快速饺子", "category": "主食", "type": "菜谱", "ingredients": [["蔬菜", "1200", "g", "搅碎、拧干"], ["肉碎", "400", "g", ""], ["盐", "9+3", "g", ""], ["味精", "6", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": ["1200g蔬菜搅碎并拧干，有时焯水；蔬菜汁收集。", "肉碎加入盐、味精、白糖、蔬菜汁、面粉，搅拌上劲。"], "cook": ["肉蔬菜混合，搓成丸子下锅。"], "notes": "原记录标题为“快速饺子”，但步骤中记录的是搓成丸子下锅。按原记录保留。"}, {"name": "烤地瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["地瓜", "", "", "去芽洗净"]], "prep": ["去芽、洗净，沿纵轴切两半。"], "cook": ["放烤箱最下层和蛋糕一起烤。"], "notes": ""}, {"name": "煮玉米", "category": "蔬菜", "type": "菜谱", "ingredients": [["玉米", "", "", ""]], "prep": [], "cook": ["沸水煮5分钟。", "焖2分钟。"], "notes": ""}, {"name": "卤菜", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅尖", "", "", ""], ["鸡脚", "", "", ""], ["鸭翅", "", "", ""]], "prep": [], "cook": ["鸡翅尖：3分钟后浸泡4-6小时。", "鸡脚：8分钟后浸泡4小时。", "鸭翅：20分钟，焖5分钟，再浸泡6小时。"], "notes": ""}];
 const KEY='my_recipe_app_v2';
 let recipes=load(); let selected=recipes[0]?.name||null; let query=''; let category='全部'; let scale=1; let searchComposing=false;
+let ingredientChecks=JSON.parse(localStorage.getItem('recipeIngredientChecks')||'{}');
 
 function load(){try{const x=JSON.parse(localStorage.getItem(KEY));return Array.isArray(x)?x:structuredClone(DEFAULT_RECIPES)}catch(e){return structuredClone(DEFAULT_RECIPES)}}
 function save(){localStorage.setItem(KEY,JSON.stringify(recipes));}
@@ -23,6 +24,7 @@ function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function num(x){let s=String(x??'').trim(); if(!s||!/^-?\d+(?:\.\d+)?$/.test(s))return null;return Number(s)}
 function fmt(n){return Number.isInteger(n)?String(n):String(Math.round(n*100)/100)}
 function scaledAmount(amount,factor){let n=num(amount);return n===null?amount:fmt(n*factor)}
+function displayAmount(amount,unit,factor){const v=scaledAmount(amount,factor);if(unit==='个'&&num(amount)!==null)return v+' 个（'+fmt(num(amount)*55*factor)+'g）';return v}
 function filtered(){let q=query.trim().toLowerCase();return recipes.filter(r=>(category==='全部'||r.category===category)&&(!q||r.name.toLowerCase().includes(q)||r.ingredients.some(i=>i[0].toLowerCase().includes(q))))}
 function render(){
  const cats=['全部',...new Set(recipes.map(r=>r.category))];
@@ -40,17 +42,34 @@ function render(){
   ${renderDetail()}
  </main></div>`;
  bind();
+ bindIngredientChecklist();
 }
 function renderDetail(){
  const r=recipes.find(x=>x.name===selected); if(!r)return '<div class="empty">选择一个菜谱开始</div>';
  const scaled=scale!==1;
  return `<div class="page"><div class="title-row"><div><h1 class="title">${esc(r.name)}</h1><div class="badges"><span class="badge">${esc(r.category)}</span><span class="badge">${esc(r.type)}</span>${scaled?`<span class="badge">当前 ${fmt(scale)}×</span>`:''}</div></div></div>
  <div class="scale-bar"><strong>配方调整：</strong>${[0.5,1,1.5,2,3].map(v=>`<button class="scale-pill ${scale===v?'active':''}" data-scale="${v}">${v}×</button>`).join('')}<button class="scale-pill" id="customScale">自定义</button><button class="scale-pill" id="baseScale">按主材料</button>${scaled?'<button class="scale-pill" id="resetScale">恢复原配方</button>':''}</div>
- <div class="section"><h2>🧂 配料 ${scaled?`<span class="hint">（原始配方 × ${fmt(scale)}）</span>`:''}</h2><table class="ingredient-table"><thead><tr><th>食材</th><th>数量</th><th>单位</th><th>备注</th></tr></thead><tbody>${r.ingredients.map(i=>`<tr><td>${esc(i[0])}</td><td class="amount">${esc(scaledAmount(i[1],scale))}</td><td>${esc(i[2])}</td><td>${esc(i[3])}</td></tr>`).join('')}</tbody></table></div>
+ <div class="section"><h2>🧂 配料 ${scaled?`<span class="hint">（原始配方 × ${fmt(scale)}）</span>`:''}<span class="check-progress" id="ingredientProgress"></span><button class="mini" id="resetIngChecks" style="float:right">全部取消</button></h2><table class="ingredient-table checklist-table"><thead><tr><th class="check-col">✓</th><th>食材</th><th>数量</th><th>单位</th><th>备注</th></tr></thead><tbody>${r.ingredients.map((i,idx)=>{const key=`${r.name}::${idx}`;const checked=!!ingredientChecks[key];return `<tr class="ingredient-row ${checked?'checked':''}"><td class="check-col"><input type="checkbox" class="ingredient-check" data-ing-key="${esc(key)}" ${checked?'checked':''}></td><td>${esc(i[0])}</td><td class="amount">${esc(displayAmount(i[1],i[2],scale))}</td><td>${/鸡蛋/.test(i[0])&&i[2]==='个'?'个（≈55g/个）':esc(i[2])}</td><td>${esc(i[3])}</td></tr>`}).join('')}</tbody></table></div>
  ${renderSteps('🔪 备菜',r.prep)}${renderSteps('🍳 烹饪',r.cook)}${r.notes?`<div class="section"><h2>📝 备注</h2><div class="notes">${esc(r.notes)}</div></div>`:''}
  </div>`;
 }
 function renderSteps(title,arr){if(!arr?.length)return '';return `<div class="section"><h2>${title}</h2>${arr.map((s,i)=>`<div class="step"><div class="num">${i+1}</div><div>${esc(s)}</div></div>`).join('')}</div>`}
+
+function bindIngredientChecklist(){
+ document.querySelectorAll('.ingredient-check').forEach(cb=>cb.addEventListener('change',e=>{
+   const key=e.target.dataset.ingKey; ingredientChecks[key]=e.target.checked; localStorage.setItem('recipeIngredientChecks',JSON.stringify(ingredientChecks));
+   e.target.closest('.ingredient-row')?.classList.toggle('checked',e.target.checked); updateIngredientProgress();
+ }));
+ document.getElementById('resetIngChecks')?.addEventListener('click',()=>{
+   const r=recipes.find(x=>x.name===selected); if(!r)return; r.ingredients.forEach((_,idx)=>delete ingredientChecks[`${r.name}::${idx}`]);
+   localStorage.setItem('recipeIngredientChecks',JSON.stringify(ingredientChecks)); render();
+ });
+ updateIngredientProgress();
+}
+function updateIngredientProgress(){
+ const r=recipes.find(x=>x.name===selected), el=document.getElementById('ingredientProgress'); if(!r||!el)return;
+ const done=r.ingredients.filter((_,idx)=>!!ingredientChecks[`${r.name}::${idx}`]).length; el.textContent=`已完成 ${done}/${r.ingredients.length}`;
+}
 
 function refreshSearchResults(){
  const current=selected;
@@ -95,11 +114,11 @@ function bind(){
  document.getElementById('backup')?.addEventListener('click',()=>backupModal());
 }
 function openScaleModal(){
- const r=recipes.find(x=>x.name===selected); const opts=r.ingredients.map((i,idx)=>{let n=num(i[1]);return n!==null?`<option value="${idx}">${esc(i[0])}（${esc(i[1])}${esc(i[2])}）</option>`:''}).join('');
+ const r=recipes.find(x=>x.name===selected); const opts=r.ingredients.map((i,idx)=>{let n=num(i[1]);return n!==null?`<option value="${idx}">${esc(i[0])}（${esc(i[1])}${esc(i[2])}${/鸡蛋/.test(i[0])&&i[2]==='个'?'，约'+fmt(n*55)+'g':''}）</option>`:''}).join('');
  if(!opts){toast('这个菜谱没有可计算的数字配料');return}
- showModal(`<h2>⚖️ 按主材料调整配方</h2><p class="hint">可以任选一个有明确数字数量的配料作为基准。原始配方不会被修改。</p><div class="scale-grid"><div class="scale-box"><label>基准食材</label><select id="baseIng">${opts}</select></div><div class="scale-box"><label>目标数量</label><input id="targetAmt" type="number" step="any" placeholder="输入目标数量"><div id="ratio" class="scale-result">—</div></div></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="applyBase">应用调整</button></div>`);
- const update=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);document.getElementById('ratio').textContent=(t>0?`调整比例：${fmt(t/Number(i[1]))}×`:'—')};document.getElementById('baseIng').onchange=update;document.getElementById('targetAmt').oninput=update;
- document.getElementById('applyBase').onclick=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);if(!(t>0)){toast('请输入有效目标数量');return}scale=t/Number(i[1]);closeModal();render()};
+ showModal(`<h2>⚖️ 按主材料调整配方</h2><p class="hint">可以任选一个有明确数字数量的配料作为基准。原始配方不会被修改。</p><div class="scale-grid"><div class="scale-box"><label>基准食材</label><select id="baseIng">${opts}</select></div><div class="scale-box"><label id="targetLabel">目标数量</label><input id="targetAmt" type="number" step="any" placeholder="输入目标数量"><div id="ratio" class="scale-result">—</div></div></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="applyBase">应用调整</button></div>`);
+ const update=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);let base=num(i[1]);let egg=/鸡蛋/.test(i[0])&&i[2]==='个';document.getElementById('targetLabel').textContent=egg?'目标重量（g，鸡蛋按55g/个）':'目标数量（'+(i[2]||'')+'）';document.getElementById('targetAmt').placeholder=egg?'例如110':'输入目标数量';document.getElementById('ratio').textContent=(t>0?`调整比例：${fmt(t/(egg?base*55:base))}×`:'—')};document.getElementById('baseIng').onchange=update;document.getElementById('targetAmt').oninput=update;
+ document.getElementById('applyBase').onclick=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);if(!(t>0)){toast('请输入有效目标数量');return}scale=t/((/鸡蛋/.test(i[0])&&i[2]==='个')?Number(i[1])*55:Number(i[1]));closeModal();render()};
 }
 
 function newRecipeChooser(){
@@ -115,40 +134,103 @@ function newRecipeChooser(){
 }
 
 function parseRecipeText(text){
- text=String(text||'').replace(/\u2029/g,'\n').replace(/\u2028/g,'\n').replace(/\r\n?/g,'\n').replace(/\u00a0/g,' ');
- const lines=text.split('\n').map(x=>x.trim()).filter(Boolean);
- let name=lines[0]||'新菜谱',category='其他/实验',type='菜谱';
- if(/配方|酱料|腌制|蘸料/.test(name)) type='配方'; if(/实验|研究|方案/.test(name)) type='实验';
- if(/蛋糕|烘焙|蛋挞/.test(name)) category='烘焙'; else if(/鱼|虾|蟹|海鲜|三文鱼|螺/.test(name)) category='海鲜'; else if(/鸡|牛|猪|羊|肉|排|翅|肚|肥肠/.test(name)) category='肉类'; else if(/饭|面|饺子|米饭|粥/.test(name)) category='主食'; else if(/汤|火锅/.test(name)) category='汤/火锅'; else if(/酱|蘸料|醋|蚝油/.test(name)) category='酱料'; else if(/咖啡|饮料|莫吉托/.test(name)) category='饮料';
- const ingredients=[],prep=[],cook=[],notes=[]; let section='auto', sawExplicit=false;
- const headers={'配料':'ingredients','材料':'ingredients','食材':'ingredients','原料':'ingredients','用料':'ingredients','备菜':'prep','准备':'prep','准备工作':'prep','备料':'prep','腌制':'prep','做法':'cook','步骤':'cook','烹饪':'cook','烹制':'cook','制作':'cook','烹饪步骤':'cook','烹饪过程':'cook','制作步骤':'cook','制作过程':'cook','烹调':'cook','烹调步骤':'cook','备注':'notes','说明':'notes','注意':'notes','注意事项':'notes'};
- const norm=x=>String(x||'').replace(/[\s（）()【】\[\]、.。:：_\-—]+/g,'');
- const findHeader=x=>{const n=norm(x);return Object.keys(headers).find(k=>n===k||n.startsWith(k)||k.startsWith(n))};
- const add=(n,a,u,note='')=>{n=String(n||'').trim();if(n){ingredients.push([n,String(a||'').trim(),String(u||'').trim(),note]);return true}return false};
- const units='kg|g|mg|ml|l|L|个|只|份|勺|汤匙|茶匙|tbsp|tsp|%';
- const pre=new RegExp('^([0-9]+(?:\\.[0-9]+)?(?:\\s*-\\s*[0-9]+(?:\\.[0-9]+)?)?)\\s*('+units+')\\s*(.+?)$','i');
- const suf=new RegExp('^(.+?)\\s*([0-9]+(?:\\.[0-9]+)?(?:\\s*-\\s*[0-9]+(?:\\.[0-9]+)?)?)\\s*('+units+')\\s*(.*)$','i');
- const special=/^(.+?)[：:]\s*(适量|少量|一点点|两点点|若干)$/;
- function parseIng(line){
-   const parts=line.split(/[，,；;、]+/).map(x=>x.trim()).filter(Boolean); if(parts.length>1){let n=0;parts.forEach(x=>{if(parseIng(x))n++});return n>0}
-   let m=line.match(pre); if(m){add(m[3],m[1].replace(/\s+/g,''),m[2]);return true}
-   m=line.match(suf); if(m){add(m[1],m[2].replace(/\s+/g,''),m[3],m[4]||'');return true}
-   m=line.match(special); if(m){add(m[1],'',m[2]);return true}
-   return false;
- }
- for(let i=1;i<lines.length;i++){
-   const raw=lines[i], h=raw.replace(/[：:]\s*$/,'').trim(), hk=findHeader(h);
-   if(hk){section=headers[hk];sawExplicit=true;continue}
-   const colon=raw.match(/^(.+?)[：:]\s*(.+)$/);
-   if(colon){const ck=findHeader(colon[1]);if(ck){section=headers[ck];sawExplicit=true;const rest=colon[2].trim();if(rest){if(section==='ingredients')parseIng(rest);else if(section==='prep')prep.push(rest);else if(section==='cook')cook.push(rest);else notes.push(rest)}continue}}
-   if(section==='ingredients'){if(parseIng(raw))continue;if(!sawExplicit&&ingredients.length){section='cook';cook.push(raw)}else notes.push(raw)} else if(section==='prep')prep.push(raw); else if(section==='cook')cook.push(raw); else notes.push(raw);
- }
- return {name,category,type,ingredients,prep,cook,notes:notes.join('\n')};
+  // 统一手机复制/粘贴产生的换行，再进行结构化识别
+  text=String(text||'').replace(/\u2029|\u2028/g,'\n').replace(/\r\n?/g,'\n').replace(/\u00a0/g,' ');
+  const lines=text.split('\n').map(s=>s.trim()).filter(Boolean);
+  const name=lines[0]||'新菜谱';
+  let category='其他/实验', type='菜谱';
+  if(/配方|酱料|腌制|蘸料/.test(name)) type='配方';
+  if(/实验|研究|方案/.test(name)) type='实验';
+  if(/蛋糕|烘焙|蛋挞/.test(name)) category='烘焙';
+  else if(/鱼|虾|蟹|海鲜|三文鱼|螺/.test(name)) category='海鲜';
+  else if(/鸡|牛|猪|羊|肉|排|翅|肚|肥肠/.test(name)) category='肉类';
+  else if(/饭|面|饺子|米饭|粥/.test(name)) category='主食';
+  else if(/汤|火锅/.test(name)) category='汤/火锅';
+  else if(/酱|蘸料|醋|蚝油/.test(name)) category='酱料';
+  else if(/咖啡|饮料|莫吉托/.test(name)) category='饮料';
+
+  const ingredients=[], prep=[], cook=[], notes=[];
+  let section='auto';
+  const headers={
+    '配料':'ingredients','材料':'ingredients','食材':'ingredients','原料':'ingredients','用料':'ingredients',
+    '备菜':'prep','准备':'prep','准备工作':'prep','备料':'prep',
+    '腌料':'ingredients','腌制':'prep',
+    '做法':'cook','步骤':'cook','烹饪':'cook','烹制':'cook','制作':'cook','烹调':'cook',
+    '烹饪步骤':'cook','烹饪过程':'cook','制作步骤':'cook','制作过程':'cook','烹调步骤':'cook',
+    '备注':'notes','说明':'notes','注意':'notes','注意事项':'notes'
+  };
+  const cleanHeader=s=>String(s||'').replace(/[\s：:（）()【】\[\]、.。_\-—]+/g,'');
+  const getHeader=s=>{const n=cleanHeader(s); return headers[n]||null;};
+  const add=(n,a,u,note='')=>{n=String(n||'').trim(); if(!n)return false; ingredients.push([n,String(a||'').trim(),String(u||'').trim(),String(note||'').trim()]); return true;};
+
+  // 数量支持：1000g鸡肉 / 鸡肉1000g / 50-100g水 / 1.5kg牛肉
+  const units='kg|mg|ml|g|l|L|个|只|份|勺|汤匙|茶匙|tbsp|tsp|%';
+  const num='[0-9]+(?:\\.[0-9]+)?(?:\\s*-\\s*[0-9]+(?:\\.[0-9]+)?)?';
+  const pre=new RegExp('^('+num+')\\s*('+units+')\\s*(.+?)$','i');
+  const suf=new RegExp('^(.+?)\\s*('+num+')\\s*('+units+')(?:\\s*[：:]?\\s*(.*))?$','i');
+  const specialSuffix=new RegExp('^(.+?)\\s*(适量|少量|一点点|两点点|若干)$');
+  const specialColon=/^(.+?)[：:]\s*(适量|少量|一点点|两点点|若干)$/;
+
+  function parseOne(line){
+    line=String(line||'').trim(); if(!line)return false;
+    // 同一行多个配料，例如：鸡翅310g，生抽18g，老抽6g
+    const parts=line.split(/[，,；;、]+/).map(x=>x.trim()).filter(Boolean);
+    if(parts.length>1){let ok=0; for(const p of parts) if(parseOne(p)) ok++; return ok>0;}
+    let m=line.match(pre);
+    if(m){add(m[3],m[1].replace(/\s+/g,''),m[2]);return true;}
+    m=line.match(suf);
+    if(m){add(m[1],m[2].replace(/\s+/g,''),m[3],m[4]||'');return true;}
+    m=line.match(specialColon);
+    if(m){add(m[1],m[2], '');return true;}
+    m=line.match(specialSuffix);
+    if(m){add(m[1],m[2], '');return true;}
+    return false;
+  }
+
+  // 自动模式：连续识别到配料就归入配料；第一次识别失败后，后续普通句子归入烹饪。
+  let autoSawIngredient=false, autoStartedCook=false;
+  for(let i=1;i<lines.length;i++){
+    const raw=lines[i];
+    const noTrail=raw.replace(/[：:]\s*$/,'').trim();
+    const explicit=getHeader(noTrail);
+    if(explicit){section=explicit;continue;}
+
+    const colon=raw.match(/^(.+?)[：:]\s*(.+)$/);
+    if(colon){
+      const h=getHeader(colon[1]);
+      if(h){
+        section=h;
+        const rest=colon[2].trim();
+        if(rest){
+          if(section==='ingredients')parseOne(rest);
+          else if(section==='prep')prep.push(rest);
+          else if(section==='cook')cook.push(rest);
+          else notes.push(rest);
+        }
+        continue;
+      }
+    }
+
+    if(section==='auto'){
+      if(parseOne(raw)){autoSawIngredient=true; continue;}
+      if(autoSawIngredient || autoStartedCook){autoStartedCook=true; cook.push(raw);}
+      else notes.push(raw);
+    }else if(section==='ingredients'){
+      if(!parseOne(raw)) notes.push(raw);
+    }else if(section==='prep'){
+      prep.push(raw);
+    }else if(section==='cook'){
+      cook.push(raw);
+    }else{
+      notes.push(raw);
+    }
+  }
+  return {name,category,type,ingredients,prep,cook,notes:notes.join('\n')};
 }
 function openTextImport(){
  showModal(`<h2>🪄 文本自动识别</h2>
- <p class="hint">把菜谱整段粘贴进来。建议第一行写菜名，后面可以写配料、备菜、做法、备注等。识别后会进入编辑页面，你可以校对后再保存。</p>
- <textarea id="recipeText" rows="14" placeholder="例如：
+ <p class="hint">把菜谱整段粘贴进来。支持“1000g鸡腿肉片”“鸡腿肉片1000g”“50-100g水”等格式；没有写“配料/做法”标题也能自动识别。识别后会进入编辑页面，请校对后再保存。</p>
+ <textarea id="recipeText" rows="14" spellcheck="false" autocapitalize="off" autocorrect="off" style="white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;-webkit-user-select:text;user-select:text;" placeholder="例如：
 可乐鸡翅
 鸡翅310g，生抽18g，老抽6g，红糖18g，白醋9g，水18g
 桂皮两点点，陈皮一点点
@@ -160,9 +242,11 @@ function openTextImport(){
 加入调料，小火煮15分钟
 最后大火收汁"></textarea>
  <div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="parseText">识别并校对</button></div>`);
+ const recipeTextEl=document.getElementById('recipeText');
+ recipeTextEl.addEventListener('paste',e=>{ e.stopPropagation(); });
  document.getElementById('parseText').onclick=()=>{
-   const text=document.getElementById('recipeText').value.trim();
-   if(!text){toast('请先粘贴菜谱文字');return}
+   const text=document.getElementById('recipeText').value;
+   if(!text.trim()){toast('请先粘贴菜谱文字');return}
    const r=parseRecipeText(text);
    closeModal();
    openEditorFromParsed(r);
