@@ -18,14 +18,20 @@ const KEY='my_recipe_app_v2';
 let recipes=load(); let selected=recipes[0]?.name||null; let query=''; let category='全部'; let scale=1; let searchComposing=false;
 let ingredientChecks=JSON.parse(localStorage.getItem('recipeIngredientChecks')||'{}');
 
-function load(){try{const x=JSON.parse(localStorage.getItem(KEY));return Array.isArray(x)?x:structuredClone(DEFAULT_RECIPES)}catch(e){return structuredClone(DEFAULT_RECIPES)}}
+function uid(prefix='id'){return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
+function normalizeRecipe(r){r=structuredClone(r||{});r.id=r.id||uid('recipe');r.name=String(r.name||'');r.ingredients=Array.isArray(r.ingredients)?r.ingredients.map(i=>{const a=Array.isArray(i)?i:[i.name||'',i.amount||'',i.unit||'',i.note||''];return {id:(i&&i.id)||uid('ing'),name:String(a[0]??''),amount:String(a[1]??''),unit:String(a[2]??''),note:String(a[3]??'')}}):[];r.prep=Array.isArray(r.prep)?r.prep:[];r.cook=Array.isArray(r.cook)?r.cook:[];r.notes=String(r.notes||'');return r}
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));const arr=Array.isArray(x)?x:structuredClone(DEFAULT_RECIPES);return arr.map(normalizeRecipe)}catch(e){return structuredClone(DEFAULT_RECIPES).map(normalizeRecipe)}}
 function save(){localStorage.setItem(KEY,JSON.stringify(recipes));}
+function ingredientKey(r,i){return `${r.id}::${i.id}`}
+function migrateCookRecords(){const a=loadCookRecords();let changed=false;for(const r of a){if(!r.recipeId&&r.recipe){const hit=recipes.find(x=>x.name===r.recipe);if(hit){r.recipeId=hit.id;changed=true}}}if(changed)saveCookRecords(a)}
+function migrateChecklist(){const old=ingredientChecks||{};const next={};recipes.forEach(r=>r.ingredients.forEach((i,idx)=>{if(old[`${r.name}::${idx}`]!==undefined)next[ingredientKey(r,i)]=!!old[`${r.name}::${idx}`];else if(old[ingredientKey(r,i)]!==undefined)next[ingredientKey(r,i)]=!!old[ingredientKey(r,i)]}));ingredientChecks=next;localStorage.setItem('recipeIngredientChecks',JSON.stringify(next))}
+
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function num(x){let s=String(x??'').trim(); if(!s||!/^-?\d+(?:\.\d+)?$/.test(s))return null;return Number(s)}
 function fmt(n){return Number.isInteger(n)?String(n):String(Math.round(n*100)/100)}
 function scaledAmount(amount,factor){let n=num(amount);return n===null?amount:fmt(n*factor)}
 function displayAmount(amount,unit,factor){const v=scaledAmount(amount,factor);if(unit==='个'&&num(amount)!==null)return v+' 个（'+fmt(num(amount)*55*factor)+'g）';return v}
-function filtered(){let q=query.trim().toLowerCase();return recipes.filter(r=>(category==='全部'||r.category===category)&&(!q||r.name.toLowerCase().includes(q)||r.ingredients.some(i=>i[0].toLowerCase().includes(q))))}
+function filtered(){let q=query.trim().toLowerCase();return recipes.filter(r=>(category==='全部'||r.category===category)&&(!q||r.name.toLowerCase().includes(q)||r.ingredients.some(i=>i.name.toLowerCase().includes(q))))}
 function render(){
  const cats=['全部',...new Set(recipes.map(r=>r.category))];
  const list=filtered();
@@ -48,8 +54,8 @@ function renderDetail(){
  const r=recipes.find(x=>x.name===selected); if(!r)return '<div class="empty">选择一个菜谱开始</div>';
  const scaled=scale!==1;
  return `<div class="page"><div class="title-row"><div><h1 class="title">${esc(r.name)}</h1><div class="badges"><span class="badge">${esc(r.category)}</span><span class="badge">${esc(r.type)}</span>${scaled?`<span class="badge">当前 ${fmt(scale)}×</span>`:''}</div></div></div>
- <div class="scale-bar"><strong>配方调整：</strong>${[0.5,1,1.5,2,3].map(v=>`<button class="scale-pill ${scale===v?'active':''}" data-scale="${v}">${v}×</button>`).join('')}<button class="scale-pill" id="customScale">自定义</button><button class="scale-pill" id="baseScale">按主材料</button>${scaled?'<button class="scale-pill" id="resetScale">恢复原配方</button>':''}</div><div class="cook-actions"><button class="primary" id="cookRecord">📸 跟做记录</button><button class="secondary" id="cookHistory">📖 历史记录</button></div>
- <div class="section"><h2>🧂 配料 ${scaled?`<span class="hint">（原始配方 × ${fmt(scale)}）</span>`:''}<span class="check-progress" id="ingredientProgress"></span><button class="mini" id="resetIngChecks" style="float:right">全部取消</button></h2><table class="ingredient-table checklist-table"><thead><tr><th class="check-col">✓</th><th>食材</th><th>数量</th><th>单位</th><th>备注</th></tr></thead><tbody>${r.ingredients.map((i,idx)=>{const key=`${r.name}::${idx}`;const checked=!!ingredientChecks[key];return `<tr class="ingredient-row ${checked?'checked':''}"><td class="check-col"><input type="checkbox" class="ingredient-check" data-ing-key="${esc(key)}" ${checked?'checked':''}></td><td>${esc(i[0])}</td><td class="amount">${esc(displayAmount(i[1],i[2],scale))}</td><td>${/鸡蛋/.test(i[0])&&i[2]==='个'?'个（≈55g/个）':esc(i[2])}</td><td>${esc(i[3])}</td></tr>`}).join('')}</tbody></table></div>
+ <div class="scale-bar"><strong>配方调整：</strong>${[0.5,1,1.5,2,3].map(v=>`<button class="scale-pill ${scale===v?'active':''}" data-scale="${v}">${v}×</button>`).join('')}<button class="scale-pill" id="customScale">自定义</button><button class="scale-pill" id="baseScale">按主材料</button><button class="scale-pill" id="totalScale">按总重</button>${scaled?'<button class="scale-pill" id="resetScale">恢复原配方</button>':''}</div><div class="cook-actions"><button class="primary" id="cookRecord">📸 跟做记录</button><button class="secondary" id="cookHistory">📖 历史记录</button></div>
+ <div class="section"><h2>🧂 配料 ${scaled?`<span class="hint">（原始配方 × ${fmt(scale)}）</span>`:''}<span class="check-progress" id="ingredientProgress"></span><button class="mini" id="resetIngChecks" style="float:right">全部取消</button></h2><table class="ingredient-table checklist-table"><thead><tr><th class="check-col">✓</th><th>食材</th><th>数量</th><th>单位</th><th>备注</th></tr></thead><tbody>${r.ingredients.map((i,idx)=>{const key=ingredientKey(r,i);const checked=!!ingredientChecks[key];return `<tr class="ingredient-row ${checked?'checked':''}"><td class="check-col"><input type="checkbox" class="ingredient-check" data-ing-key="${esc(key)}" ${checked?'checked':''}></td><td>${esc(i.name)}</td><td class="amount">${esc(displayAmount(i.amount,i.unit,scale))}</td><td>${/鸡蛋/.test(i.name)&&i.unit==='个'?'个（≈55g/个）':esc(i.unit)}</td><td>${esc(i.note)}</td></tr>`}).join('')}</tbody></table></div>
  ${renderSteps('🔪 备菜',r.prep)}${renderSteps('🍳 烹饪',r.cook)}${r.notes?`<div class="section"><h2>📝 备注</h2><div class="notes">${esc(r.notes)}</div></div>`:''}
  </div>`;
 }
@@ -61,14 +67,14 @@ function bindIngredientChecklist(){
    e.target.closest('.ingredient-row')?.classList.toggle('checked',e.target.checked); updateIngredientProgress();
  }));
  document.getElementById('resetIngChecks')?.addEventListener('click',()=>{
-   const r=recipes.find(x=>x.name===selected); if(!r)return; r.ingredients.forEach((_,idx)=>delete ingredientChecks[`${r.name}::${idx}`]);
+   const r=recipes.find(x=>x.name===selected); if(!r)return; r.ingredients.forEach((_,idx)=>delete ingredientChecks[ingredientKey(r,r.ingredients[idx])]);
    localStorage.setItem('recipeIngredientChecks',JSON.stringify(ingredientChecks)); render();
  });
  updateIngredientProgress();
 }
 function updateIngredientProgress(){
  const r=recipes.find(x=>x.name===selected), el=document.getElementById('ingredientProgress'); if(!r||!el)return;
- const done=r.ingredients.filter((_,idx)=>!!ingredientChecks[`${r.name}::${idx}`]).length; el.textContent=`已完成 ${done}/${r.ingredients.length}`;
+ const done=r.ingredients.filter((_,idx)=>!!ingredientChecks[ingredientKey(r,r.ingredients[idx])]).length; el.textContent=`已完成 ${done}/${r.ingredients.length}`;
 }
 
 function refreshSearchResults(){
@@ -106,6 +112,7 @@ function bind(){
  document.querySelectorAll('[data-name]').forEach(b=>b.onclick=()=>{selected=b.dataset.name;scale=1;render()});
  document.querySelectorAll('[data-scale]').forEach(b=>b.onclick=()=>{scale=Number(b.dataset.scale);render()});
  document.getElementById('resetScale')?.addEventListener('click',()=>{scale=1;render()});
+ document.getElementById('totalScale')?.addEventListener('click',()=>openTotalWeightModal());
  document.getElementById('customScale')?.addEventListener('click',()=>{let x=prompt('请输入调整倍数，例如 2.5');let n=Number(x);if(n>0){scale=n;render()}});
  document.getElementById('baseScale')?.addEventListener('click',()=>openScaleModal());
  document.getElementById('edit')?.addEventListener('click',()=>openEditor(selected));
@@ -128,15 +135,40 @@ function openCookRecord(){cookDraftPhotos=[];showModal(`<h2>📸 跟做记录 ·
 async function addCookPhotos(files){for(const f of [...files]){if(!f.type.startsWith('image/'))continue;try{const blob=await compressCookImage(f);cookDraftPhotos.push({id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2),blob});}catch(e){toast('有照片处理失败')}}renderDraftPhotos()}
 function renderDraftPhotos(){const el=document.getElementById('draftPhotos');if(!el)return;el.innerHTML=cookDraftPhotos.map((p,i)=>`<div class="photo-thumb"><img src="${URL.createObjectURL(p.blob)}"><button onclick="removeDraftPhoto(${i})">×</button></div>`).join('')}
 function removeDraftPhoto(i){cookDraftPhotos.splice(i,1);renderDraftPhotos()}
-async function saveCookRecord(){const note=document.getElementById('cookNote')?.value.trim()||'';if(!cookDraftPhotos.length&&!note){toast('请至少添加照片或备注');return}const rec={id:'r_'+Date.now()+'_'+Math.random().toString(36).slice(2),recipe:selected,date:new Date().toISOString(),note,photos:cookDraftPhotos.map(p=>p.id)};try{for(const p of cookDraftPhotos)await putCookPhoto(p.id,p.blob);const a=loadCookRecords();a.unshift(rec);saveCookRecords(a);cookDraftPhotos=[];closeModal();toast('跟做记录已保存')}catch(e){toast('保存失败，请重试')}}
-async function openCookHistory(){const all=loadCookRecords().filter(x=>x.recipe===selected);if(!all.length){showModal(`<h2>📖 历史记录</h2><p class="hint">「${esc(selected||'')}」还没有跟做记录。</p><div class="modal-actions"><button class="secondary" onclick="closeModal()">关闭</button></div>`);return}showModal(`<h2>📖 ${esc(selected)} · 历史记录</h2><div id="historyList"></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">关闭</button></div>`);const el=document.getElementById('historyList');for(const r of all){const item=document.createElement('div');item.className='history-item';item.innerHTML=`<div class="history-head"><strong>${new Date(r.date).toLocaleString('zh-CN')}</strong><button class="mini danger" data-del="${esc(r.id)}">删除</button></div>${r.note?`<div style="white-space:pre-wrap;margin-top:8px">${esc(r.note)}</div>`:''}<div class="history-grid"></div>`;el.appendChild(item);const grid=item.querySelector('.history-grid');for(const pid of r.photos||[]){const blob=await getCookPhoto(pid);if(blob){const img=document.createElement('img');img.src=URL.createObjectURL(blob);grid.appendChild(img)}}item.querySelector('[data-del]').onclick=()=>deleteCookRecord(r.id)}}
+async function saveCookRecord(){const note=document.getElementById('cookNote')?.value.trim()||'';if(!cookDraftPhotos.length&&!note){toast('请至少添加照片或备注');return}const rec={id:'r_'+Date.now()+'_'+Math.random().toString(36).slice(2),recipeId:recipes.find(x=>x.name===selected)?.id,recipe:selected,date:new Date().toISOString(),note,photos:cookDraftPhotos.map(p=>p.id)};try{for(const p of cookDraftPhotos)await putCookPhoto(p.id,p.blob);const a=loadCookRecords();a.unshift(rec);saveCookRecords(a);cookDraftPhotos=[];closeModal();toast('跟做记录已保存')}catch(e){toast('保存失败，请重试')}}
+async function openCookHistory(){const current=recipes.find(x=>x.name===selected); const all=loadCookRecords().filter(x=>x.recipeId===current?.id || (!x.recipeId&&x.recipe===selected));if(!all.length){showModal(`<h2>📖 历史记录</h2><p class="hint">「${esc(selected||'')}」还没有跟做记录。</p><div class="modal-actions"><button class="secondary" onclick="closeModal()">关闭</button></div>`);return}showModal(`<h2>📖 ${esc(selected)} · 历史记录</h2><div id="historyList"></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">关闭</button></div>`);const el=document.getElementById('historyList');for(const r of all){const item=document.createElement('div');item.className='history-item';item.innerHTML=`<div class="history-head"><strong>${new Date(r.date).toLocaleString('zh-CN')}</strong><button class="mini danger" data-del="${esc(r.id)}">删除</button></div>${r.note?`<div style="white-space:pre-wrap;margin-top:8px">${esc(r.note)}</div>`:''}<div class="history-grid"></div>`;el.appendChild(item);const grid=item.querySelector('.history-grid');for(const pid of r.photos||[]){const blob=await getCookPhoto(pid);if(blob){const img=document.createElement('img');img.src=URL.createObjectURL(blob);grid.appendChild(img)}}item.querySelector('[data-del]').onclick=()=>deleteCookRecord(r.id)}}
 async function deleteCookRecord(id){const a=loadCookRecords(),r=a.find(x=>x.id===id);if(!r)return;if(!confirm('确定删除这条跟做历史记录吗？'))return;for(const pid of r.photos||[])await delCookPhoto(pid);saveCookRecords(a.filter(x=>x.id!==id));openCookHistory()}
+function ingredientWeightG(i){
+ const n=num(i.amount);
+ if(n===null)return null;
+ const u=String(i.unit||'').trim().toLowerCase();
+ if(/^(g|克|公克|gram|grams)$/.test(u))return n;
+ if(/^(kg|千克|公斤|kilogram|kilograms)$/.test(u))return n*1000;
+ if(u==='个' && /鸡蛋/.test(i.name))return n*55;
+ return null;
+}
+function recipeTotalWeight(r){
+ let total=0,count=0;
+ for(const i of r.ingredients||[]){const w=ingredientWeightG(i);if(w!==null){total+=w;count++;}}
+ return {total,count,all:(r.ingredients||[]).length};
+}
+function openTotalWeightModal(){
+ const r=recipes.find(x=>x.name===selected);
+ if(!r)return;
+ const info=recipeTotalWeight(r);
+ if(!(info.total>0)){toast('这个菜谱没有可计算的总重量');return}
+ const excluded=info.all-info.count;
+ showModal(`<h2>⚖️ 按菜谱总重调整</h2><p class="hint">当前可计算总重：<strong>${fmt(info.total)}g</strong>${excluded?`（${excluded} 项因单位为毫升、个等无法可靠换算为重量，未计入）`:''}</p><div class="scale-box"><label>目标总重量（g）</label><input id="totalTarget" type="number" min="0" step="any" placeholder="例如 2000"><div id="totalRatio" class="scale-result">—</div></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="applyTotal">应用调整</button></div>`);
+ const update=()=>{const t=Number(document.getElementById('totalTarget').value);document.getElementById('totalRatio').textContent=t>0?`调整比例：${fmt(t/info.total)}×`:'—'};
+ document.getElementById('totalTarget').oninput=update;
+ document.getElementById('applyTotal').onclick=()=>{const t=Number(document.getElementById('totalTarget').value);if(!(t>0)){toast('请输入有效目标总重量');return}scale=t/info.total;closeModal();render()};
+}
 function openScaleModal(){
- const r=recipes.find(x=>x.name===selected); const opts=r.ingredients.map((i,idx)=>{let n=num(i[1]);return n!==null?`<option value="${idx}">${esc(i[0])}（${esc(i[1])}${esc(i[2])}${/鸡蛋/.test(i[0])&&i[2]==='个'?'，约'+fmt(n*55)+'g':''}）</option>`:''}).join('');
+ const r=recipes.find(x=>x.name===selected); const opts=r.ingredients.map((i,idx)=>{let n=num(i.amount);return n!==null?`<option value="${idx}">${esc(i.name)}（${esc(i.amount)}${esc(i.unit)}${/鸡蛋/.test(i.name)}&&i.unit==='个'?'，约'+fmt(n*55)+'g':''}）</option>`:''}).join('');
  if(!opts){toast('这个菜谱没有可计算的数字配料');return}
  showModal(`<h2>⚖️ 按主材料调整配方</h2><p class="hint">可以任选一个有明确数字数量的配料作为基准。原始配方不会被修改。</p><div class="scale-grid"><div class="scale-box"><label>基准食材</label><select id="baseIng">${opts}</select></div><div class="scale-box"><label id="targetLabel">目标数量</label><input id="targetAmt" type="number" step="any" placeholder="输入目标数量"><div id="ratio" class="scale-result">—</div></div></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="applyBase">应用调整</button></div>`);
- const update=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);let base=num(i[1]);let egg=/鸡蛋/.test(i[0])&&i[2]==='个';document.getElementById('targetLabel').textContent=egg?'目标重量（g，鸡蛋按55g/个）':'目标数量（'+(i[2]||'')+'）';document.getElementById('targetAmt').placeholder=egg?'例如110':'输入目标数量';document.getElementById('ratio').textContent=(t>0?`调整比例：${fmt(t/(egg?base*55:base))}×`:'—')};document.getElementById('baseIng').onchange=update;document.getElementById('targetAmt').oninput=update;
- document.getElementById('applyBase').onclick=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);if(!(t>0)){toast('请输入有效目标数量');return}scale=t/((/鸡蛋/.test(i[0])&&i[2]==='个')?Number(i[1])*55:Number(i[1]));closeModal();render()};
+ const update=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);let base=num(i.amount);let egg=/鸡蛋/.test(i.name)&&i.unit==='个';document.getElementById('targetLabel').textContent=egg?'目标重量（g，鸡蛋按55g/个）':'目标数量（'+(i.unit||'')+'）';document.getElementById('targetAmt').placeholder=egg?'例如110':'输入目标数量';document.getElementById('ratio').textContent=(t>0?`调整比例：${fmt(t/(egg?base*55:base))}×`:'—')};document.getElementById('baseIng').onchange=update;document.getElementById('targetAmt').oninput=update;
+ document.getElementById('applyBase').onclick=()=>{let i=r.ingredients[Number(document.getElementById('baseIng').value)],t=Number(document.getElementById('targetAmt').value);if(!(t>0)){toast('请输入有效目标数量');return}scale=t/((/鸡蛋/.test(i.name)&&i.unit==='个')?Number(i.amount)*55:Number(i.amount));closeModal();render()};
 }
 
 function newRecipeChooser(){
@@ -307,14 +339,14 @@ function openEditor(name){
  document.getElementById('addCook').onclick=()=>{let c=document.getElementById('cook');c.insertAdjacentHTML('beforeend',stepRow('cook','',Date.now()))};
  document.getElementById('saveRecipe').onclick=()=>saveEditor(name);
 }
-function ingRow(i,idx){return `<div class="ing-row" data-ing="${idx}"><input placeholder="食材" value="${esc(i[0])}"><input placeholder="数量" value="${esc(i[1])}"><input placeholder="单位" value="${esc(i[2])}"><input placeholder="备注" value="${esc(i[3])}"><button class="mini danger" onclick="this.parentElement.remove()">×</button></div>`}
+function ingRow(i,idx){const a=Array.isArray(i)?i:[i.name||'',i.amount||'',i.unit||'',i.note||''];return `<div class="ing-row" data-ing="${idx}" data-ing-id="${esc((i&&i.id)||'')}"><input placeholder="食材" value="${esc(a[0])}"><input placeholder="数量" value="${esc(a[1])}"><input placeholder="单位" value="${esc(a[2])}"><input placeholder="备注" value="${esc(a[3])}"><button class="mini danger" onclick="this.parentElement.remove()">×</button></div>`}
 function stepRow(kind,s,idx){return `<div class="step-edit" data-step="${kind}"><div class="move"><button class="mini" onclick="moveStep(this,-1)">↑</button><button class="mini" onclick="moveStep(this,1)">↓</button></div><textarea placeholder="输入步骤">${esc(s)}</textarea><button class="mini danger" onclick="this.parentElement.remove()">×</button></div>`}
 function moveStep(btn,d){let el=btn.closest('.step-edit'),sib=d<0?el.previousElementSibling:el.nextElementSibling;if(sib) d<0?sib.before(el):sib.after(el)}
 function saveEditor(oldName){
  const name=document.getElementById('rName').value.trim();if(!name){toast('请输入菜谱名称');return}
- const ingredients=[...document.querySelectorAll('#ings .ing-row')].map(x=>[...x.querySelectorAll('input')].map(i=>i.value.trim())).filter(i=>i[0]);
+ const ingredients=[...document.querySelectorAll('#ings .ing-row')].map(x=>{const v=[...x.querySelectorAll('input')].map(i=>i.value.trim());return {id:x.dataset.ingId||uid('ing'),name:v[0],amount:v[1],unit:v[2],note:v[3]}}).filter(i=>i.name);
  const getSteps=id=>[...document.querySelectorAll(id+' .step-edit textarea')].map(x=>x.value.trim()).filter(Boolean);
- const r={name,category:document.getElementById('rCat').value,type:document.getElementById('rType').value,ingredients,prep:getSteps('#prep'),cook:getSteps('#cook'),notes:document.getElementById('rNotes').value.trim()};
+ const old=oldName?recipes.find(x=>x.name===oldName):null; const r={id:old?.id||uid('recipe'),name,category:document.getElementById('rCat').value,type:document.getElementById('rType').value,ingredients,prep:getSteps('#prep'),cook:getSteps('#cook'),notes:document.getElementById('rNotes').value.trim()};
  if(oldName){
    let idx=recipes.findIndex(x=>x.name===oldName);
    if(idx>=0){
@@ -336,138 +368,35 @@ function deleteRecipe(name){
  <p class="hint">删除后不会影响其他菜谱；如果之前导出过 JSON 备份，可以从备份恢复。</p>
  <div class="modal-actions"><button class="secondary" id="cancelDelete">取消</button><button class="primary danger" id="confirmDelete">确认删除</button></div>`);
  document.getElementById('cancelDelete').onclick=closeModal;
- document.getElementById('confirmDelete').onclick=()=>{
-   recipes=recipes.filter(x=>x.name!==name);
-   selected=recipes[0]?.name||null;
-   scale=1;
-   save();
-   closeModal();
-   render();
-   toast('已删除');
+ document.getElementById('confirmDelete').onclick=async()=>{
+   const target=recipes.find(x=>x.name===name);
+   recipes=recipes.filter(x=>x.id!==target?.id);
+   const records=loadCookRecords();
+   const doomed=records.filter(x=>x.recipeId===target?.id || (!x.recipeId&&x.recipe===name));
+   for(const rec of doomed){for(const pid of rec.photos||[]){try{await delCookPhoto(pid)}catch{}}}
+   saveCookRecords(records.filter(x=>!(x.recipeId===target?.id || (!x.recipeId&&x.recipe===name))));
+   for(const key of Object.keys(ingredientChecks)){if(key.startsWith((target?.id||'')+'::'))delete ingredientChecks[key]}
+   localStorage.setItem('recipeIngredientChecks',JSON.stringify(ingredientChecks));
+   selected=recipes[0]?.name||null; scale=1; save(); closeModal(); render(); toast('已删除');
  };
 }
+async function blobToDataURL(blob){return await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(blob)})}
+function dataURLToBlob(data){const [head,b64]=String(data).split(',');const mime=(head.match(/data:(.*?);base64/)||[])[1]||'image/jpeg';const bin=atob(b64||'');const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
+async function makeFullBackup(){const records=loadCookRecords();const photos={};for(const rec of records){for(const pid of rec.photos||[]){const blob=await getCookPhoto(pid);if(blob)photos[pid]=await blobToDataURL(blob)}}return {version:2,exportedAt:new Date().toISOString(),recipes,ingredientChecks,records,photos}}
 function backupModal(){
- const isFilePage=location.protocol==='file:';
- const canSaveAs=typeof window.showSaveFilePicker==='function' && window.isSecureContext;
- const saveAsTitle=canSaveAs?'💾 另存为...':'💾 另存为（当前环境不可用）';
- const envHint=isFilePage
-   ? '你现在是直接双击 HTML 文件打开的（file://）。Chrome 不允许这种本地页面使用系统“另存为”文件选择器，这是浏览器安全限制，不是菜谱数据的问题。'
-   : (!window.isSecureContext
-      ? '当前页面不是安全上下文，浏览器不会开放系统“另存为”接口。'
-      : '当前浏览器支持系统文件保存。');
-
- showModal(`<h2>💾 数据备份</h2>
- <p>当前共有 <strong>${recipes.length}</strong> 个菜谱。</p>
- <div style="background:#fff7df;border:1px solid #ead79a;border-radius:10px;padding:12px;line-height:1.6;font-size:13px">
-   <strong>为什么“另存为”会失败？</strong><br>${envHint}
- </div>
- <div style="background:#f5f6f8;border-radius:9px;padding:12px 13px;margin:12px 0">
-   <div style="font-size:12px;color:#777">备份文件名</div>
-   <strong>我的食谱备份.json</strong>
- </div>
- <div class="modal-actions" style="flex-wrap:wrap">
-   ${canSaveAs?'<button class="primary" id="saveAs">💾 另存为...</button>':'<button class="secondary" id="saveAs" disabled title="直接打开HTML时浏览器不支持系统另存为">💾 另存为（不可用）</button>'}
-   <button class="primary" id="export">⬇️ 导出备份文件</button>
-   <button class="secondary" id="copyBackup">📋 复制备份</button>
-   <button class="secondary" id="importBtn">📥 导入 JSON</button>
-   <button class="secondary" onclick="closeModal()">关闭</button>
- </div>
- <div class="hint" style="margin-top:12px">
-   <strong>最稳妥：</strong>点击“导出备份文件”，然后打开浏览器右上角“下载”记录（Ctrl+J）查看文件实际保存位置。
-   <br>如果浏览器设置了“下载前询问保存位置”，会直接弹出保存窗口。
- </div>
- <input type="file" id="fileInput" accept=".json,application/json" style="display:none">
- <textarea id="backupText" style="position:fixed;left:-99999px;top:-99999px;width:1px;height:1px"></textarea>`);
-
- const backupString=()=>JSON.stringify(recipes,null,2);
- const makeBlob=()=>new Blob([backupString()],{type:'application/json'});
-
- if(canSaveAs){
-   document.getElementById('saveAs').onclick=async()=>{
-     try{
-       const handle=await window.showSaveFilePicker({
-         suggestedName:'我的食谱备份.json',
-         types:[{description:'JSON 备份文件',accept:{'application/json':['.json']}}]
-       });
-       const writable=await handle.createWritable();
-       await writable.write(makeBlob());
-       await writable.close();
-       toast('备份已保存到你选择的位置');
-     }catch(e){
-       if(e?.name!=='AbortError') toast('另存为失败：请改用“导出备份文件”');
-     }
-   };
- }
-
- document.getElementById('export').onclick=()=>{
-   const blob=makeBlob();
-   const url=URL.createObjectURL(blob);
-   const a=document.createElement('a');
-   a.href=url;
-   a.download='我的食谱备份.json';
-   a.rel='noopener';
-   a.style.display='none';
-   document.body.appendChild(a);
-   a.click();
-   setTimeout(()=>{
-     a.remove();
-     URL.revokeObjectURL(url);
-   },2000);
-   toast('备份文件已生成，请按 Ctrl+J 查看下载位置');
- };
-
- document.getElementById('copyBackup').onclick=async()=>{
-   const text=backupString();
-   try{
-     await navigator.clipboard.writeText(text);
-     toast('备份内容已复制');
-   }catch(e){
-     const ta=document.getElementById('backupText');
-     ta.style.position='fixed';
-     ta.style.left='12px';
-     ta.style.top='12px';
-     ta.style.width='calc(100% - 24px)';
-     ta.style.height='45vh';
-     ta.style.zIndex='9999';
-     ta.style.background='#fff';
-     ta.style.border='2px solid #202124';
-     ta.style.padding='10px';
-     ta.value=text;
-     ta.focus();
-     ta.select();
-     toast('自动复制被浏览器阻止，请按 Ctrl+C');
-   }
- };
-
+ const isFilePage=location.protocol==='file:'; const canSaveAs=typeof window.showSaveFilePicker==='function'&&window.isSecureContext;
+ showModal(`<h2>💾 数据备份</h2><p>当前共有 <strong>${recipes.length}</strong> 个菜谱。</p><div style="background:#f5f6f8;border-radius:9px;padding:12px 13px;margin:12px 0;line-height:1.6;font-size:13px"><strong>完整备份包含：</strong>菜谱、配料Checklist、跟做历史、照片。照片会转成压缩后的数据写入备份，因此文件可能比较大。</div><div class="modal-actions" style="flex-wrap:wrap"><button class="primary" id="export">⬇️ 导出完整备份</button><button class="secondary" id="copyBackup">📋 复制完整备份</button><button class="secondary" id="importBtn">📥 导入备份</button><button class="secondary" onclick="closeModal()">关闭</button></div><div class="hint" style="margin-top:12px">${isFilePage?'直接双击 HTML 时不能使用系统“另存为”，请使用“导出完整备份”。':(canSaveAs?'当前环境支持系统保存。':'当前环境不支持系统保存。')}</div><input type="file" id="fileInput" accept=".json,application/json" style="display:none"><textarea id="backupText" style="position:fixed;left:-99999px;top:-99999px;width:1px;height:1px"></textarea>`);
+ const exportBtn=document.getElementById('export'); exportBtn.onclick=async()=>{exportBtn.disabled=true;exportBtn.textContent='⏳ 正在整理照片…';try{const data=await makeFullBackup();const blob=new Blob([JSON.stringify(data)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='我的食谱完整备份.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('完整备份已导出')}catch(e){toast('备份失败')}finally{exportBtn.disabled=false;exportBtn.textContent='⬇️ 导出完整备份'}};
+ document.getElementById('copyBackup').onclick=async()=>{try{const data=await makeFullBackup();await navigator.clipboard.writeText(JSON.stringify(data));toast('完整备份已复制')}catch(e){toast('复制失败，请改用导出文件')}};
  document.getElementById('importBtn').onclick=()=>document.getElementById('fileInput').click();
- document.getElementById('fileInput').onchange=e=>{
-   const f=e.target.files[0];
-   if(!f)return;
-   const rd=new FileReader();
-   rd.onload=()=>{
-     try{
-       const x=JSON.parse(rd.result);
-       if(!Array.isArray(x))throw new Error('invalid');
-       if(!confirm(`准备导入 ${x.length} 个菜谱。导入会替换当前食谱库，是否继续？`))return;
-       recipes=x;
-       selected=recipes[0]?.name||null;
-       category='全部';
-       query='';
-       scale=1;
-       save();
-       closeModal();
-       render();
-       toast('导入成功');
-     }catch{
-       toast('JSON 文件格式不正确，未导入');
-     }
-   };
-   rd.readAsText(f,'utf-8');
- };
+ document.getElementById('fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());const incoming=Array.isArray(x)?{version:1,recipes:x,ingredientChecks:{},records:[],photos:{}}:x;if(!Array.isArray(incoming.recipes))throw new Error('invalid');if(!confirm(`准备导入 ${incoming.recipes.length} 个菜谱${Array.isArray(incoming.records)?`和 ${incoming.records.length} 条跟做记录`:''}，会替换当前数据，是否继续？`))return;recipes=incoming.recipes.map(normalizeRecipe);ingredientChecks=incoming.ingredientChecks||{};saveCookRecords(Array.isArray(incoming.records)?incoming.records:[]);for(const [pid,data] of Object.entries(incoming.photos||{})){try{await putCookPhoto(pid,dataURLToBlob(data))}catch{}}migrateChecklist();migrateCookRecords();save();selected=recipes[0]?.name||null;category='全部';query='';scale=1;closeModal();render();toast('完整备份导入成功')}catch(e){toast('备份文件格式不正确，未导入')}};
 }
 function showModal(content){let d=document.createElement('div');d.className='modal-back';d.id='modal';d.innerHTML='<div class="modal">'+content+'</div>';document.body.appendChild(d)}
 function closeModal(){document.getElementById('modal')?.remove()}
 function toast(s){let t=document.getElementById('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+migrateChecklist();
+migrateCookRecords();
+save();
 render();
 </script>
 </body>
