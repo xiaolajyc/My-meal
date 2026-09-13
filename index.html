@@ -530,11 +530,43 @@ function deleteRecipe(name){
 }
 async function blobToDataURL(blob){return await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(blob)})}
 function dataURLToBlob(data){const [head,b64]=String(data).split(',');const mime=(head.match(/data:(.*?);base64/)||[])[1]||'image/jpeg';const bin=atob(b64||'');const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
+
+function makeBakedAppHTML(){
+  // 将当前运行中的 recipes 写回 DEFAULT_RECIPES，生成一个“自带当前菜谱数据”的独立 HTML。
+  const json=JSON.stringify(recipes);
+  const escaped=json.replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026');
+  const re=/const\s+DEFAULT_RECIPES\s*=\s*[\s\S]*?;\s*const\s+KEY\s*=/;
+  if(!re.test(document.documentElement.outerHTML)) throw new Error('未找到默认菜谱数据');
+  return '<!DOCTYPE html>\n'+document.documentElement.outerHTML.replace(
+    re,
+    'const DEFAULT_RECIPES = '+escaped+';\\nconst KEY='
+  );
+}
+function downloadBakedApp(){
+  try{
+    const html=makeBakedAppHTML();
+    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='index.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
+    toast('已烧录当前菜谱并导出 index.html');
+  }catch(e){
+    console.error(e);
+    toast('烧录失败，请稍后重试');
+  }
+}
+
 async function makeFullBackup(){const records=loadCookRecords();const photos={};for(const rec of records){for(const pid of rec.photos||[]){const blob=await getCookPhoto(pid);if(blob)photos[pid]=await blobToDataURL(blob)}}return {version:2,exportedAt:new Date().toISOString(),recipes,ingredientChecks,records,photos}}
 function backupModal(){
  const isFilePage=location.protocol==='file:'; const canSaveAs=typeof window.showSaveFilePicker==='function'&&window.isSecureContext;
- showModal(`<h2>💾 数据备份</h2><p>当前共有 <strong>${recipes.length}</strong> 个菜谱。</p><div style="background:#f5f6f8;border-radius:9px;padding:12px 13px;margin:12px 0;line-height:1.6;font-size:13px"><strong>完整备份包含：</strong>菜谱、配料Checklist、跟做历史、照片。照片会转成压缩后的数据写入备份，因此文件可能比较大。</div><div class="modal-actions" style="flex-wrap:wrap"><button class="primary" id="export">⬇️ 导出完整备份</button><button class="secondary" id="copyBackup">📋 复制完整备份</button><button class="secondary" id="importBtn">📥 导入备份</button><button class="secondary" onclick="closeModal()">关闭</button></div><div class="hint" style="margin-top:12px">${isFilePage?'直接双击 HTML 时不能使用系统“另存为”，请使用“导出完整备份”。':(canSaveAs?'当前环境支持系统保存。':'当前环境不支持系统保存。')}</div><input type="file" id="fileInput" accept=".json,application/json" style="display:none"><textarea id="backupText" style="position:fixed;left:-99999px;top:-99999px;width:1px;height:1px"></textarea>`);
- const exportBtn=document.getElementById('export'); exportBtn.onclick=async()=>{exportBtn.disabled=true;exportBtn.textContent='⏳ 正在整理照片…';try{const data=await makeFullBackup();const blob=new Blob([JSON.stringify(data)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='我的食谱完整备份.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('完整备份已导出')}catch(e){toast('备份失败')}finally{exportBtn.disabled=false;exportBtn.textContent='⬇️ 导出完整备份'}};
+ showModal(`<h2>💾 数据备份</h2><p>当前共有 <strong>${recipes.length}</strong> 个菜谱。</p><div style="background:#f5f6f8;border-radius:9px;padding:12px 13px;margin:12px 0;line-height:1.6;font-size:13px"><strong>完整备份包含：</strong>菜谱、配料Checklist、跟做历史、照片。照片会转成压缩后的数据写入备份，因此文件可能比较大。</div><div class="modal-actions" style="flex-wrap:wrap"><button class="primary" id="export">⬇️ 导出完整备份</button><button class="primary" id="burnApp">🔥 一键烧录并导出 index.html</button><button class="secondary" id="copyBackup">📋 复制完整备份</button><button class="secondary" id="importBtn">📥 导入备份</button><button class="secondary" onclick="closeModal()">关闭</button></div><div class="hint" style="margin-top:12px">${isFilePage?'直接双击 HTML 时不能使用系统“另存为”，请使用“导出完整备份”。':(canSaveAs?'当前环境支持系统保存。':'当前环境不支持系统保存。')}</div><input type="file" id="fileInput" accept=".json,application/json" style="display:none"><textarea id="backupText" style="position:fixed;left:-99999px;top:-99999px;width:1px;height:1px"></textarea>`);
+ document.getElementById('burnApp').onclick=()=>{if(confirm(`将当前 ${recipes.length} 个菜谱烧录进 HTML，并导出为 index.html。\n\n烧录的是当前菜谱数据，不会修改你手机里的现有数据。是否继续？`))downloadBakedApp()};
+  const exportBtn=document.getElementById('export'); exportBtn.onclick=async()=>{exportBtn.disabled=true;exportBtn.textContent='⏳ 正在整理照片…';try{const data=await makeFullBackup();const blob=new Blob([JSON.stringify(data)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='我的食谱完整备份.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('完整备份已导出')}catch(e){toast('备份失败')}finally{exportBtn.disabled=false;exportBtn.textContent='⬇️ 导出完整备份'}};
  document.getElementById('copyBackup').onclick=async()=>{try{const data=await makeFullBackup();await navigator.clipboard.writeText(JSON.stringify(data));toast('完整备份已复制')}catch(e){toast('复制失败，请改用导出文件')}};
  document.getElementById('importBtn').onclick=()=>document.getElementById('fileInput').click();
  document.getElementById('fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());const incoming=Array.isArray(x)?{version:1,recipes:x,ingredientChecks:{},records:[],photos:{}}:x;if(!Array.isArray(incoming.recipes))throw new Error('invalid');if(!confirm(`准备导入 ${incoming.recipes.length} 个菜谱${Array.isArray(incoming.records)?`和 ${incoming.records.length} 条跟做记录`:''}，会替换当前数据，是否继续？`))return;recipes=incoming.recipes.map(normalizeRecipe);ingredientChecks=incoming.ingredientChecks||{};saveCookRecords(Array.isArray(incoming.records)?incoming.records:[]);for(const [pid,data] of Object.entries(incoming.photos||{})){try{await putCookPhoto(pid,dataURLToBlob(data))}catch{}}migrateChecklist();migrateCookRecords();save();selected=recipes[0]?.name||null;category='全部';query='';scale=1;persistSelected();save();closeModal();render();toast('完整备份导入成功')}catch(e){toast('备份文件格式不正确，未导入')}};
