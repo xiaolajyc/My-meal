@@ -557,9 +557,25 @@ async function downloadBakedApp(){
       return;
     }
 
-    // 不支持目录写入的浏览器（例如部分 iOS Safari）：退回普通下载。
-    // 浏览器本身可能把同名文件改成 index (1).html，这是浏览器下载机制，无法由网页强制覆盖。
     const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+
+    // iOS Safari：优先走系统分享/存储面板。这样文件名固定为 index.html，
+    // 用户可以在“存储到文件”时选择目标文件夹；若系统询问是否替换，选择“替换”。
+    // 这是 iOS 上网页能够做到的最接近“直接覆盖”的方式。
+    const file=new File([blob],'index.html',{type:'text/html'});
+    if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({files:[file],title:'index.html'});
+        toast('已生成 index.html');
+        return;
+      }catch(e){
+        if(e?.name==='AbortError') return;
+        console.warn('系统分享失败，改用普通下载',e);
+      }
+    }
+
+    // 其他浏览器：普通下载，文件名固定为 index.html。
+    // 如果浏览器下载目录已有同名文件，浏览器/操作系统可能自动改成 index (1).html。
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;
@@ -568,7 +584,7 @@ async function downloadBakedApp(){
     a.click();
     a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),3000);
-    toast('已烧录并导出 index.html；如出现同名副本，请手动替换');
+    toast('已烧录并导出 index.html');
   }catch(e){
     if(e?.name==='AbortError') return;
     console.error(e);
