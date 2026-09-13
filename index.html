@@ -178,6 +178,12 @@ function scaledAmount(amount,factor){let n=num(amount);return n===null?amount:fm
 function displayAmount(amount,unit,factor){const v=scaledAmount(amount,factor);if(unit==='个'&&num(amount)!==null)return v+' 个（'+fmt(num(amount)*55*factor)+'g）';return v}
 function filtered(){let q=query.trim().toLowerCase();return recipes.filter(r=>(category==='全部'||r.category===category)&&(!q||r.name.toLowerCase().includes(q)||r.ingredients.some(i=>i.name.toLowerCase().includes(q))))}
 function render(){
+ const oldList=document.querySelector('.recipe-list');
+ const oldScrollTop=oldList?oldList.scrollTop:0;
+ const oldListHeight=oldList?oldList.clientHeight:0;
+ const oldSelected=oldList?oldList.querySelector('.recipe-item.active'):null;
+ const oldSelectedTop=oldSelected?oldSelected.offsetTop:0;
+ const oldSelectedBottom=oldSelected?oldSelectedTop+oldSelected.offsetHeight:0;
  const cats=['全部',...new Set(recipes.map(r=>r.category))];
  const list=filtered();
  document.getElementById('app').innerHTML=`<div class="app">
@@ -194,6 +200,21 @@ function render(){
  </main></div>`;
  bind();
  bindIngredientChecklist();
+ const newList=document.querySelector('.recipe-list');
+ const newSelected=newList?.querySelector('.recipe-item.active');
+ if(newList && newSelected){
+   // 优先保持点击前的列表位置；如果选中的菜谱原本不在可视区，则把它带入视野。
+   const wasVisible=oldSelected && oldSelectedTop>=oldScrollTop && oldSelectedBottom<=oldScrollTop+oldListHeight;
+   if(wasVisible){
+     newList.scrollTop=oldScrollTop;
+   }else{
+     const targetTop=newSelected.offsetTop;
+     const targetBottom=targetTop+newSelected.offsetHeight;
+     if(targetTop<newList.scrollTop || targetBottom>newList.scrollTop+newList.clientHeight){
+       newList.scrollTop=Math.max(0,targetTop-newList.clientHeight/2+newSelected.offsetHeight/2);
+     }
+   }
+ }
 }
 function renderDetail(){
  const r=recipes.find(x=>x.name===selected); if(!r)return '<div class="empty">选择一个菜谱开始</div>';
