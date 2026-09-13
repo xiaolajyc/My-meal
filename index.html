@@ -149,6 +149,8 @@ function persistSelected(){
 function selectRecipe(name){
   const r=recipes.find(x=>x.name===name);
   if(!r)return;
+  const listEl=document.querySelector('.recipe-list');
+  window.__recipeListScrollTop = listEl ? listEl.scrollTop : 0;
   selected=r.name;
   selectedRecipeId=r.id;
   localStorage.setItem(LAST_RECIPE_KEY,r.id);
@@ -187,6 +189,14 @@ function render(){
  </main></div>`;
  bind();
  bindIngredientChecklist();
+ if(window.__recipeListScrollTop!==undefined){
+   const listEl=document.querySelector('.recipe-list');
+   if(listEl){
+     const y=window.__recipeListScrollTop;
+     requestAnimationFrame(()=>{listEl.scrollTop=y;});
+   }
+   delete window.__recipeListScrollTop;
+ }
 }
 function renderDetail(){
  const r=recipes.find(x=>x.name===selected); if(!r)return '<div class="empty">选择一个菜谱开始</div>';
