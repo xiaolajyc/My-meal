@@ -18,7 +18,7 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 .search{background:#f5f5f2;border:1px solid transparent;border-radius:13px;padding:12px 14px;margin-top:10px;transition:.2s}
 .search:focus{background:#fff;border-color:#b9c6ba;box-shadow:0 0 0 3px rgba(63,95,69,.08)}
 .filters{padding-bottom:14px}.chip{background:#f0f1ed;color:#555;border:1px solid transparent;transition:.18s}.chip:hover{background:#e7ebe6}.chip.active{background:var(--accent);box-shadow:0 3px 10px rgba(63,95,69,.18)}
-.recipe-list{padding:2px 10px 16px}.recipe-item{padding:13px 14px;border-radius:12px;margin:3px 0;transition:.18s;border:1px solid transparent}.recipe-item:hover{background:#f5f6f3;transform:translateX(2px)}.recipe-item.active{background:var(--accent-soft);border-color:#d6e2d7}.recipe-name{font-size:15px}.recipe-meta{color:var(--muted)}
+.recipe-list{padding:2px 10px 16px}.recipe-item{padding:13px 14px;border-radius:12px;margin:3px 0;transition:.18s;border:1px solid transparent}.recipe-item:hover{background:#f5f6f3;transform:none}.recipe-item.active{background:var(--accent-soft);border-color:#d6e2d7}.recipe-name{font-size:15px}.recipe-meta{color:var(--muted)}
 .side-actions{padding:14px;border-top:1px solid var(--line);background:rgba(255,255,255,.8)}
 .primary{background:var(--accent);border-radius:11px;box-shadow:0 3px 10px rgba(63,95,69,.15);transition:.18s}.primary:hover{filter:brightness(.95);transform:translateY(-1px)}.secondary{background:#eef0ec;border-radius:11px;transition:.18s}.secondary:hover{background:#e4e8e3}
 .content{background:transparent}.topbar{height:68px;background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 30px}.topbar-actions button{border:1px solid var(--line)}
@@ -32,13 +32,26 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 .history-item{border-color:var(--line);box-shadow:0 4px 15px rgba(30,40,30,.025);border-radius:14px}.toast{background:#26372b;border-radius:11px;box-shadow:0 8px 25px rgba(0,0,0,.16)}
 @media(max-width:800px){body{background:#f7f7f5}.brand{padding-top:18px}.topbar{height:58px;padding:0 14px}.page{padding:24px 14px 50px}.title{font-size:29px}.recipe-item:hover{transform:none}.side-actions{padding:10px}.modal{border-radius:17px;padding:18px}}
 
+/* ===== 手机竖屏：扩大菜谱选择区，并针对旧版 Android/MIUI 浏览器稳定输入排版 ===== */
+@media (max-width:800px) and (orientation:portrait){
+  html,body{overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  .app{width:100%;min-width:0;overflow-x:hidden}
+  .sidebar{width:100%;height:68vh;min-height:0;overflow:hidden;border-right:0;border-bottom:1px solid var(--line)}
+  .content{width:100%;min-width:0;min-height:32vh}
+  .brand{padding:18px 16px 8px}
+  .search{display:block;width:calc(100% - 24px);min-width:0;height:44px;margin:7px 12px 10px;padding:10px 13px;font-size:16px!important;line-height:22px;-webkit-appearance:none;appearance:none;transform:none}
+  .filters{min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+  .recipe-list{min-width:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .recipe-item{transform:none!important}
+}
+
 /* ===== 手机/平板横屏：优先保证菜谱列表可浏览、可点击 ===== */
 @media (orientation: landscape) and (max-width: 1000px){
-  html,body{height:100%;overflow:hidden}
+  html,body{height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .app{
     display:flex;
     flex-direction:row;
-    width:100vw;
+    width:100%;
     height:100vh;
     min-height:0;
     overflow:hidden;
@@ -58,8 +71,13 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
   }
   .brand:after{margin-top:1px}
   .search{
+    display:block;
     margin:5px 12px 8px;
     width:calc(100% - 24px);
+    min-width:0;
+    font-size:16px!important;
+    -webkit-appearance:none;
+    appearance:none;
     padding:9px 12px;
   }
   .filters{
@@ -201,19 +219,9 @@ function render(){
  bind();
  bindIngredientChecklist();
  const newList=document.querySelector('.recipe-list');
- const newSelected=newList?.querySelector('.recipe-item.active');
- if(newList && newSelected){
-   // 优先保持点击前的列表位置；如果选中的菜谱原本不在可视区，则把它带入视野。
-   const wasVisible=oldSelected && oldSelectedTop>=oldScrollTop && oldSelectedBottom<=oldScrollTop+oldListHeight;
-   if(wasVisible){
-     newList.scrollTop=oldScrollTop;
-   }else{
-     const targetTop=newSelected.offsetTop;
-     const targetBottom=targetTop+newSelected.offsetHeight;
-     if(targetTop<newList.scrollTop || targetBottom>newList.scrollTop+newList.clientHeight){
-       newList.scrollTop=Math.max(0,targetTop-newList.clientHeight/2+newSelected.offsetHeight/2);
-     }
-   }
+ if(newList){
+   // 选择菜谱后左侧菜单完全保持原来的滚动位置，不自动跳到选中项。
+   newList.scrollTop=oldScrollTop;
  }
 }
 function renderDetail(){
