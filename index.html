@@ -31,6 +31,102 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 .modal-back{background:rgba(25,30,25,.42);backdrop-filter:blur(3px)}.modal{border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.18);padding:26px}.modal input,.modal select,.modal textarea,.form-row input,.form-row select,.form-row textarea{background:#fafaf8;border-color:#deded8}.modal input:focus,.modal select:focus,.modal textarea:focus{background:#fff;border-color:#aebcaf;box-shadow:0 0 0 3px rgba(63,95,69,.07)}
 .history-item{border-color:var(--line);box-shadow:0 4px 15px rgba(30,40,30,.025);border-radius:14px}.toast{background:#26372b;border-radius:11px;box-shadow:0 8px 25px rgba(0,0,0,.16)}
 @media(max-width:800px){body{background:#f7f7f5}.brand{padding-top:18px}.topbar{height:58px;padding:0 14px}.page{padding:24px 14px 50px}.title{font-size:29px}.recipe-item:hover{transform:none}.side-actions{padding:10px}.modal{border-radius:17px;padding:18px}}
+
+/* ===== 手机/平板横屏：优先保证菜谱列表可浏览、可点击 ===== */
+@media (orientation: landscape) and (max-width: 1000px){
+  html,body{height:100%;overflow:hidden}
+  .app{
+    display:flex;
+    flex-direction:row;
+    width:100vw;
+    height:100vh;
+    min-height:0;
+    overflow:hidden;
+  }
+  .sidebar{
+    width:42vw;
+    min-width:300px;
+    max-width:460px;
+    height:100vh;
+    flex:none;
+    border-right:1px solid var(--line);
+    border-bottom:0;
+  }
+  .brand{
+    padding:12px 16px 6px;
+    font-size:20px;
+  }
+  .brand:after{margin-top:1px}
+  .search{
+    margin:5px 12px 8px;
+    width:calc(100% - 24px);
+    padding:9px 12px;
+  }
+  .filters{
+    padding:0 12px 8px;
+    gap:6px;
+  }
+  .chip{
+    padding:6px 9px;
+    font-size:12px;
+  }
+  .recipe-list{
+    padding:0 8px 8px;
+    min-height:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .recipe-item{
+    padding:10px 12px;
+    margin:2px 0;
+    min-height:48px;
+  }
+  .recipe-name{font-size:14px}
+  .recipe-meta{font-size:11px;margin-top:2px}
+  .side-actions{
+    padding:8px;
+    gap:6px;
+    flex:none;
+  }
+  .side-actions button{
+    min-height:40px;
+    padding:8px 10px;
+  }
+  .content{
+    flex:1;
+    min-width:0;
+    min-height:0;
+    height:100vh;
+    overflow:auto;
+  }
+  .topbar{
+    height:52px;
+    padding:0 14px;
+  }
+  .page{
+    max-width:none;
+    padding:20px 20px 40px;
+  }
+  .title{font-size:28px}
+  .section{margin-top:22px}
+}
+
+/* 超窄手机横屏：进一步压缩左侧控制区 */
+@media (orientation: landscape) and (max-width: 700px){
+  .sidebar{width:46vw;min-width:250px}
+  .brand{padding:8px 12px 4px;font-size:18px}
+  .brand:after{display:none}
+  .search{margin:3px 8px 6px;width:calc(100% - 16px);padding:7px 10px}
+  .filters{padding:0 8px 6px}
+  .chip{padding:5px 8px}
+  .recipe-list{padding:0 5px 5px}
+  .recipe-item{padding:8px 9px;min-height:42px}
+  .side-actions{padding:6px}
+  .side-actions button{min-height:36px;padding:6px 8px}
+  .content .page{padding:16px 14px 30px}
+  .title{font-size:24px}
+}
+
 </style>
 </head>
 <body>
