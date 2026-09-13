@@ -1,0 +1,16 @@
+{
+  "name": "我的食谱",
+  "short_name": "我的食谱",
+  "description": "个人离线食谱与配方管理 App",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f7f6f2",
+  "theme_color": "#3f6849",
+  "lang": "zh-CN",
+  "icons": [
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

@@ -128,6 +128,13 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 }
 
 </style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#3f6849">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="我的食谱">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 <div id="app"></div><div id="toast" class="toast"></div>
@@ -149,8 +156,6 @@ function persistSelected(){
 function selectRecipe(name){
   const r=recipes.find(x=>x.name===name);
   if(!r)return;
-  const listEl=document.querySelector('.recipe-list');
-  window.__recipeListScrollTop = listEl ? listEl.scrollTop : 0;
   selected=r.name;
   selectedRecipeId=r.id;
   localStorage.setItem(LAST_RECIPE_KEY,r.id);
@@ -189,14 +194,6 @@ function render(){
  </main></div>`;
  bind();
  bindIngredientChecklist();
- if(window.__recipeListScrollTop!==undefined){
-   const listEl=document.querySelector('.recipe-list');
-   if(listEl){
-     const y=window.__recipeListScrollTop;
-     requestAnimationFrame(()=>{listEl.scrollTop=y;});
-   }
-   delete window.__recipeListScrollTop;
- }
 }
 function renderDetail(){
  const r=recipes.find(x=>x.name===selected); if(!r)return '<div class="empty">选择一个菜谱开始</div>';
@@ -530,74 +527,11 @@ function deleteRecipe(name){
 }
 async function blobToDataURL(blob){return await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(blob)})}
 function dataURLToBlob(data){const [head,b64]=String(data).split(',');const mime=(head.match(/data:(.*?);base64/)||[])[1]||'image/jpeg';const bin=atob(b64||'');const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
-
-function makeBakedAppHTML(){
-  // 将当前运行中的 recipes 写回 DEFAULT_RECIPES，生成一个“自带当前菜谱数据”的独立 HTML。
-  const json=JSON.stringify(recipes);
-  const escaped=json.replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026');
-  const re=/const\s+DEFAULT_RECIPES\s*=\s*[\s\S]*?;\s*const\s+KEY\s*=/;
-  if(!re.test(document.documentElement.outerHTML)) throw new Error('未找到默认菜谱数据');
-  return '<!DOCTYPE html>\n'+document.documentElement.outerHTML.replace(
-    re,
-    'const DEFAULT_RECIPES = '+escaped+';\nconst KEY='
-  );
-}
-async function downloadBakedApp(){
-  try{
-    const html=makeBakedAppHTML();
-
-    // 支持 File System Access API 的浏览器：选择目标文件夹，并直接覆盖其中已有的 index.html。
-    if(typeof window.showDirectoryPicker==='function' && window.isSecureContext){
-      const dir=await window.showDirectoryPicker({mode:'readwrite'});
-      const fileHandle=await dir.getFileHandle('index.html',{create:true});
-      const writable=await fileHandle.createWritable();
-      await writable.write(html);
-      await writable.close();
-      toast('已烧录并覆盖目标文件夹中的 index.html');
-      return;
-    }
-
-    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
-
-    // iOS Safari：优先走系统分享/存储面板。这样文件名固定为 index.html，
-    // 用户可以在“存储到文件”时选择目标文件夹；若系统询问是否替换，选择“替换”。
-    // 这是 iOS 上网页能够做到的最接近“直接覆盖”的方式。
-    const file=new File([blob],'index.html',{type:'text/html'});
-    if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-      try{
-        await navigator.share({files:[file],title:'index.html'});
-        toast('已生成 index.html');
-        return;
-      }catch(e){
-        if(e?.name==='AbortError') return;
-        console.warn('系统分享失败，改用普通下载',e);
-      }
-    }
-
-    // 其他浏览器：普通下载，文件名固定为 index.html。
-    // 如果浏览器下载目录已有同名文件，浏览器/操作系统可能自动改成 index (1).html。
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download='index.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url),3000);
-    toast('已烧录并导出 index.html');
-  }catch(e){
-    if(e?.name==='AbortError') return;
-    console.error(e);
-    toast('烧录失败，请检查目标文件夹写入权限');
-  }
-}
-
 async function makeFullBackup(){const records=loadCookRecords();const photos={};for(const rec of records){for(const pid of rec.photos||[]){const blob=await getCookPhoto(pid);if(blob)photos[pid]=await blobToDataURL(blob)}}return {version:2,exportedAt:new Date().toISOString(),recipes,ingredientChecks,records,photos}}
 function backupModal(){
  const isFilePage=location.protocol==='file:'; const canSaveAs=typeof window.showSaveFilePicker==='function'&&window.isSecureContext;
- showModal(`<h2>💾 数据备份</h2><p>当前共有 <strong>${recipes.length}</strong> 个菜谱。</p><div style="background:#f5f6f8;border-radius:9px;padding:12px 13px;margin:12px 0;line-height:1.6;font-size:13px"><strong>完整备份包含：</strong>菜谱、配料Checklist、跟做历史、照片。照片会转成压缩后的数据写入备份，因此文件可能比较大。</div><div class="modal-actions" style="flex-wrap:wrap"><button class="primary" id="export">⬇️ 导出完整备份</button><button class="primary" id="burnApp">🔥 一键烧录并覆盖 index.html</button><button class="secondary" id="copyBackup">📋 复制完整备份</button><button class="secondary" id="importBtn">📥 导入备份</button><button class="secondary" onclick="closeModal()">关闭</button></div><div class="hint" style="margin-top:12px">${isFilePage?'浏览器支持目录写入时，可选择目标文件夹并直接覆盖 index.html；否则会普通下载。':(canSaveAs?'当前环境支持系统保存。':'当前环境不支持系统保存。')}</div><input type="file" id="fileInput" accept=".json,application/json" style="display:none"><textarea id="backupText" style="position:fixed;left:-99999px;top:-99999px;width:1px;height:1px"></textarea>`);
- document.getElementById('burnApp').onclick=()=>{if(confirm(`将当前 ${recipes.length} 个菜谱烧录进 HTML，并写入目标文件夹的 index.html（如已存在将覆盖）。\n\n烧录的是当前菜谱数据，不会修改你手机里的现有数据。是否继续？`))downloadBakedApp()};
-  const exportBtn=document.getElementById('export'); exportBtn.onclick=async()=>{exportBtn.disabled=true;exportBtn.textContent='⏳ 正在整理照片…';try{const data=await makeFullBackup();const blob=new Blob([JSON.stringify(data)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='我的食谱完整备份.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('完整备份已导出')}catch(e){toast('备份失败')}finally{exportBtn.disabled=false;exportBtn.textContent='⬇️ 导出完整备份'}};
+ showModal(`<h2>💾 数据备份</h2><p>当前共有 <strong>${recipes.length}</strong> 个菜谱。</p><div style="background:#f5f6f8;border-radius:9px;padding:12px 13px;margin:12px 0;line-height:1.6;font-size:13px"><strong>完整备份包含：</strong>菜谱、配料Checklist、跟做历史、照片。照片会转成压缩后的数据写入备份，因此文件可能比较大。</div><div class="modal-actions" style="flex-wrap:wrap"><button class="primary" id="export">⬇️ 导出完整备份</button><button class="secondary" id="copyBackup">📋 复制完整备份</button><button class="secondary" id="importBtn">📥 导入备份</button><button class="secondary" onclick="closeModal()">关闭</button></div><div class="hint" style="margin-top:12px">${isFilePage?'直接双击 HTML 时不能使用系统“另存为”，请使用“导出完整备份”。':(canSaveAs?'当前环境支持系统保存。':'当前环境不支持系统保存。')}</div><input type="file" id="fileInput" accept=".json,application/json" style="display:none"><textarea id="backupText" style="position:fixed;left:-99999px;top:-99999px;width:1px;height:1px"></textarea>`);
+ const exportBtn=document.getElementById('export'); exportBtn.onclick=async()=>{exportBtn.disabled=true;exportBtn.textContent='⏳ 正在整理照片…';try{const data=await makeFullBackup();const blob=new Blob([JSON.stringify(data)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='我的食谱完整备份.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('完整备份已导出')}catch(e){toast('备份失败')}finally{exportBtn.disabled=false;exportBtn.textContent='⬇️ 导出完整备份'}};
  document.getElementById('copyBackup').onclick=async()=>{try{const data=await makeFullBackup();await navigator.clipboard.writeText(JSON.stringify(data));toast('完整备份已复制')}catch(e){toast('复制失败，请改用导出文件')}};
  document.getElementById('importBtn').onclick=()=>document.getElementById('fileInput').click();
  document.getElementById('fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const x=JSON.parse(await f.text());const incoming=Array.isArray(x)?{version:1,recipes:x,ingredientChecks:{},records:[],photos:{}}:x;if(!Array.isArray(incoming.recipes))throw new Error('invalid');if(!confirm(`准备导入 ${incoming.recipes.length} 个菜谱${Array.isArray(incoming.records)?`和 ${incoming.records.length} 条跟做记录`:''}，会替换当前数据，是否继续？`))return;recipes=incoming.recipes.map(normalizeRecipe);ingredientChecks=incoming.ingredientChecks||{};saveCookRecords(Array.isArray(incoming.records)?incoming.records:[]);for(const [pid,data] of Object.entries(incoming.photos||{})){try{await putCookPhoto(pid,dataURLToBlob(data))}catch{}}migrateChecklist();migrateCookRecords();save();selected=recipes[0]?.name||null;category='全部';query='';scale=1;persistSelected();save();closeModal();render();toast('完整备份导入成功')}catch(e){toast('备份文件格式不正确，未导入')}};
@@ -610,6 +544,12 @@ migrateCookRecords();
 persistSelected();
 save();
 render();
+</script>
+
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
 </script>
 </body>
 </html>
