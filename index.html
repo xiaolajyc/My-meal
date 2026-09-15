@@ -239,6 +239,13 @@ html.force-landscape .filters{width:auto!important;max-width:none!important;over
 html.force-landscape .recipe-list{flex:1!important;width:100%!important;min-width:0!important;min-height:0!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;}
 html.force-landscape .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
 
+
+/* FINAL: orientation is controlled only by .force-* classes.
+   Do not let Android's IME/viewport-driven @media orientation decide layout. */
+html.force-portrait .app{flex-direction:column!important}
+html.force-landscape .app{flex-direction:row!important}
+html.force-portrait .sidebar{width:100%!important;max-width:100%!important;min-width:0!important;height:68vh!important;flex:none!important}
+html.force-landscape .sidebar{width:46vw!important;min-width:250px!important;max-width:460px!important;height:100vh!important;flex:none!important}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -264,21 +271,30 @@ let searchFocused=false;
 let recipeListScrollTop=Number(localStorage.getItem(MENU_SCROLL_KEY)||0);
 let restoreRecipeListScroll=true;
 function readDeviceOrientation(){
-  // Xiaomi 6 / legacy Android WebView: window.orientation is tied to the
-  // physical device rotation and is not affected by the software keyboard.
+  // Determine the physical device orientation only. Do NOT use
+  // innerWidth/innerHeight, visualViewport, or CSS orientation media queries:
+  // Android's soft keyboard can change the visual viewport and make a
+  // portrait device temporarily satisfy the landscape media query.
+  //
+  // On older Xiaomi WebView, window.orientation is the most useful signal.
   const legacy=window.orientation;
   if(typeof legacy==='number' && isFinite(legacy)){
-    return Math.abs(legacy)===90 ? 'landscape' : 'portrait';
+    return Math.abs(legacy)%180===90?'landscape':'portrait';
   }
-  // Modern browsers expose screen.orientation.angle; also unaffected by IME.
+  // If the legacy API is absent, screen dimensions are independent of the
+  // keyboard and are therefore safe to use.
+  const sw=window.screen && Number(window.screen.width)||0;
+  const sh=window.screen && Number(window.screen.height)||0;
+  if(sw && sh && sw!==sh) return sw>sh?'landscape':'portrait';
   const angle=window.screen && window.screen.orientation && window.screen.orientation.angle;
   if(typeof angle==='number' && isFinite(angle)){
-    return Math.abs(angle%180)===90 ? 'landscape' : 'portrait';
+    return Math.abs(angle%180)===90?'landscape':'portrait';
   }
-  // Last-resort fallback only for browsers without either orientation API.
+  // Only a final fallback for browsers with none of the physical orientation
+  // APIs. This branch is not used on Xiaomi 6 when window.orientation exists.
   const w=window.innerWidth||document.documentElement.clientWidth||0;
   const h=window.innerHeight||document.documentElement.clientHeight||0;
-  return (w && h && w>h) ? 'landscape' : 'portrait';
+  return (w && h && w>h)?'landscape':'portrait';
 }
 let layoutOrientation=readDeviceOrientation();
 function applyLayoutOrientation(){
