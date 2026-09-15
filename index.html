@@ -179,36 +179,40 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
   .title{font-size:24px!important}
 }
 
-/* ===== Xiaomi 6 / Android keyboard stability ===== */
+/* ===== Xiaomi 6 / Android orientation stability ===== */
 html,body{width:100%;max-width:100%;overflow-x:hidden}
-@media (max-width:800px) and (orientation:portrait){
-  .app{width:100%;max-width:100%;overflow-x:hidden}
-  .sidebar{width:100%;max-width:100%;}
-  .search{font-size:16px!important;transform:none!important;zoom:1!important;}
-  .recipe-list,.recipe-item{width:100%;max-width:100%;}
-  .recipe-name,.recipe-meta{writing-mode:horizontal-tb!important;text-orientation:mixed!important;word-break:keep-all!important;overflow-wrap:normal!important;white-space:nowrap!important;}
-}
-/* 食材尽量一行显示；过长时允许表格区域横向查看，而不是把中文拆成竖排 */
-.ingredient-table{table-layout:auto;width:max-content;min-width:100%;}
-.ingredient-table th,.ingredient-table td{white-space:nowrap;}
-.ingredient-table td:nth-child(5),.ingredient-table th:nth-child(5){white-space:normal;}
-.section:has(.ingredient-table){overflow-x:auto;-webkit-overflow-scrolling:touch;}
-@media(max-width:800px){
-  .ingredient-table th,.ingredient-table td{padding:10px 11px;}
-  .ingredient-table td:nth-child(2){min-width:72px;}
-  .ingredient-table td:nth-child(5){min-width:120px;max-width:360px;}
-}
-/* ===== Xiaomi 6: keep physical portrait layout while the soft keyboard is open ===== */
-html.force-portrait .app{flex-direction:column!important;width:100%!important;min-width:0!important;overflow-x:hidden!important;}
-html.force-portrait .sidebar{width:100%!important;max-width:100%!important;height:68vh!important;min-height:0!important;border-right:0!important;border-bottom:1px solid var(--line)!important;overflow:hidden!important;}
+.recipe-item,.recipe-item *{writing-mode:horizontal-tb!important;text-orientation:mixed!important;direction:ltr}
+.recipe-name,.recipe-meta{writing-mode:horizontal-tb!important;text-orientation:mixed!important;word-break:keep-all!important;overflow-wrap:normal!important}
+
+/* 旧版 Android WebView 对 orientation media query 可能反向报告。真正方向由 JS 的 layoutOrientation 控制。
+   键盘弹出只触发 resize，不触发这里的方向切换，因此不会把竖屏搜索变成横屏。 */
+html.force-portrait .app{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;overflow-x:hidden!important;}
+html.force-portrait .sidebar{width:100%!important;max-width:100%!important;height:68vh!important;min-height:0!important;flex:none!important;border-right:0!important;border-bottom:1px solid var(--line)!important;overflow:hidden!important;}
 html.force-portrait .content{width:100%!important;min-width:0!important;min-height:32vh!important;height:auto!important;overflow:visible!important;}
 html.force-portrait .recipe-list{min-width:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;}
 html.force-portrait .search{display:block!important;width:calc(100% - 24px)!important;min-width:0!important;height:44px!important;font-size:16px!important;line-height:1.4!important;transform:none!important;zoom:1!important;}
 html.force-portrait .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
-html.force-portrait .recipe-name,html.force-portrait .recipe-meta{writing-mode:horizontal-tb!important;text-orientation:mixed!important;word-break:keep-all!important;overflow-wrap:normal!important;white-space:nowrap!important;}
-/* 食材表默认每一项尽量保持一行；整张表可横向滚动，避免中文被挤成竖排。 */
+html.force-portrait .recipe-name,html.force-portrait .recipe-meta{white-space:nowrap!important;}
+
+html.force-landscape .app{display:flex!important;flex-direction:row!important;width:100vw!important;height:100vh!important;min-height:0!important;overflow:hidden!important;}
+html.force-landscape .sidebar{width:42vw!important;min-width:250px!important;max-width:460px!important;height:100vh!important;flex:none!important;border-right:1px solid var(--line)!important;border-bottom:0!important;overflow:hidden!important;}
+html.force-landscape .recipe-list{flex:1!important;min-height:0!important;width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;}
+html.force-landscape .content{flex:1!important;width:auto!important;min-width:0!important;min-height:0!important;height:100vh!important;overflow:auto!important;}
+html.force-landscape .topbar{height:50px!important;padding:0 10px!important;}
+html.force-landscape .page{padding:16px 14px 30px!important;}
+html.force-landscape .title{font-size:24px!important;}
+html.force-landscape .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
+html.force-landscape .recipe-name,html.force-landscape .recipe-meta{white-space:nowrap!important;}
+
+/* 食材尽量保持一项一行；过长内容让整张表横向滚动，不拆中文字符。 */
+.ingredient-table{table-layout:auto!important;width:max-content!important;min-width:100%!important;}
 .ingredient-table th,.ingredient-table td{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;}
 .section:has(.ingredient-table){overflow-x:auto!important;-webkit-overflow-scrolling:touch;}
+@media(max-width:800px){
+  .search{font-size:16px!important;line-height:1.4;min-height:44px;}
+  .ingredient-table th,.ingredient-table td{padding:10px 11px;}
+  .ingredient-table td:nth-child(2){min-width:72px;}
+}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -233,23 +237,25 @@ let query=''; let category='全部'; let scale=1; let searchComposing=false;
 let searchFocused=false;
 let recipeListScrollTop=Number(localStorage.getItem(MENU_SCROLL_KEY)||0);
 let restoreRecipeListScroll=true;
-function updatePhysicalOrientation(){
-  // 不使用 screen.width/screen.height 判断方向：小米6在旋转或软键盘弹出时，
-  // 这些值可能仍保持物理竖屏尺寸，从而把真正的横屏误判成竖屏。
-  let portrait;
-  try{
-    portrait=window.matchMedia('(orientation: portrait)').matches;
-  }catch(e){
-    const angle=window.screen?.orientation?.angle;
-    if(typeof angle==='number') portrait=angle===0||angle===180;
-    else portrait=window.innerWidth < window.innerHeight;
-  }
-  document.documentElement.classList.toggle('force-portrait', !!portrait && window.innerWidth <= 800);
+let layoutOrientation = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait';
+function applyLayoutOrientation(){
+  const root=document.documentElement;
+  root.classList.toggle('force-portrait', layoutOrientation==='portrait');
+  root.classList.toggle('force-landscape', layoutOrientation==='landscape');
 }
-updatePhysicalOrientation();
-window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,80));
-window.addEventListener('resize',()=>setTimeout(updatePhysicalOrientation,80));
-
+function updatePhysicalOrientation(){
+  // 仅由真实旋转事件调用。绝不在 resize 中判断方向，因为小米6键盘弹出会改变 viewport 高度。
+  const w=window.innerWidth||document.documentElement.clientWidth||0;
+  const h=window.innerHeight||document.documentElement.clientHeight||0;
+  if(w && h) layoutOrientation = w>h ? 'landscape' : 'portrait';
+  applyLayoutOrientation();
+}
+applyLayoutOrientation();
+window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,250));
+if(window.screen?.orientation?.addEventListener){
+  window.screen.orientation.addEventListener('change',()=>setTimeout(updatePhysicalOrientation,250));
+}
+// 不监听 window.resize：搜索框获得焦点/输入法弹出不会改变横竖屏布局。
 function persistSelected(){
   const r=recipes.find(x=>x.name===selected);
   selectedRecipeId=r?.id||'';
