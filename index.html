@@ -59,7 +59,7 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 }
 
 /* ===== 手机/平板横屏：优先保证菜谱列表可浏览、可点击 ===== */
-@media (orientation: landscape) and (max-width: 1000px){
+@media (orientation: landscape) and (max-width: 1000px) and (min-height: 370px){
   html,body{height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .app{
     display:flex;
@@ -143,7 +143,7 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 }
 
 /* 超窄手机横屏：进一步压缩左侧控制区 */
-@media (orientation: landscape) and (max-width: 700px){
+@media (orientation: landscape) and (max-width: 700px) and (min-height: 370px){
   .sidebar{width:46vw;min-width:250px}
   .brand{padding:8px 12px 4px;font-size:18px}
   .brand:after{display:none}
@@ -158,6 +158,25 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
   .title{font-size:24px}
 }
 
+/* ===== Xiaomi 6 / Android keyboard stability ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+@media (max-width:800px) and (orientation:portrait){
+  .app{width:100%;max-width:100%;overflow-x:hidden}
+  .sidebar{width:100%;max-width:100%;}
+  .search{font-size:16px!important;transform:none!important;zoom:1!important;}
+  .recipe-list,.recipe-item{width:100%;max-width:100%;}
+  .recipe-name,.recipe-meta{writing-mode:horizontal-tb!important;text-orientation:mixed!important;word-break:keep-all!important;overflow-wrap:normal!important;white-space:nowrap!important;}
+}
+/* 食材尽量一行显示；过长时允许表格区域横向查看，而不是把中文拆成竖排 */
+.ingredient-table{table-layout:auto;width:max-content;min-width:100%;}
+.ingredient-table th,.ingredient-table td{white-space:nowrap;}
+.ingredient-table td:nth-child(5),.ingredient-table th:nth-child(5){white-space:normal;}
+.section:has(.ingredient-table){overflow-x:auto;-webkit-overflow-scrolling:touch;}
+@media(max-width:800px){
+  .ingredient-table th,.ingredient-table td{padding:10px 11px;}
+  .ingredient-table td:nth-child(2){min-width:72px;}
+  .ingredient-table td:nth-child(5){min-width:120px;max-width:360px;}
+}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -179,6 +198,7 @@ let selectedRecipeId=localStorage.getItem(LAST_RECIPE_KEY)||'';
 let selected=(recipes.find(r=>r.id===selectedRecipeId)||recipes[0])?.name||null;
 selectedRecipeId=recipes.find(r=>r.name===selected)?.id||'';
 let query=''; let category='全部'; let scale=1; let searchComposing=false;
+let searchFocused=false;
 let recipeListScrollTop=Number(localStorage.getItem(MENU_SCROLL_KEY)||0);
 let restoreRecipeListScroll=true;
 function persistSelected(){
@@ -289,7 +309,9 @@ function refreshSearchResults(){
 function bind(){
  const searchEl=document.getElementById('search');
  if(searchEl){
-   searchEl.addEventListener('compositionstart',()=>{searchComposing=true});
+   searchEl.addEventListener('focus',()=>{searchFocused=true;document.documentElement.classList.add('search-focused')});
+  searchEl.addEventListener('blur',()=>{searchFocused=false;document.documentElement.classList.remove('search-focused')});
+  searchEl.addEventListener('compositionstart',()=>{searchComposing=true});
    searchEl.addEventListener('compositionend',e=>{
      searchComposing=false;
      query=e.target.value;
