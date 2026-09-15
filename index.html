@@ -45,207 +45,56 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 .history-item{border-color:var(--line);box-shadow:0 4px 15px rgba(30,40,30,.025);border-radius:14px}.toast{background:#26372b;border-radius:11px;box-shadow:0 8px 25px rgba(0,0,0,.16)}
 @media(max-width:800px){body{background:#f7f7f5}.brand{padding-top:18px}.topbar{height:58px;padding:0 14px}.page{padding:24px 14px 50px}.title{font-size:29px}.recipe-item:hover{transform:none}.side-actions{padding:10px}.modal{border-radius:17px;padding:18px}}
 
-/* ===== 手机竖屏：扩大菜谱选择区，并针对旧版 Android/MIUI 浏览器稳定输入排版 ===== */
-@media (max-width:800px) and (orientation:portrait){
-  html,body{overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-  .app{width:100%;min-width:0;overflow-x:hidden}
-  .sidebar{width:100%;height:68vh;min-height:0;overflow:hidden;border-right:0;border-bottom:1px solid var(--line)}
-  .content{width:100%;min-width:0;min-height:32vh}
-  .brand{padding:18px 16px 8px}
-  .search{display:block;width:calc(100% - 24px);min-width:0;height:44px;margin:7px 12px 10px;padding:10px 13px;font-size:16px!important;line-height:22px;-webkit-appearance:none;appearance:none;transform:none}
-  .filters{min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
-  .recipe-list{min-width:0;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch}
-  .recipe-item{transform:none!important}
-}
-
-/* ===== 手机/平板横屏：优先保证菜谱列表可浏览、可点击 ===== */
-@media (orientation: landscape) and (max-width: 1000px) and (min-height: 300px){
-  html,body{height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-  .app{
-    display:flex;
-    flex-direction:row;
-    width:100%;
-    height:100vh;
-    min-height:0;
-    overflow:hidden;
-  }
-  .sidebar{
-    width:42vw;
-    min-width:300px;
-    max-width:460px;
-    height:100vh;
-    flex:none;
-    border-right:1px solid var(--line);
-    border-bottom:0;
-  }
-  .brand{
-    padding:12px 16px 6px;
-    font-size:20px;
-  }
-  .brand:after{margin-top:1px}
-  .search{
-    display:block;
-    margin:5px 12px 8px;
-    width:calc(100% - 24px);
-    min-width:0;
-    font-size:16px!important;
-    -webkit-appearance:none;
-    appearance:none;
-    padding:9px 12px;
-  }
-  .filters{
-    padding:0 12px 8px;
-    gap:6px;
-  }
-  .chip{
-    padding:6px 9px;
-    font-size:12px;
-  }
-  .recipe-list{
-    padding:0 8px 8px;
-    min-height:0;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .recipe-item{
-    padding:10px 12px;
-    margin:2px 0;
-    min-height:48px;
-  }
-  .recipe-name{font-size:14px}
-  .recipe-meta{font-size:11px;margin-top:2px}
-  .side-actions{
-    padding:8px;
-    gap:6px;
-    flex:none;
-  }
-  .side-actions button{
-    min-height:40px;
-    padding:8px 10px;
-  }
-  .content{
-    flex:1;
-    min-width:0;
-    min-height:0;
-    height:100vh;
-    overflow:auto;
-  }
-  .topbar{
-    height:52px;
-    padding:0 14px;
-  }
-  .page{
-    max-width:none;
-    padding:20px 20px 40px;
-  }
-  .title{font-size:28px}
-  .section{margin-top:22px}
-}
-
-/* 超窄手机横屏：进一步压缩左侧控制区 */
-@media (orientation: landscape) and (max-width: 700px) and (min-height: 300px){
-  .sidebar{width:46vw;min-width:250px}
-  .brand{padding:8px 12px 4px;font-size:18px}
-  .brand:after{display:none}
-  .search{margin:3px 8px 6px;width:calc(100% - 16px);padding:7px 10px}
-  .filters{padding:0 8px 6px}
-  .chip{padding:5px 8px}
-  .recipe-list{padding:0 5px 5px}
-  .recipe-item{padding:8px 9px;min-height:42px}
-  .side-actions{padding:6px}
-  .side-actions button{min-height:36px;padding:6px 8px}
-  .content .page{padding:16px 14px 30px}
-  .title{font-size:24px}
-}
-
-/* ===== 小米6及小屏设备横屏：横屏时始终恢复左右分栏 ===== */
-@media (orientation: landscape) and (max-width: 800px) and (min-height: 300px){
-  html,body{height:100%;overflow:hidden!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-  .app{display:flex!important;flex-direction:row!important;width:100vw!important;height:100vh!important;min-height:0!important;overflow:hidden!important}
-  .sidebar{width:46vw!important;min-width:250px!important;max-width:380px!important;height:100vh!important;flex:none!important;border-right:1px solid var(--line)!important;border-bottom:0!important;overflow:hidden!important}
-  .brand{padding:8px 12px 4px!important;font-size:18px!important}
-  .search{margin:3px 8px 6px!important;width:calc(100% - 16px)!important;height:40px!important;padding:7px 10px!important;font-size:16px!important}
-  .filters{padding:0 8px 6px!important;gap:5px!important;flex:none!important}
-  .chip{padding:5px 8px!important;font-size:11px!important}
-  .recipe-list{flex:1!important;min-height:0!important;width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;padding:0 5px 5px!important}
-  .recipe-item{width:100%!important;max-width:100%!important;min-height:42px!important;padding:8px 9px!important;margin:2px 0!important;transform:none!important}
-  .recipe-name{font-size:14px!important;white-space:nowrap!important;writing-mode:horizontal-tb!important;word-break:keep-all!important;overflow-wrap:normal!important}
-  .recipe-meta{font-size:10px!important;white-space:nowrap!important;writing-mode:horizontal-tb!important}
-  .side-actions{padding:6px!important;gap:6px!important;flex:none!important}
-  .side-actions button{min-height:36px!important;padding:6px 8px!important}
-  .content{flex:1!important;width:auto!important;min-width:0!important;min-height:0!important;height:100vh!important;overflow:auto!important}
-  .topbar{height:50px!important;padding:0 10px!important}
-  .page{padding:16px 14px 30px!important}
-  .title{font-size:24px!important}
-}
-
-/* ===== Xiaomi 6 / Android orientation stability ===== */
-html,body{width:100%;max-width:100%;overflow-x:hidden}
+/* ===== Xiaomi 6 / Android orientation stability =====
+   The CSS orientation media feature is intentionally NOT used here. On old
+   Android WebView, opening the IME can change the visual viewport and make a
+   portrait viewport satisfy (orientation: landscape). The force-* class is
+   the only source of layout direction. */
+html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .recipe-item,.recipe-item *{writing-mode:horizontal-tb!important;text-orientation:mixed!important;direction:ltr}
 .recipe-name,.recipe-meta{writing-mode:horizontal-tb!important;text-orientation:mixed!important;word-break:keep-all!important;overflow-wrap:normal!important}
 
-/* 旧版 Android WebView 对 orientation media query 可能反向报告。真正方向由 JS 的 layoutOrientation 控制。
-   键盘弹出只触发 resize，不触发这里的方向切换，因此不会把竖屏搜索变成横屏。 */
-html.force-portrait .app{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;overflow-x:hidden!important;}
-html.force-portrait .sidebar{width:100%!important;max-width:100%!important;height:68vh!important;min-height:0!important;flex:none!important;border-right:0!important;border-bottom:1px solid var(--line)!important;overflow:hidden!important;}
-html.force-portrait .content{width:100%!important;min-width:0!important;min-height:32vh!important;height:auto!important;overflow:visible!important;}
-html.force-portrait .recipe-list{min-width:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;}
-html.force-portrait .search{display:block!important;width:calc(100% - 24px)!important;min-width:0!important;height:44px!important;font-size:16px!important;line-height:1.4!important;transform:none!important;zoom:1!important;}
-html.force-portrait .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
-html.force-portrait .recipe-name,html.force-portrait .recipe-meta{white-space:nowrap!important;}
+/* Portrait phone/tablet */
+html.force-portrait,html.force-portrait body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+html.force-portrait .app{display:flex!important;flex-direction:column!important;width:100%!important;height:auto!important;min-height:100%!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:visible!important}
+html.force-portrait .sidebar{width:100%!important;max-width:100%!important;min-width:0!important;height:68vh!important;min-height:0!important;max-height:none!important;flex:none!important;border-right:0!important;border-bottom:1px solid var(--line)!important;overflow:hidden!important}
+html.force-portrait .content{width:100%!important;max-width:100%!important;min-width:0!important;min-height:32vh!important;height:auto!important;flex:none!important;overflow:visible!important}
+html.force-portrait .brand{padding:18px 16px 8px!important}
+html.force-portrait .search{display:block!important;box-sizing:border-box!important;width:calc(100% - 24px)!important;min-width:0!important;height:44px!important;margin:7px 12px 10px!important;padding:10px 13px!important;font-size:16px!important;line-height:22px!important;transform:none!important;zoom:1!important;-webkit-appearance:none!important;appearance:none!important}
+html.force-portrait .filters{min-width:0!important;max-width:100%!important;width:100%!important;overflow-x:auto!important;overflow-y:hidden!important}
+html.force-portrait .recipe-list{width:100%!important;min-width:0!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+html.force-portrait .recipe-item{width:100%!important;max-width:100%!important;transform:none!important}
+html.force-portrait .recipe-name,html.force-portrait .recipe-meta{white-space:nowrap!important}
+html.force-portrait .side-actions{width:100%!important;box-sizing:border-box!important}
 
-html.force-landscape .app{display:flex!important;flex-direction:row!important;width:100vw!important;height:100vh!important;min-height:0!important;overflow:hidden!important;}
-html.force-landscape .sidebar{width:42vw!important;min-width:250px!important;max-width:460px!important;height:100vh!important;flex:none!important;border-right:1px solid var(--line)!important;border-bottom:0!important;overflow:hidden!important;}
-html.force-landscape .recipe-list{flex:1!important;min-height:0!important;width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;}
-html.force-landscape .content{flex:1!important;width:auto!important;min-width:0!important;min-height:0!important;height:100vh!important;overflow:auto!important;}
-html.force-landscape .topbar{height:50px!important;padding:0 10px!important;}
-html.force-landscape .page{padding:16px 14px 30px!important;}
-html.force-landscape .title{font-size:24px!important;}
-html.force-landscape .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
-html.force-landscape .recipe-name,html.force-landscape .recipe-meta{white-space:nowrap!important;}
+/* Landscape phone/tablet */
+html.force-landscape,html.force-landscape body{width:100%!important;max-width:100%!important;height:100%!important;overflow:hidden!important}
+html.force-landscape .app{display:flex!important;flex-direction:row!important;width:100vw!important;height:100vh!important;min-height:0!important;max-width:none!important;overflow:hidden!important}
+html.force-landscape .sidebar{width:46vw!important;min-width:250px!important;max-width:460px!important;height:100vh!important;flex:none!important;border-right:1px solid var(--line)!important;border-bottom:0!important;overflow:hidden!important}
+html.force-landscape .content{flex:1!important;width:auto!important;max-width:none!important;min-width:0!important;min-height:0!important;height:100vh!important;overflow:auto!important}
+html.force-landscape .brand{padding:8px 12px 4px!important;font-size:18px!important}
+html.force-landscape .search{display:block!important;box-sizing:border-box!important;width:calc(100% - 16px)!important;min-width:0!important;height:40px!important;margin:3px 8px 6px!important;padding:7px 10px!important;font-size:16px!important;line-height:22px!important}
+html.force-landscape .filters{width:auto!important;max-width:none!important;overflow-x:auto!important;overflow-y:hidden!important}
+html.force-landscape .recipe-list{flex:1!important;width:100%!important;min-width:0!important;min-height:0!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+html.force-landscape .recipe-item{width:100%!important;max-width:100%!important;min-height:42px!important;padding:8px 9px!important;transform:none!important}
+html.force-landscape .recipe-name{font-size:14px!important;white-space:nowrap!important}
+html.force-landscape .recipe-meta{font-size:10px!important;white-space:nowrap!important}
+html.force-landscape .side-actions{padding:6px!important;gap:6px!important;flex:none!important}
+html.force-landscape .side-actions button{min-height:36px!important;padding:6px 8px!important}
+html.force-landscape .topbar{height:50px!important;padding:0 10px!important}
+html.force-landscape .page{padding:16px 14px 30px!important}
+html.force-landscape .title{font-size:24px!important}
 
-/* 食材尽量保持一项一行；过长内容让整张表横向滚动，不拆中文字符。 */
-.ingredient-table{table-layout:auto!important;width:max-content!important;min-width:100%!important;}
-.ingredient-table th,.ingredient-table td{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;}
-.section:has(.ingredient-table){overflow-x:auto!important;-webkit-overflow-scrolling:touch;}
+/* Ingredients: keep each ingredient row intact rather than breaking Chinese
+   characters vertically. The table can scroll horizontally if necessary. */
+.ingredient-table{table-layout:auto!important;width:max-content!important;min-width:100%!important}
+.ingredient-table th,.ingredient-table td{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important}
+.section:has(.ingredient-table){overflow-x:auto!important;-webkit-overflow-scrolling:touch}
 @media(max-width:800px){
-  .search{font-size:16px!important;line-height:1.4;min-height:44px;}
-  .ingredient-table th,.ingredient-table td{padding:10px 11px;}
-  .ingredient-table td:nth-child(2){min-width:72px;}
+  .search{font-size:16px!important;line-height:1.4;min-height:44px}
+  .ingredient-table th,.ingredient-table td{padding:10px 11px}
+  .ingredient-table td:nth-child(2){min-width:72px}
 }
-
-/* ===== Final orientation lock for legacy Android / Xiaomi 6 =====
-   CSS orientation media queries can react to the IME/keyboard changing the
-   visual viewport. The force-* class is authoritative and is updated only
-   by a real device orientation event. */
-html.force-portrait,html.force-portrait body{width:100%!important;max-width:100%!important;overflow-x:hidden!important;}
-html.force-portrait .app{display:flex!important;flex-direction:column!important;width:100%!important;height:auto!important;min-height:100%!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:visible!important;}
-html.force-portrait .sidebar{width:100%!important;max-width:100%!important;min-width:0!important;height:68vh!important;min-height:0!important;max-height:none!important;flex:none!important;border-right:0!important;border-bottom:1px solid var(--line)!important;overflow:hidden!important;}
-html.force-portrait .content{width:100%!important;max-width:100%!important;min-width:0!important;min-height:32vh!important;height:auto!important;flex:none!important;overflow:visible!important;}
-html.force-portrait .brand{padding:18px 16px 8px!important;font-size:inherit!important;}
-html.force-portrait .search{display:block!important;box-sizing:border-box!important;width:calc(100% - 24px)!important;min-width:0!important;height:44px!important;margin:7px 12px 10px!important;padding:10px 13px!important;font-size:16px!important;line-height:22px!important;transform:none!important;zoom:1!important;-webkit-appearance:none!important;appearance:none!important;}
-html.force-portrait .filters{min-width:0!important;max-width:100%!important;width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;}
-html.force-portrait .recipe-list{width:100%!important;min-width:0!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;}
-html.force-portrait .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
-html.force-portrait .side-actions{width:100%!important;box-sizing:border-box!important;}
-
-html.force-landscape,html.force-landscape body{width:100%!important;max-width:100%!important;height:100%!important;overflow:hidden!important;}
-html.force-landscape .app{display:flex!important;flex-direction:row!important;width:100vw!important;height:100vh!important;min-height:0!important;max-width:none!important;overflow:hidden!important;}
-html.force-landscape .sidebar{width:42vw!important;min-width:250px!important;max-width:460px!important;height:100vh!important;min-height:0!important;flex:none!important;border-right:1px solid var(--line)!important;border-bottom:0!important;overflow:hidden!important;}
-html.force-landscape .content{flex:1!important;width:auto!important;max-width:none!important;min-width:0!important;min-height:0!important;height:100vh!important;overflow:auto!important;}
-html.force-landscape .brand{padding:8px 12px 4px!important;font-size:18px!important;}
-html.force-landscape .search{display:block!important;box-sizing:border-box!important;width:calc(100% - 16px)!important;min-width:0!important;height:40px!important;margin:3px 8px 6px!important;padding:7px 10px!important;font-size:16px!important;line-height:22px!important;}
-html.force-landscape .filters{width:auto!important;max-width:none!important;overflow-x:auto!important;overflow-y:hidden!important;}
-html.force-landscape .recipe-list{flex:1!important;width:100%!important;min-width:0!important;min-height:0!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;}
-html.force-landscape .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
-
-
-/* FINAL: orientation is controlled only by .force-* classes.
-   Do not let Android's IME/viewport-driven @media orientation decide layout. */
-html.force-portrait .app{flex-direction:column!important}
-html.force-landscape .app{flex-direction:row!important}
-html.force-portrait .sidebar{width:100%!important;max-width:100%!important;min-width:0!important;height:68vh!important;flex:none!important}
-html.force-landscape .sidebar{width:46vw!important;min-width:250px!important;max-width:460px!important;height:100vh!important;flex:none!important}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -270,50 +119,45 @@ let query=''; let category='全部'; let scale=1; let searchComposing=false;
 let searchFocused=false;
 let recipeListScrollTop=Number(localStorage.getItem(MENU_SCROLL_KEY)||0);
 let restoreRecipeListScroll=true;
-function readDeviceOrientation(){
-  // Determine the physical device orientation only. Do NOT use
-  // innerWidth/innerHeight, visualViewport, or CSS orientation media queries:
-  // Android's soft keyboard can change the visual viewport and make a
-  // portrait device temporarily satisfy the landscape media query.
-  //
-  // On older Xiaomi WebView, window.orientation is the most useful signal.
+function readInitialOrientation(){
+  // Read the CSS viewport orientation ONCE at startup, before the keyboard is
+  // involved. This gives the correct initial portrait/landscape state.
+  // After startup we never react to media-query changes caused by the IME.
+  const mq=window.matchMedia && window.matchMedia('(orientation: landscape)');
+  if(mq) return mq.matches?'landscape':'portrait';
   const legacy=window.orientation;
-  if(typeof legacy==='number' && isFinite(legacy)){
-    return Math.abs(legacy)%180===90?'landscape':'portrait';
-  }
-  // If the legacy API is absent, screen dimensions are independent of the
-  // keyboard and are therefore safe to use.
-  const sw=window.screen && Number(window.screen.width)||0;
-  const sh=window.screen && Number(window.screen.height)||0;
-  if(sw && sh && sw!==sh) return sw>sh?'landscape':'portrait';
-  const angle=window.screen && window.screen.orientation && window.screen.orientation.angle;
-  if(typeof angle==='number' && isFinite(angle)){
-    return Math.abs(angle%180)===90?'landscape':'portrait';
-  }
-  // Only a final fallback for browsers with none of the physical orientation
-  // APIs. This branch is not used on Xiaomi 6 when window.orientation exists.
-  const w=window.innerWidth||document.documentElement.clientWidth||0;
-  const h=window.innerHeight||document.documentElement.clientHeight||0;
-  return (w && h && w>h)?'landscape':'portrait';
+  if(typeof legacy==='number' && isFinite(legacy)) return Math.abs(legacy)%180===90?'landscape':'portrait';
+  return 'portrait';
 }
-let layoutOrientation=readDeviceOrientation();
+function readRotatedOrientation(){
+  // This function is called ONLY after a real orientationchange / Screen
+  // Orientation API event, never from resize or keyboard events.
+  const so=window.screen && window.screen.orientation;
+  if(so && typeof so.type==='string') return so.type.indexOf('landscape')===0?'landscape':'portrait';
+  const legacy=window.orientation;
+  if(typeof legacy==='number' && isFinite(legacy)) return Math.abs(legacy)%180===90?'landscape':'portrait';
+  const mq=window.matchMedia && window.matchMedia('(orientation: landscape)');
+  return mq && mq.matches?'landscape':'portrait';
+}
+let layoutOrientation=readInitialOrientation();
 function applyLayoutOrientation(){
   const root=document.documentElement;
-  root.classList.toggle('force-portrait', layoutOrientation==='portrait');
-  root.classList.toggle('force-landscape', layoutOrientation==='landscape');
+  root.classList.toggle('force-portrait',layoutOrientation==='portrait');
+  root.classList.toggle('force-landscape',layoutOrientation==='landscape');
 }
 function updatePhysicalOrientation(){
-  layoutOrientation=readDeviceOrientation();
-  applyLayoutOrientation();
+  const next=readRotatedOrientation();
+  if(next!==layoutOrientation){
+    layoutOrientation=next;
+    applyLayoutOrientation();
+  }
 }
 applyLayoutOrientation();
-// Only actual orientation/configuration events may change layout orientation.
-// Never infer orientation from resize: Android IME/keyboard changes the visual
-// viewport and can fire resize without rotating the device.
-window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,150));
-window.addEventListener('deviceorientation',()=>setTimeout(updatePhysicalOrientation,150));
+// CRITICAL: do not listen to resize or media-query changes. Android's soft
+// keyboard changes the visual viewport and may make CSS orientation flip.
+window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,100));
 if(window.screen && window.screen.orientation && window.screen.orientation.addEventListener){
-  window.screen.orientation.addEventListener('change',updatePhysicalOrientation);
+  window.screen.orientation.addEventListener('change',()=>setTimeout(updatePhysicalOrientation,100));
 }
 function persistSelected(){
   const r=recipes.find(x=>x.name===selected);
