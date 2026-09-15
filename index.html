@@ -213,6 +213,32 @@ html.force-landscape .recipe-name,html.force-landscape .recipe-meta{white-space:
   .ingredient-table th,.ingredient-table td{padding:10px 11px;}
   .ingredient-table td:nth-child(2){min-width:72px;}
 }
+
+/* ===== Final orientation lock for legacy Android / Xiaomi 6 =====
+   CSS orientation media queries can react to the IME/keyboard changing the
+   visual viewport. The force-* class is authoritative and is updated only
+   by a real device orientation event. */
+html.force-portrait,html.force-portrait body{width:100%!important;max-width:100%!important;overflow-x:hidden!important;}
+html.force-portrait .app{display:flex!important;flex-direction:column!important;width:100%!important;height:auto!important;min-height:100%!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:visible!important;}
+html.force-portrait .sidebar{width:100%!important;max-width:100%!important;min-width:0!important;height:68vh!important;min-height:0!important;max-height:none!important;flex:none!important;border-right:0!important;border-bottom:1px solid var(--line)!important;overflow:hidden!important;}
+html.force-portrait .content{width:100%!important;max-width:100%!important;min-width:0!important;min-height:32vh!important;height:auto!important;flex:none!important;overflow:visible!important;}
+html.force-portrait .brand{padding:18px 16px 8px!important;font-size:inherit!important;}
+html.force-portrait .search{display:block!important;box-sizing:border-box!important;width:calc(100% - 24px)!important;min-width:0!important;height:44px!important;margin:7px 12px 10px!important;padding:10px 13px!important;font-size:16px!important;line-height:22px!important;transform:none!important;zoom:1!important;-webkit-appearance:none!important;appearance:none!important;}
+html.force-portrait .filters{min-width:0!important;max-width:100%!important;width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;}
+html.force-portrait .recipe-list{width:100%!important;min-width:0!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;}
+html.force-portrait .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
+html.force-portrait .side-actions{width:100%!important;box-sizing:border-box!important;}
+
+html.force-landscape,html.force-landscape body{width:100%!important;max-width:100%!important;height:100%!important;overflow:hidden!important;}
+html.force-landscape .app{display:flex!important;flex-direction:row!important;width:100vw!important;height:100vh!important;min-height:0!important;max-width:none!important;overflow:hidden!important;}
+html.force-landscape .sidebar{width:42vw!important;min-width:250px!important;max-width:460px!important;height:100vh!important;min-height:0!important;flex:none!important;border-right:1px solid var(--line)!important;border-bottom:0!important;overflow:hidden!important;}
+html.force-landscape .content{flex:1!important;width:auto!important;max-width:none!important;min-width:0!important;min-height:0!important;height:100vh!important;overflow:auto!important;}
+html.force-landscape .brand{padding:8px 12px 4px!important;font-size:18px!important;}
+html.force-landscape .search{display:block!important;box-sizing:border-box!important;width:calc(100% - 16px)!important;min-width:0!important;height:40px!important;margin:3px 8px 6px!important;padding:7px 10px!important;font-size:16px!important;line-height:22px!important;}
+html.force-landscape .filters{width:auto!important;max-width:none!important;overflow-x:auto!important;overflow-y:hidden!important;}
+html.force-landscape .recipe-list{flex:1!important;width:100%!important;min-width:0!important;min-height:0!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;}
+html.force-landscape .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
+
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -237,25 +263,42 @@ let query=''; let category='全部'; let scale=1; let searchComposing=false;
 let searchFocused=false;
 let recipeListScrollTop=Number(localStorage.getItem(MENU_SCROLL_KEY)||0);
 let restoreRecipeListScroll=true;
-let layoutOrientation = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait';
+function readDeviceOrientation(){
+  // Xiaomi 6 / legacy Android WebView: window.orientation is tied to the
+  // physical device rotation and is not affected by the software keyboard.
+  const legacy=window.orientation;
+  if(typeof legacy==='number' && isFinite(legacy)){
+    return Math.abs(legacy)===90 ? 'landscape' : 'portrait';
+  }
+  // Modern browsers expose screen.orientation.angle; also unaffected by IME.
+  const angle=window.screen && window.screen.orientation && window.screen.orientation.angle;
+  if(typeof angle==='number' && isFinite(angle)){
+    return Math.abs(angle%180)===90 ? 'landscape' : 'portrait';
+  }
+  // Last-resort fallback only for browsers without either orientation API.
+  const w=window.innerWidth||document.documentElement.clientWidth||0;
+  const h=window.innerHeight||document.documentElement.clientHeight||0;
+  return (w && h && w>h) ? 'landscape' : 'portrait';
+}
+let layoutOrientation=readDeviceOrientation();
 function applyLayoutOrientation(){
   const root=document.documentElement;
   root.classList.toggle('force-portrait', layoutOrientation==='portrait');
   root.classList.toggle('force-landscape', layoutOrientation==='landscape');
 }
 function updatePhysicalOrientation(){
-  // 仅由真实旋转事件调用。绝不在 resize 中判断方向，因为小米6键盘弹出会改变 viewport 高度。
-  const w=window.innerWidth||document.documentElement.clientWidth||0;
-  const h=window.innerHeight||document.documentElement.clientHeight||0;
-  if(w && h) layoutOrientation = w>h ? 'landscape' : 'portrait';
+  layoutOrientation=readDeviceOrientation();
   applyLayoutOrientation();
 }
 applyLayoutOrientation();
-window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,250));
-if(window.screen?.orientation?.addEventListener){
-  window.screen.orientation.addEventListener('change',()=>setTimeout(updatePhysicalOrientation,250));
+// Only actual orientation/configuration events may change layout orientation.
+// Never infer orientation from resize: Android IME/keyboard changes the visual
+// viewport and can fire resize without rotating the device.
+window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,150));
+window.addEventListener('deviceorientation',()=>setTimeout(updatePhysicalOrientation,150));
+if(window.screen && window.screen.orientation && window.screen.orientation.addEventListener){
+  window.screen.orientation.addEventListener('change',updatePhysicalOrientation);
 }
-// 不监听 window.resize：搜索框获得焦点/输入法弹出不会改变横竖屏布局。
 function persistSelected(){
   const r=recipes.find(x=>x.name===selected);
   selectedRecipeId=r?.id||'';
