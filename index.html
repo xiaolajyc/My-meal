@@ -59,7 +59,7 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 }
 
 /* ===== 手机/平板横屏：优先保证菜谱列表可浏览、可点击 ===== */
-@media (orientation: landscape) and (max-width: 1000px) and (min-height: 370px) and (min-width: 801px){
+@media (orientation: landscape) and (max-width: 1000px) and (min-height: 300px){
   html,body{height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .app{
     display:flex;
@@ -143,7 +143,7 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 }
 
 /* 超窄手机横屏：进一步压缩左侧控制区 */
-@media (orientation: landscape) and (max-width: 700px) and (min-height: 370px) and (min-width: 801px){
+@media (orientation: landscape) and (max-width: 700px) and (min-height: 300px){
   .sidebar{width:46vw;min-width:250px}
   .brand{padding:8px 12px 4px;font-size:18px}
   .brand:after{display:none}
@@ -156,6 +156,27 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
   .side-actions button{min-height:36px;padding:6px 8px}
   .content .page{padding:16px 14px 30px}
   .title{font-size:24px}
+}
+
+/* ===== 小米6及小屏设备横屏：横屏时始终恢复左右分栏 ===== */
+@media (orientation: landscape) and (max-width: 800px) and (min-height: 300px){
+  html,body{height:100%;overflow:hidden!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  .app{display:flex!important;flex-direction:row!important;width:100vw!important;height:100vh!important;min-height:0!important;overflow:hidden!important}
+  .sidebar{width:46vw!important;min-width:250px!important;max-width:380px!important;height:100vh!important;flex:none!important;border-right:1px solid var(--line)!important;border-bottom:0!important;overflow:hidden!important}
+  .brand{padding:8px 12px 4px!important;font-size:18px!important}
+  .search{margin:3px 8px 6px!important;width:calc(100% - 16px)!important;height:40px!important;padding:7px 10px!important;font-size:16px!important}
+  .filters{padding:0 8px 6px!important;gap:5px!important;flex:none!important}
+  .chip{padding:5px 8px!important;font-size:11px!important}
+  .recipe-list{flex:1!important;min-height:0!important;width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;padding:0 5px 5px!important}
+  .recipe-item{width:100%!important;max-width:100%!important;min-height:42px!important;padding:8px 9px!important;margin:2px 0!important;transform:none!important}
+  .recipe-name{font-size:14px!important;white-space:nowrap!important;writing-mode:horizontal-tb!important;word-break:keep-all!important;overflow-wrap:normal!important}
+  .recipe-meta{font-size:10px!important;white-space:nowrap!important;writing-mode:horizontal-tb!important}
+  .side-actions{padding:6px!important;gap:6px!important;flex:none!important}
+  .side-actions button{min-height:36px!important;padding:6px 8px!important}
+  .content{flex:1!important;width:auto!important;min-width:0!important;min-height:0!important;height:100vh!important;overflow:auto!important}
+  .topbar{height:50px!important;padding:0 10px!important}
+  .page{padding:16px 14px 30px!important}
+  .title{font-size:24px!important}
 }
 
 /* ===== Xiaomi 6 / Android keyboard stability ===== */
@@ -213,13 +234,21 @@ let searchFocused=false;
 let recipeListScrollTop=Number(localStorage.getItem(MENU_SCROLL_KEY)||0);
 let restoreRecipeListScroll=true;
 function updatePhysicalOrientation(){
-  const portrait = (window.screen && Number(screen.width) && Number(screen.height))
-    ? screen.width < screen.height
-    : window.innerWidth < window.innerHeight;
-  document.documentElement.classList.toggle('force-portrait', portrait && window.innerWidth <= 800);
+  // 不使用 screen.width/screen.height 判断方向：小米6在旋转或软键盘弹出时，
+  // 这些值可能仍保持物理竖屏尺寸，从而把真正的横屏误判成竖屏。
+  let portrait;
+  try{
+    portrait=window.matchMedia('(orientation: portrait)').matches;
+  }catch(e){
+    const angle=window.screen?.orientation?.angle;
+    if(typeof angle==='number') portrait=angle===0||angle===180;
+    else portrait=window.innerWidth < window.innerHeight;
+  }
+  document.documentElement.classList.toggle('force-portrait', !!portrait && window.innerWidth <= 800);
 }
 updatePhysicalOrientation();
 window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,80));
+window.addEventListener('resize',()=>setTimeout(updatePhysicalOrientation,80));
 
 function persistSelected(){
   const r=recipes.find(x=>x.name===selected);
