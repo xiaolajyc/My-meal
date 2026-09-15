@@ -59,7 +59,7 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 }
 
 /* ===== 手机/平板横屏：优先保证菜谱列表可浏览、可点击 ===== */
-@media (orientation: landscape) and (max-width: 1000px) and (min-height: 370px){
+@media (orientation: landscape) and (max-width: 1000px) and (min-height: 370px) and (min-width: 801px){
   html,body{height:100%;overflow:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
   .app{
     display:flex;
@@ -143,7 +143,7 @@ body{background:linear-gradient(135deg,#f7f7f5 0%,#f2f4ef 100%);color:var(--text
 }
 
 /* 超窄手机横屏：进一步压缩左侧控制区 */
-@media (orientation: landscape) and (max-width: 700px) and (min-height: 370px){
+@media (orientation: landscape) and (max-width: 700px) and (min-height: 370px) and (min-width: 801px){
   .sidebar{width:46vw;min-width:250px}
   .brand{padding:8px 12px 4px;font-size:18px}
   .brand:after{display:none}
@@ -177,6 +177,17 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   .ingredient-table td:nth-child(2){min-width:72px;}
   .ingredient-table td:nth-child(5){min-width:120px;max-width:360px;}
 }
+/* ===== Xiaomi 6: keep physical portrait layout while the soft keyboard is open ===== */
+html.force-portrait .app{flex-direction:column!important;width:100%!important;min-width:0!important;overflow-x:hidden!important;}
+html.force-portrait .sidebar{width:100%!important;max-width:100%!important;height:68vh!important;min-height:0!important;border-right:0!important;border-bottom:1px solid var(--line)!important;overflow:hidden!important;}
+html.force-portrait .content{width:100%!important;min-width:0!important;min-height:32vh!important;height:auto!important;overflow:visible!important;}
+html.force-portrait .recipe-list{min-width:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;}
+html.force-portrait .search{display:block!important;width:calc(100% - 24px)!important;min-width:0!important;height:44px!important;font-size:16px!important;line-height:1.4!important;transform:none!important;zoom:1!important;}
+html.force-portrait .recipe-item{width:100%!important;max-width:100%!important;transform:none!important;}
+html.force-portrait .recipe-name,html.force-portrait .recipe-meta{writing-mode:horizontal-tb!important;text-orientation:mixed!important;word-break:keep-all!important;overflow-wrap:normal!important;white-space:nowrap!important;}
+/* 食材表默认每一项尽量保持一行；整张表可横向滚动，避免中文被挤成竖排。 */
+.ingredient-table th,.ingredient-table td{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;}
+.section:has(.ingredient-table){overflow-x:auto!important;-webkit-overflow-scrolling:touch;}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -201,6 +212,15 @@ let query=''; let category='全部'; let scale=1; let searchComposing=false;
 let searchFocused=false;
 let recipeListScrollTop=Number(localStorage.getItem(MENU_SCROLL_KEY)||0);
 let restoreRecipeListScroll=true;
+function updatePhysicalOrientation(){
+  const portrait = (window.screen && Number(screen.width) && Number(screen.height))
+    ? screen.width < screen.height
+    : window.innerWidth < window.innerHeight;
+  document.documentElement.classList.toggle('force-portrait', portrait && window.innerWidth <= 800);
+}
+updatePhysicalOrientation();
+window.addEventListener('orientationchange',()=>setTimeout(updatePhysicalOrientation,80));
+
 function persistSelected(){
   const r=recipes.find(x=>x.name===selected);
   selectedRecipeId=r?.id||'';
@@ -294,6 +314,10 @@ function updateIngredientProgress(){
 
 function refreshSearchResults(){
  const listEl=document.querySelector('.recipe-list');
+ const searchEl=document.getElementById('search');
+ const hadFocus=searchEl && document.activeElement===searchEl;
+ const caretStart=searchEl?.selectionStart ?? null;
+ const caretEnd=searchEl?.selectionEnd ?? null;
  const savedScroll=listEl?listEl.scrollTop:recipeListScrollTop;
  recipeListScrollTop=savedScroll;
  const list=filtered();
@@ -304,6 +328,10 @@ function refreshSearchResults(){
    requestAnimationFrame(restore);
    document.querySelectorAll('.recipe-item[data-name]').forEach(b=>b.onclick=()=>{selectRecipe(b.dataset.name);render()});
    listEl.onscroll=()=>{recipeListScrollTop=listEl.scrollTop;localStorage.setItem(MENU_SCROLL_KEY,String(recipeListScrollTop))};
+   if(hadFocus){
+     try{searchEl.focus({preventScroll:true});}catch(e){searchEl.focus();}
+     if(caretStart!==null){try{searchEl.setSelectionRange(caretStart,caretEnd);}catch(e){}}
+   }
  }
 }
 function bind(){
