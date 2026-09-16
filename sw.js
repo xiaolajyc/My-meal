@@ -1,4 +1,4 @@
-const CACHE_NAME = 'my-recipe-pwa-v6';
+const CACHE_NAME = 'my-recipe-pwa-v7';
 const APP_SHELL = [
   './',
   './index.html',
