@@ -1,10 +1,7 @@
-我的食谱 PWA Flat
-版本：v1.1.2
+我的食谱 PWA Flat v1.1.3
 
-Google Drive 多设备同步：
-- 使用 Google Identity Services + Drive API drive.file
-- 已授权设备优先静默续期 access token，避免频繁重新登录
-- 自动同步在 token 过期后尝试静默续期，不主动弹出登录窗口
-- 若 Google 登录会话本身已失效，只在设置中手动连接时重新授权
-
-部署：将全部 7 个文件放在同一目录，通过 HTTPS/localhost 访问。
+本版本修复：
+- Google Drive 设置窗口重复叠加，导致需要取消两次的问题。
+- 所有弹窗现在保证同一时间只有一个实例。
+- 版本号更新为 v1.1.3。
+- Service Worker 缓存版本同步更新。
