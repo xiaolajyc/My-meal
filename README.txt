@@ -11,3 +11,6 @@
 
 注意：Service Worker 需要 HTTPS（localhost 除外）。
 数据主要保存在设备本地，使用应用内“数据备份”进行 JSON 导入/导出。
+
+
+Google Drive 同步：进入“设置”→“连接 Google Drive”，首次授权后可手动上传到云端或从云端恢复。
