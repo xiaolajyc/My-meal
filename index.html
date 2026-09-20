@@ -23,6 +23,14 @@ button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
 }
 
 
+
+.drive-sync-card{background:#fff;border:1px solid #e3e7ed;border-radius:16px;padding:16px;box-shadow:0 3px 12px rgba(0,0,0,.035)}
+.drive-sync-title{font-size:18px;font-weight:800;margin-bottom:8px}.drive-sync-last{font-size:14px;color:#6f7d92;margin-bottom:14px}
+.drive-sync-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.drive-sync-grid button{min-height:46px;font-weight:700}
+.drive-sync-grid .primary{background:#147af3;color:#fff}.drive-sync-grid .secondary{background:#eef1f5;color:#45536a}
+.drive-sync-check{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:15px}.drive-sync-check input{width:22px;height:22px;accent-color:#147af3}
+.drive-sync-detail{font-size:13px;color:#8a98ad;line-height:1.55;margin-top:10px}.drive-status{font-size:13px;color:#6f7d92;margin-bottom:8px}.drive-connected{color:#2f6f43}.drive-error{color:#c0392b}
+@media(max-width:420px){.drive-sync-grid{gap:8px}.drive-sync-grid button{padding:10px 7px;font-size:14px}}
 .settings-card{background:#f8f9f6;border:1px solid var(--line);border-radius:13px;padding:4px 14px;margin:14px 0}.settings-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 2px;border-bottom:1px solid var(--line)}.settings-row:last-child{border-bottom:0}.settings-row span{color:var(--muted);font-size:14px}.settings-row strong{font-size:14px;color:var(--text)}
 .side-actions{grid-template-columns:1fr 1fr 1fr!important}
 @media(max-width:420px){.side-actions{grid-template-columns:1fr 1fr!important}.settings-row{padding:12px 2px}}
@@ -113,7 +121,7 @@ html.force-landscape .title{font-size:24px!important}
 <div id="app"></div><div id="toast" class="toast"></div>
 <script>
 const DEFAULT_RECIPES = [{"name": "大龙糊糊", "category": "汤/火锅", "type": "菜谱", "ingredients": [["绿豆", "200", "g", ""], ["火腿肠", "600", "g", ""], ["蔬菜", "1050", "g", ""], ["葱", "65", "g", ""], ["胡萝卜", "35", "g", ""], ["芹菜", "50", "g", ""], ["面包", "200", "g", ""]], "prep": ["绿豆提前浸泡一天。", "火腿肠切好，分成600g×2袋冷冻。", "绿豆高压锅按“牛羊肉，软烂70”，35分钟。冷却后分装冷冻。备注：1kg干豆约变成3kg熟豆。", "需要焯水的蔬菜焯水后挤干。青菜、白菜焯3分钟；萝卜缨焯6分钟。", "葱、胡萝卜、芹菜切好，用少量油炒香。"], "cook": ["加入火腿肠翻炒。", "加入鸡汤。", "加入大量热水，煮10分钟。", "加入熟绿豆，再煮5分钟。", "加入蔬菜，煮至合适状态。", "使用后清洁工具。"], "notes": ""}, {"name": "大吉利火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["蒜泥", "3", "份", ""], ["小米辣", "1", "份", ""], ["菌菇酱", "1", "份", ""], ["牛肉酱", "2", "份", ""], ["韭花酱", "0.5", "份", ""], ["榨菜", "1", "份", ""], ["芝麻酱", "0.5", "份", ""], ["香油", "1", "份", ""], ["青椒酱", "2", "份", ""], ["香菜", "2", "份", ""]], "prep": [], "cook": ["将所有配料混合均匀。"], "notes": ""}, {"name": "咸肉菜饭", "category": "主食", "type": "菜谱", "ingredients": [["咸肉", "800", "g", "切0.5×0.5×2cm丁，肥瘦分开"], ["青白菜", "1200", "g", "切1×1cm丁，焯水3分钟并挤干"], ["大米", "600", "g", ""]], "prep": ["咸肉切0.5×0.5×2cm丁，肥瘦分开。", "青白菜洗净，切1×1cm丁，焯水3分钟，挤干。", "青菜加入0.75%的盐和味精。"], "cook": ["肥咸肉煸油。", "瘦肉加入少量料酒和姜去腥。", "咸肉煸好后加入米饭。", "放入高压锅压熟。", "拌入青菜。"], "notes": "原记录未明确青菜中盐和味精的具体克数，因此保留0.75%的原始记录。"}, {"name": "烤南瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["南瓜", "600", "g", "切三角片，能立住"], ["糖", "20", "g", ""], ["水", "10", "g", ""], ["黄油", "", "适量", ""]], "prep": ["南瓜切成能立住的三角片。", "糖20g加水10g调成糖水。"], "cook": ["200°C烤至开始焦边。", "翻面并刷两面糖水。", "继续烤10分钟。", "正反面再次刷糖水，继续烤10分钟。", "最后仅正面刷黄油。"], "notes": ""}, {"name": "酸奶研究方案", "category": "其他/实验", "type": "实验", "ingredients": [["全脂奶粉", "105", "g", "现方案"], ["水", "750", "g", "现方案"], ["酸奶", "150", "g", "现方案"], ["糖", "7", "%", "现方案"], ["脱脂奶粉", "105", "g", "方案1"]], "prep": [], "cook": ["发酵12小时。"], "notes": "现方案：全脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。方案1：脱脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。"}, {"name": "Risotto", "category": "主食", "type": "菜谱", "ingredients": [["蘑菇片", "500", "g", ""], ["黄油", "95", "g", ""], ["白葡萄酒", "65", "ml", ""], ["帕马森芝士", "50", "g", ""], ["蒜泥", "1", "勺", ""], ["洋葱碎", "1", "个", ""], ["奶油", "125", "ml", ""], ["米饭", "300", "g", ""], ["鸡精", "1", "勺", ""]], "prep": [], "cook": ["热锅，加入小块黄油。", "加入蒜泥、洋葱。", "加入蘑菇、白葡萄酒、鸡精并混匀。", "关火，加入芝士。", "加入黄油和奶油。", "加入米饭搅匀。", "静置5分钟后上桌。"], "notes": ""}, {"name": "蛋挞", "category": "烘焙", "type": "菜谱", "ingredients": [["奶", "70", "g", ""], ["淡奶油", "60", "g", ""], ["鸡蛋", "1", "个", ""], ["糖", "30", "g", ""], ["炼乳", "15", "g", ""]], "prep": ["使用大塑料杯。"], "cook": [], "notes": "原记录未提供具体烘烤温度和时间。"}, {"name": "肯德基香辣鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "1000", "g", ""], ["盐", "10", "g", "腌料"], ["鸡精", "6.25", "g", "腌料"], ["辣椒粉", "17.5", "g", "腌料"], ["蒜粉", "1.25", "g", "腌料"], ["小苏打", "4", "g", "腌料"], ["水", "75", "g", "腌料"], ["自发粉", "300", "g", "裹粉"], ["盐", "3", "g", "裹粉"], ["鸡精", "1.875", "g", "裹粉"], ["蒜粉", "0.75", "g", "裹粉"], ["自发粉", "167", "g", "裹糊"], ["水", "250", "g", "裹糊"], ["盐", "4.17", "g", "裹糊"], ["鸡精", "2.6", "g", "裹糊"], ["蒜粉", "1.04", "g", "裹糊"]], "prep": ["鸡肉按腌料配方腌制。", "将裹粉材料混合。", "将裹糊材料混合。"], "cook": ["165°C预炸2分钟。", "复炸2分钟。"], "notes": ""}, {"name": "派克鸡排", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "600", "g", ""], ["水", "200", "g", "腌料"], ["盐", "10", "g", "腌料"], ["甜椒粉", "7.5", "g", "腌料"], ["辣椒粉", "7.5", "g", "腌料"], ["蒜粉", "5", "g", "腌料"], ["糖", "100", "g", "腌料"], ["自发粉", "100", "g", "粉浆"], ["太白粉", "70", "g", "粉浆"], ["水", "170", "g", "粉浆"], ["盐", "", "少量", "粉浆"]], "prep": ["按腌料配方混合鸡肉。", "粉浆材料混合。"], "cook": [], "notes": "原记录未提供具体烹饪温度和时间。"}, {"name": "腌咸鸭蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1500", "g", ""], ["盐", "650", "g", ""]], "prep": [], "cook": ["腌制40天。"], "notes": ""}, {"name": "腌皮蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1000", "g", ""], ["盐", "50", "g", ""], ["NaOH", "50", "g", ""]], "prep": [], "cook": ["腌制14天。"], "notes": "记录另注：六月底七月初，10°C室温20天。"}, {"name": "巴沙鱼片腌制", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "1000", "g", "先左右分开再切中等厚片"], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["盐", "5", "g", ""], ["味精", "3", "g", ""], ["水", "50-100", "g", ""]], "prep": ["巴沙鱼先左右分开，再切中等厚片。", "腌料先混匀。"], "cook": ["将腌料与鱼片混合。"], "notes": ""}, {"name": "鸡肉片腌制", "category": "肉类", "type": "配方", "ingredients": [["鸡腿肉片", "1000", "g", ""], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["鸡精", "3", "g", ""], ["盐", "5", "g", ""], ["小苏打", "4", "g", ""], ["水", "50-100", "g", ""]], "prep": ["腌料混匀。"], "cook": ["将腌料与鸡肉片混合。"], "notes": ""}, {"name": "虾滑", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "500", "g", ""], ["虾仁", "500", "g", "其中333g切小块"], ["木薯粉", "50", "g", ""], ["水", "50", "g", ""], ["盐", "5", "g", ""], ["味精", "5", "g", ""], ["鸡蛋", "1", "个", ""]], "prep": ["虾仁中333g切小块。", "调料混匀。"], "cook": ["将调料与虾滑材料混合。"], "notes": ""}, {"name": "齐齐哈尔烤肉", "category": "肉类", "type": "菜谱", "ingredients": [["牛肉", "800", "g", ""], ["洋葱", "160", "g", ""], ["香菜", "50", "g", ""], ["蚝油", "50", "g", ""], ["盐", "8", "g", "适合配菜"], ["孜然", "23", "g", ""], ["红椒粉", "2", "g", ""], ["油", "64", "g", ""]], "prep": [], "cook": ["按配方混合并烤制。"], "notes": "原记录未提供更具体烤制时间和温度。"}, {"name": "自制蚝油", "category": "酱料", "type": "配方", "ingredients": [["生抽", "15", "g", "不是鲜酱油"], ["糖", "6", "g", ""], ["鸡精", "5", "g", ""], ["水", "15", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "莫吉托", "category": "饮料", "type": "配方", "ingredients": [["薄荷叶", "10", "g", ""], ["糖", "6", "g", ""], ["青柠汁", "10", "g", ""], ["雪碧", "250", "g", ""]], "prep": [], "cook": ["混合饮用。"], "notes": ""}, {"name": "药膳鸡火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["生抽", "50", "g", "不是鲜酱油"], ["醋", "10-15", "g", ""], ["糖", "5", "g", ""], ["鸡精", "5", "g", ""], ["高汤/水", "15", "g", ""], ["小米辣", "4", "个", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "希腊酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["脱脂奶粉", "45", "g", ""], ["全脂奶粉", "119", "g", ""], ["水", "900", "g", ""], ["酸奶", "200", "g", ""], ["奶油", "100", "g", ""], ["糖", "95-109", "g", "7%-8%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["全脂奶粉", "140", "g", ""], ["水", "1000", "g", ""], ["酸奶", "200", "g", ""], ["糖", "94", "g", "7%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "红枣酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["无糖酸奶", "", "", ""], ["红枣浓缩液", "10", "%", ""], ["糖", "1", "%", ""], ["红糖", "", "", ""]], "prep": [], "cook": [], "notes": "红糖记录：白糖300g + 红印黑糖1 tbsp。"}, {"name": "可乐鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅", "310", "g", ""], ["生抽", "18", "g", ""], ["老抽", "6", "g", ""], ["红糖", "18", "g", ""], ["白醋", "9", "g", ""], ["水", "18", "g", ""], ["桂皮", "", "两点点", ""], ["陈皮", "", "一点点", ""]], "prep": [], "cook": ["按配方烹制至熟透并收汁。"], "notes": ""}, {"name": "寿司米饭", "category": "主食", "type": "菜谱", "ingredients": [["寿司米", "300", "g", ""], ["水", "400", "g", ""], ["寿司醋", "50", "g", ""]], "prep": [], "cook": ["按米饭方式煮熟。", "拌入寿司醋。"], "notes": ""}, {"name": "寿司醋", "category": "酱料", "type": "配方", "ingredients": [["白醋", "200", "g", ""], ["糖", "100", "g", ""], ["盐", "10", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "烟熏三文鱼", "category": "海鲜", "type": "配方", "ingredients": [["三文鱼", "100", "g", "去皮后重量"], ["水", "100", "g", "基础卤水"], ["红糖", "3", "g", "基础卤水"], ["盐", "3", "g", "基础卤水"], ["红糖", "3", "g", ""], ["盐", "3", "g", ""], ["烟熏液", "1", "g", ""], ["盐糖水", "1", "g", ""], ["红糖", "3", "g", ""]], "prep": ["三文鱼去皮后称100g。", "基础卤水：水100g、红糖3g、盐3g。", "腌48小时，期间翻2次。", "加入烟熏液、盐糖水、红糖等继续处理，腌24小时，期间翻2次。"], "cook": [], "notes": ""}, {"name": "剁椒蒸鱼", "category": "海鲜", "type": "菜谱", "ingredients": [["鱼肉", "500", "g", "整鱼重900g"], ["葱姜水", "10", "g", "腌制"], ["蒸鱼豉油", "10", "g", "腌制"], ["味精", "2", "g", "腌制"], ["糖", "2", "g", "腌制"], ["料酒", "10", "g", "腌制"], ["盐", "2", "g", "腌制；下饭吃再加1g"], ["蒸鱼豉油", "5", "g", "炒料"], ["剁椒+泡椒", "75", "g", "炒料"], ["豆豉", "5", "g", "炒料"], ["大蒜", "15", "g", "炒料"], ["青红椒", "50", "g", "炒料"], ["葱", "5", "g", "炒料"], ["姜", "5", "g", "炒料"], ["糖", "5", "g", "炒料"], ["味精", "2", "g", "炒料"], ["油", "20", "g", ""]], "prep": ["用葱姜水等腌料腌鱼。", "炒料按配方准备。", "葱姜水：葱50g、姜25g、水200g。"], "cook": ["开水下锅。", "鱼身蒸4分钟，焖1分钟；鱼头蒸6分钟，焖1-2分钟；整鱼蒸6分钟，焖1-2分钟。", "出锅加葱花。", "淋油。"], "notes": ""}, {"name": "狮子头", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉末", "165", "g", ""], ["猪肥肉沫", "35", "g", ""], ["盐", "1", "g", ""], ["味精", "1", "g", ""], ["生抽", "5", "g", ""], ["面粉", "12", "g", ""], ["葱姜水", "12", "g", ""], ["水", "24", "g", ""], ["料酒", "6", "g", ""], ["马蹄", "50", "g", "切丁"]], "prep": ["马蹄切丁。", "按配方混合肉馅。"], "cook": ["油炸3分钟。", "高压锅25分钟。", "浸泡3小时。"], "notes": ""}, {"name": "巴斯克蛋糕", "category": "烘焙", "type": "菜谱", "ingredients": [["奶油奶酪", "375", "g", ""], ["糖", "90", "g", ""], ["鸡蛋", "3", "个", ""], ["蛋黄", "1.5", "个", ""], ["淡奶油", "180", "g", ""], ["面粉", "15", "g", ""]], "prep": ["使用8寸模具。"], "cook": ["220°C烤20-25分钟。"], "notes": ""}, {"name": "农家一碗香", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉片", "400", "g", ""], ["生抽", "10", "g", ""], ["老抽", "5", "g", ""], ["料酒", "5", "g", ""], ["豆豉", "10", "g", ""], ["蚝油", "10", "g", ""], ["味精", "2", "g", ""], ["辣椒粉", "2", "g", ""], ["小苏打", "1.6", "g", ""], ["青椒", "600", "g", ""], ["盐", "8", "g", "青椒部分"], ["味精", "3", "g", "青椒部分"], ["辣椒粉", "5", "g", "青椒部分"], ["鸡蛋", "4", "个", ""], ["盐", "2", "g", "鸡蛋部分"], ["味精", "1", "g", "鸡蛋部分"]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "馅料调味", "category": "主食", "type": "配方", "ingredients": [["猪肉碎", "400", "g", ""], ["蔬菜", "1200", "g", ""], ["盐", "12+3", "g", ""], ["味精", "9", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "黑胡椒酱汁", "category": "酱料", "type": "配方", "ingredients": [["洋葱", "150", "g", ""], ["大蒜", "40", "g", ""], ["黄油", "40", "g", ""], ["老抽", "5", "g", ""], ["生抽", "20", "g", ""], ["蚝油", "24", "g", ""], ["蕃茄酱", "20", "g", ""], ["糖", "10", "g", ""], ["盐", "2", "g", ""], ["面粉", "4", "g", ""], ["黑胡椒", "10", "g", ""], ["奶粉", "28", "g", ""], ["水", "200", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "牛排", "category": "肉类", "type": "菜谱", "ingredients": [["牛排", "400", "g", ""], ["盐", "3", "g", ""], ["小苏打", "1.6", "g", ""], ["黑胡椒", "0.5", "g", ""]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "咖啡", "category": "饮料", "type": "配方", "ingredients": [["咖啡粉", "3", "g", ""], ["脱脂奶粉", "14", "g", ""], ["全脂奶粉", "7", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "快速饺子", "category": "主食", "type": "菜谱", "ingredients": [["蔬菜", "1200", "g", "搅碎、拧干"], ["肉碎", "400", "g", ""], ["盐", "9+3", "g", ""], ["味精", "6", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": ["1200g蔬菜搅碎并拧干，有时焯水；蔬菜汁收集。", "肉碎加入盐、味精、白糖、蔬菜汁、面粉，搅拌上劲。"], "cook": ["肉蔬菜混合，搓成丸子下锅。"], "notes": "原记录标题为“快速饺子”，但步骤中记录的是搓成丸子下锅。按原记录保留。"}, {"name": "烤地瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["地瓜", "", "", "去芽洗净"]], "prep": ["去芽、洗净，沿纵轴切两半。"], "cook": ["放烤箱最下层和蛋糕一起烤。"], "notes": ""}, {"name": "煮玉米", "category": "蔬菜", "type": "菜谱", "ingredients": [["玉米", "", "", ""]], "prep": [], "cook": ["沸水煮5分钟。", "焖2分钟。"], "notes": ""}, {"name": "卤菜", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅尖", "", "", ""], ["鸡脚", "", "", ""], ["鸭翅", "", "", ""]], "prep": [], "cook": ["鸡翅尖：3分钟后浸泡4-6小时。", "鸡脚：8分钟后浸泡4小时。", "鸭翅：20分钟，焖5分钟，再浸泡6小时。"], "notes": ""}];
-const APP_VERSION='v1.1.0';
+const APP_VERSION='v1.1.1';
 const KEY='my_recipe_app_v2';
 const LAST_RECIPE_KEY='my_recipe_last_selected_v1';
 const MENU_SCROLL_KEY='my_recipe_menu_scroll_v1';
@@ -185,7 +193,7 @@ let ingredientChecks=JSON.parse(localStorage.getItem('recipeIngredientChecks')||
 function uid(prefix='id'){return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8)}
 function normalizeRecipe(r){r=structuredClone(r||{});r.id=r.id||uid('recipe');r.name=String(r.name||'');r.ingredients=Array.isArray(r.ingredients)?r.ingredients.map(i=>{const a=Array.isArray(i)?i:[i.name||'',i.amount||'',i.unit||'',i.note||''];return {id:(i&&i.id)||uid('ing'),name:String(a[0]??''),amount:String(a[1]??''),unit:String(a[2]??''),note:String(a[3]??'')}}):[];r.prep=Array.isArray(r.prep)?r.prep:[];r.cook=Array.isArray(r.cook)?r.cook:[];r.notes=String(r.notes||'');return r}
 function load(){try{const x=JSON.parse(localStorage.getItem(KEY));const arr=Array.isArray(x)?x:structuredClone(DEFAULT_RECIPES);return arr.map(normalizeRecipe)}catch(e){return structuredClone(DEFAULT_RECIPES).map(normalizeRecipe)}}
-function save(){localStorage.setItem(KEY,JSON.stringify(recipes));}
+function save(){localStorage.setItem(KEY,JSON.stringify(recipes));scheduleDriveAutoSync();}
 function ingredientKey(r,i){return `${r.id}::${i.id}`}
 function migrateCookRecords(){const a=loadCookRecords();let changed=false;for(const r of a){if(!r.recipeId&&r.recipe){const hit=recipes.find(x=>x.name===r.recipe);if(hit){r.recipeId=hit.id;changed=true}}}if(changed)saveCookRecords(a)}
 function migrateChecklist(){const old=ingredientChecks||{};const next={};recipes.forEach(r=>r.ingredients.forEach((i,idx)=>{if(old[`${r.name}::${idx}`]!==undefined)next[ingredientKey(r,i)]=!!old[`${r.name}::${idx}`];else if(old[ingredientKey(r,i)]!==undefined)next[ingredientKey(r,i)]=!!old[ingredientKey(r,i)]}));ingredientChecks=next;localStorage.setItem('recipeIngredientChecks',JSON.stringify(next))}
@@ -242,7 +250,7 @@ function renderSteps(title,arr){if(!arr?.length)return '';return `<div class="se
 
 function bindIngredientChecklist(){
  document.querySelectorAll('.ingredient-check').forEach(cb=>cb.addEventListener('change',e=>{
-   const key=e.target.dataset.ingKey; ingredientChecks[key]=e.target.checked; localStorage.setItem('recipeIngredientChecks',JSON.stringify(ingredientChecks));
+   const key=e.target.dataset.ingKey; ingredientChecks[key]=e.target.checked; localStorage.setItem('recipeIngredientChecks',JSON.stringify(ingredientChecks)); scheduleDriveAutoSync();
    e.target.closest('.ingredient-row')?.classList.toggle('checked',e.target.checked); updateIngredientProgress();
  }));
  document.getElementById('resetIngChecks')?.addEventListener('click',()=>{
@@ -324,7 +332,7 @@ async function putCookPhoto(id,blob){const db=await openCookDB();return new Prom
 async function getCookPhoto(id){const db=await openCookDB();return new Promise((res,rej)=>{const tx=db.transaction('photos','readonly');const q=tx.objectStore('photos').get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)})}
 async function delCookPhoto(id){const db=await openCookDB();return new Promise((res,rej)=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').delete(id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
 function loadCookRecords(){try{return JSON.parse(localStorage.getItem('recipeCookRecords')||'[]')}catch{return[]}}
-function saveCookRecords(a){localStorage.setItem('recipeCookRecords',JSON.stringify(a))}
+function saveCookRecords(a){localStorage.setItem('recipeCookRecords',JSON.stringify(a));scheduleDriveAutoSync();}
 function compressCookImage(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const max=1280,ratio=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*ratio));c.height=Math.max(1,Math.round(im.naturalHeight*ratio));c.getContext('2d').drawImage(im,0,0,c.width,c.height);c.toBlob(b=>b?resolve(b):reject(new Error('compress failed')),'image/jpeg',.76)};im.onerror=reject;im.src=fr.result};fr.onerror=reject;fr.readAsDataURL(file)})}
 function openCookRecord(){cookDraftPhotos=[];showModal(`<h2>📸 跟做记录 · ${esc(selected||'')}</h2><p class="hint">可以边做边拍照，也可以从相册选择。照片会自动压缩后保存。</p><div class="photo-source-row"><button class="primary" id="takeCookPhoto">📷 拍照</button><button class="secondary" id="pickCookPhoto">🖼️ 选择照片</button></div><input id="cameraInput" type="file" accept="image/*" capture="environment" multiple style="display:none"><input id="galleryInput" type="file" accept="image/*" multiple style="display:none"><div id="draftPhotos" class="photo-preview-grid"></div><div class="editor-section"><h3>📝 备注</h3><textarea id="cookNote" rows="4" placeholder="记录这次跟做的情况……"></textarea></div><div class="modal-actions"><button class="secondary" onclick="closeModal()">取消</button><button class="primary" id="saveCookRecord">保存记录</button></div>`);document.getElementById('takeCookPhoto').onclick=()=>document.getElementById('cameraInput').click();document.getElementById('pickCookPhoto').onclick=()=>document.getElementById('galleryInput').click();['cameraInput','galleryInput'].forEach(id=>document.getElementById(id).onchange=e=>addCookPhotos(e.target.files));document.getElementById('saveCookRecord').onclick=saveCookRecord}
 async function addCookPhotos(files){for(const f of [...files]){if(!f.type.startsWith('image/'))continue;try{const blob=await compressCookImage(f);cookDraftPhotos.push({id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2),blob});}catch(e){toast('有照片处理失败')}}renderDraftPhotos()}
@@ -579,12 +587,22 @@ async function blobToDataURL(blob){return await new Promise((res,rej)=>{const fr
 function dataURLToBlob(data){const [head,b64]=String(data).split(',');const mime=(head.match(/data:(.*?);base64/)||[])[1]||'image/jpeg';const bin=atob(b64||'');const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
 async function makeFullBackup(){const records=loadCookRecords();const photos={};for(const rec of records){for(const pid of rec.photos||[]){const blob=await getCookPhoto(pid);if(blob)photos[pid]=await blobToDataURL(blob)}}return {version:2,exportedAt:new Date().toISOString(),recipes,ingredientChecks,records,photos}}
 
-/* Google Drive sync — adapted from the working Todo Calendar implementation.
-   Local-first: browser data remains local; Drive stores a JSON snapshot created by this app. */
+/* Google Drive sync — matched to the working Todo Calendar sync UX. */
 const DRIVE_CLIENT_ID='801960562511-seglebnblnr1jo9vhc3ad3q00ae4jggo.apps.googleusercontent.com';
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 const DRIVE_FILE_NAME='my-recipe-app-sync-v1.json';
-let driveToken=null,driveTokenExpiresAt=0,driveFileId=null,driveBusy=false,driveGISPromise=null;
+const DRIVE_FILE_ID_KEY='my_recipe_drive_file_id_v1';
+const DRIVE_CONNECTED_KEY='my_recipe_drive_connected_v1';
+const DRIVE_LAST_SYNC_KEY='my_recipe_drive_last_sync_v1';
+const DRIVE_AUTO_SYNC_KEY='my_recipe_drive_auto_sync_v1';
+let driveToken=null,driveTokenExpiresAt=0,driveFileId=localStorage.getItem(DRIVE_FILE_ID_KEY)||null,driveBusy=false,driveGISPromise=null;
+let driveAutoSyncTimer=null;
+function driveAutoSyncEnabled(){return localStorage.getItem(DRIVE_AUTO_SYNC_KEY)!=='0'}
+function setDriveAutoSync(v){localStorage.setItem(DRIVE_AUTO_SYNC_KEY,v?'1':'0');if(v)scheduleDriveAutoSync(500)}
+function driveRememberConnection(fileId){localStorage.setItem(DRIVE_CONNECTED_KEY,'1');if(fileId){driveFileId=fileId;localStorage.setItem(DRIVE_FILE_ID_KEY,fileId)}}
+function driveForgetConnection(){localStorage.removeItem(DRIVE_CONNECTED_KEY);localStorage.removeItem(DRIVE_FILE_ID_KEY);driveFileId=null}
+function driveRememberSync(){localStorage.setItem(DRIVE_LAST_SYNC_KEY,new Date().toISOString())}
+function driveLastSyncText(){const v=localStorage.getItem(DRIVE_LAST_SYNC_KEY);if(!v)return '尚未同步';const d=new Date(v);return '同步完成：'+d.toLocaleString()}
 function driveEnsureGIS(){
   if(window.google?.accounts?.oauth2)return Promise.resolve();
   if(driveGISPromise)return driveGISPromise;
@@ -610,7 +628,7 @@ async function driveGetToken(interactive=true){
       },
       error_callback:(err)=>{if(!settled)reject(new Error(err?.message||'Google 登录窗口未完成'))}
     });
-    client.requestAccessToken({prompt:interactive?'consent':''});
+    client.requestAccessToken({prompt:interactive?'consent':'none'});
   });
 }
 async function driveFetch(url,options={}){
@@ -622,99 +640,98 @@ async function driveFetch(url,options={}){
   return r;
 }
 async function recipeDrivePayload(){
-  const records=loadCookRecords();
-  const photos={};
-  for(const rec of records){
-    for(const pid of rec.photos||[]){
-      try{const blob=await getCookPhoto(pid);if(blob)photos[pid]=await blobToDataURL(blob)}catch{}
-    }
-  }
-  return {
-    schema:'my-recipe-app-sync-v1',
-    appVersion:APP_VERSION,
-    updatedAt:new Date().toISOString(),
-    recipes,
-    ingredientChecks,
-    records,
-    photos,
-    lastSelectedRecipeId:localStorage.getItem(LAST_RECIPE_KEY)||''
-  };
+  const records=loadCookRecords();const photos={};
+  for(const rec of records){for(const pid of rec.photos||[]){try{const blob=await getCookPhoto(pid);if(blob)photos[pid]=await blobToDataURL(blob)}catch{}}}
+  return {schema:'my-recipe-app-sync-v1',appVersion:APP_VERSION,updatedAt:new Date().toISOString(),recipes,ingredientChecks,records,photos,lastSelectedRecipeId:localStorage.getItem(LAST_RECIPE_KEY)||''};
 }
 async function driveFindFile(){
   const q=`name='${DRIVE_FILE_NAME}' and trashed=false`;
   const url='https://www.googleapis.com/drive/v3/files?'+new URLSearchParams({q,spaces:'drive',fields:'files(id,name,modifiedTime,size)',pageSize:'10'});
   const r=await driveFetch(url);const data=await r.json();
-  driveFileId=data.files?.[0]?.id||null;return data.files?.[0]||null;
+  const f=data.files?.[0]||null;if(f){driveRememberConnection(f.id)}
+  return f;
 }
-async function driveUpload(showToast=true){
-  if(driveBusy)return;driveBusy=true;driveSetStatus('正在整理数据并上传…');
+function driveSetStatus(text,type=''){const el=document.getElementById('driveStatus');if(el){el.className='drive-status '+(type==='ok'?'drive-connected':type==='error'?'drive-error':'');el.textContent=text}}
+function driveConnectionText(){
+  if(localStorage.getItem(DRIVE_CONNECTED_KEY)==='1')return driveFileId?'当前账号已授权 drive.file；云端文件：已关联。':'当前账号已授权 drive.file；云端文件：尚未创建。';
+  return '尚未连接 Google Drive。';
+}
+function driveStatusText(){return driveConnectionText()}
+async function driveUpload(showToast=true,automatic=false){
+  if(driveBusy)return;driveBusy=true;
+  driveSetStatus(automatic?'正在自动同步…':'正在整理数据并上传…');
   try{
-    await driveGetToken(true);const existing=await driveFindFile();
+    await driveGetToken(!automatic);
+    const existing=await driveFindFile();
     const text=JSON.stringify(await recipeDrivePayload());
     if(existing){
-      driveFileId=existing.id;
+      driveFileId=existing.id;localStorage.setItem(DRIVE_FILE_ID_KEY,driveFileId);
       await driveFetch('https://www.googleapis.com/upload/drive/v3/files/'+encodeURIComponent(driveFileId)+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body:text});
     }else{
       const boundary='recipeAppBoundary'+Date.now();
       const meta=JSON.stringify({name:DRIVE_FILE_NAME,mimeType:'application/json'});
       const body='--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+meta+'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n'+text+'\r\n--'+boundary+'--';
-      const r=await driveFetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,modifiedTime',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body});
-      const data=await r.json();driveFileId=data.id;
+      const r=await driveFetch('https://www.googleapis.com/drive/v3/files?uploadType=multipart&fields=id,name,modifiedTime',{method:'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body});
+      const data=await r.json();driveRememberConnection(data.id);
     }
-    driveSetStatus('已同步到 Google Drive · '+new Date().toLocaleString(),'ok');
-    if(showToast)toast('已上传到 Google Drive');
-  }catch(e){driveSetStatus('同步失败：'+(e.message||e),'error');if(showToast)toast('Google Drive 上传失败：'+(e.message||e))}
-  finally{driveBusy=false}
+    driveRememberConnection(driveFileId);driveRememberSync();
+    driveSetStatus('同步完成 · '+new Date().toLocaleString(),'ok');
+    if(showToast)toast('已同步到 Google Drive');
+  }catch(e){
+    if(automatic){driveSetStatus('自动同步暂未完成：请重新连接 Google Drive','error')}else{driveSetStatus('同步失败：'+(e.message||e),'error');if(showToast)toast('Google Drive 上传失败：'+(e.message||e))}
+  }finally{driveBusy=false}
 }
 async function driveDownload(){
   if(driveBusy)return;driveBusy=true;driveSetStatus('正在从 Google Drive 下载…');
   try{
     const f=await driveFindFile();
     if(!f){driveSetStatus('云端还没有同步文件','error');toast('Google Drive 中还没有食谱同步文件，请先上传');return}
-    driveFileId=f.id;
+    driveFileId=f.id;driveRememberConnection(f.id);
     const r=await driveFetch('https://www.googleapis.com/drive/v3/files/'+encodeURIComponent(driveFileId)+'?alt=media');
     const data=await r.json();
     if(data.schema!=='my-recipe-app-sync-v1'||!Array.isArray(data.recipes))throw new Error('云端文件格式不正确');
-    if(!confirm(`将用 Google Drive 中的 ${data.recipes.length} 个菜谱、跟做记录和照片覆盖本机数据吗？`)){driveSetStatus('已连接 · 未覆盖本机数据','ok');return}
-    recipes=data.recipes.map(normalizeRecipe);
-    ingredientChecks=data.ingredientChecks&&typeof data.ingredientChecks==='object'?data.ingredientChecks:{};
+    if(!confirm(`将用 Google Drive 中的 ${data.recipes.length} 个菜谱、跟做记录和照片覆盖本机数据吗？`)){driveSetStatus(driveConnectionText(),'ok');return}
+    window.__driveApplying=true;
+    recipes=data.recipes.map(normalizeRecipe);ingredientChecks=data.ingredientChecks&&typeof data.ingredientChecks==='object'?data.ingredientChecks:{};
     saveCookRecords(Array.isArray(data.records)?data.records:[]);
     for(const [pid,raw] of Object.entries(data.photos||{})){try{await putCookPhoto(pid,dataURLToBlob(raw))}catch{}}
-    migrateChecklist();migrateCookRecords();save();
-    const wantedId=String(data.lastSelectedRecipeId||'');
-    const wanted=recipes.find(r=>r.id===wantedId)||recipes[0];
-    selected=wanted?.name||null;
+    migrateChecklist();migrateCookRecords();localStorage.setItem(KEY,JSON.stringify(recipes));
+    const wantedId=String(data.lastSelectedRecipeId||'');const wanted=recipes.find(r=>r.id===wantedId)||recipes[0];selected=wanted?.name||null;
     if(wanted?.id)localStorage.setItem(LAST_RECIPE_KEY,wanted.id);else localStorage.removeItem(LAST_RECIPE_KEY);
-    category='全部';query='';scale=1;render();
-    driveSetStatus('已从 Google Drive 恢复 · '+new Date().toLocaleString(),'ok');toast('云端数据已恢复到本机');
-  }catch(e){driveSetStatus('同步失败：'+(e.message||e),'error');toast('Google Drive 下载失败：'+(e.message||e))}
+    category='全部';query='';scale=1;render();window.__driveApplying=false;driveRememberSync();driveSetStatus('同步完成 · '+new Date().toLocaleString(),'ok');toast('云端数据已恢复到本机');
+  }catch(e){window.__driveApplying=false;driveSetStatus('同步失败：'+(e.message||e),'error');toast('Google Drive 下载失败：'+(e.message||e))}
   finally{driveBusy=false}
 }
 async function driveConnect(){
-  try{driveSetStatus('正在连接 Google Drive…');await driveGetToken(true);const f=await driveFindFile();driveFileId=f?.id||null;driveSetStatus(f?'已连接 · 找到云端同步文件':'已连接 · 云端尚未创建同步文件','ok');settingsModal()}
+  try{driveSetStatus('正在连接 Google Drive…');await driveGetToken(true);const f=await driveFindFile();driveRememberConnection(f?.id||driveFileId);driveSetStatus(f?'当前账号已授权 drive.file；云端文件：已关联。':'当前账号已授权 drive.file；云端文件：尚未创建。','ok');settingsModal()}
   catch(e){driveSetStatus('连接失败：'+(e.message||e),'error');toast('Google Drive 连接失败：'+(e.message||e))}
 }
-function driveDisconnect(){driveToken=null;driveTokenExpiresAt=0;driveFileId=null;driveSetStatus('未连接');settingsModal()}
-function driveSetStatus(text,type=''){const el=document.getElementById('driveStatus');if(el){el.className='drive-status '+(type==='ok'?'drive-connected':type==='error'?'drive-error':'');el.textContent=text}}
-function driveStatusText(){if(driveTokenValid())return driveFileId?'已连接 · 云端文件已找到':'已连接 · 尚未找到云端文件';return '未连接'}
+function driveDisconnect(){driveToken=null;driveTokenExpiresAt=0;driveForgetConnection();driveSetStatus('尚未连接 Google Drive');settingsModal()}
+function scheduleDriveAutoSync(delay=1200){
+  if(!window.__recipeAppReady||localStorage.getItem(DRIVE_AUTO_SYNC_KEY)==='0'||localStorage.getItem(DRIVE_CONNECTED_KEY)!=='1'||window.__driveApplying)return;
+  clearTimeout(driveAutoSyncTimer);driveAutoSyncTimer=setTimeout(()=>{if(!driveBusy&&!window.__driveApplying)driveUpload(false,true)},delay);
+}
 
 function settingsModal(){
+ const autoSync=driveAutoSyncEnabled();
  showModal(`<h2>⚙ 设置</h2>
  <div class="settings-card">
   <div class="settings-row"><span>应用名称</span><strong>我的食谱</strong></div>
   <div class="settings-row"><span>版本</span><strong>${APP_VERSION}</strong></div>
   <div class="settings-row"><span>应用类型</span><strong>PWA · 离线应用</strong></div>
  </div>
- <div class="settings-card" style="margin-top:12px">
-  <div style="font-weight:800;margin-bottom:8px">☁️ Google Drive 多设备同步</div>
-  <div id="driveStatus" class="drive-status ${driveTokenValid()?'drive-connected':''}" style="margin-bottom:10px">${driveStatusText()}</div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
+ <div class="drive-sync-card" style="margin-top:12px">
+  <div class="drive-sync-title">Google Drive 云同步</div>
+  <div class="drive-sync-last" id="driveLastSync">${esc(driveLastSyncText())}</div>
+  <div id="driveStatus" class="drive-status ${localStorage.getItem(DRIVE_CONNECTED_KEY)==='1'?'drive-connected':''}">${esc(driveConnectionText())}</div>
+  <div class="drive-sync-grid">
    <button class="primary" onclick="driveConnect()">连接 Google Drive</button>
-   <button class="secondary" onclick="driveUpload()">上传到云端</button>
-   <button class="secondary" onclick="driveDownload()">从云端恢复</button>
-   ${driveTokenValid()?'<button class="secondary" onclick="driveDisconnect()">断开连接</button>':''}
+   <button class="secondary" onclick="driveDisconnect()">断开</button>
+   <button class="primary" onclick="driveUpload()">☁️ 上传/同步</button>
+   <button class="secondary" onclick="driveDownload()">⬇️ 从云端恢复</button>
   </div>
-  <div class="hint" style="margin-top:10px">同步内容：全部菜谱、配料 Checklist、跟做历史和照片。数据仍同时保存在本机浏览器。首次连接会弹出 Google 授权窗口。</div>
+  <label class="drive-sync-check"><input id="driveAutoSync" type="checkbox" ${autoSync?'checked':''} onchange="setDriveAutoSync(this.checked)"><span>数据修改后自动同步</span></label>
+  <div class="drive-sync-detail">当前账号授权范围：drive.file；云端文件：${driveFileId?'已关联':'未关联'}。自动同步为本机开关。</div>
  </div>
  <p class="hint">版本信息用于确认当前安装的应用版本。更新 PWA 后，如果仍显示旧版本，请重新加载或重新安装主屏幕应用。</p>
  <div class="modal-actions"><button class="secondary" onclick="closeModal()">关闭</button></div>`);
