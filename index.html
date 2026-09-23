@@ -121,7 +121,7 @@ html.force-landscape .title{font-size:24px!important}
 <div id="app"></div><div id="toast" class="toast"></div>
 <script>
 const DEFAULT_RECIPES = [{"name": "大龙糊糊", "category": "汤/火锅", "type": "菜谱", "ingredients": [["绿豆", "200", "g", ""], ["火腿肠", "600", "g", ""], ["蔬菜", "1050", "g", ""], ["葱", "65", "g", ""], ["胡萝卜", "35", "g", ""], ["芹菜", "50", "g", ""], ["面包", "200", "g", ""]], "prep": ["绿豆提前浸泡一天。", "火腿肠切好，分成600g×2袋冷冻。", "绿豆高压锅按“牛羊肉，软烂70”，35分钟。冷却后分装冷冻。备注：1kg干豆约变成3kg熟豆。", "需要焯水的蔬菜焯水后挤干。青菜、白菜焯3分钟；萝卜缨焯6分钟。", "葱、胡萝卜、芹菜切好，用少量油炒香。"], "cook": ["加入火腿肠翻炒。", "加入鸡汤。", "加入大量热水，煮10分钟。", "加入熟绿豆，再煮5分钟。", "加入蔬菜，煮至合适状态。", "使用后清洁工具。"], "notes": ""}, {"name": "大吉利火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["蒜泥", "3", "份", ""], ["小米辣", "1", "份", ""], ["菌菇酱", "1", "份", ""], ["牛肉酱", "2", "份", ""], ["韭花酱", "0.5", "份", ""], ["榨菜", "1", "份", ""], ["芝麻酱", "0.5", "份", ""], ["香油", "1", "份", ""], ["青椒酱", "2", "份", ""], ["香菜", "2", "份", ""]], "prep": [], "cook": ["将所有配料混合均匀。"], "notes": ""}, {"name": "咸肉菜饭", "category": "主食", "type": "菜谱", "ingredients": [["咸肉", "800", "g", "切0.5×0.5×2cm丁，肥瘦分开"], ["青白菜", "1200", "g", "切1×1cm丁，焯水3分钟并挤干"], ["大米", "600", "g", ""]], "prep": ["咸肉切0.5×0.5×2cm丁，肥瘦分开。", "青白菜洗净，切1×1cm丁，焯水3分钟，挤干。", "青菜加入0.75%的盐和味精。"], "cook": ["肥咸肉煸油。", "瘦肉加入少量料酒和姜去腥。", "咸肉煸好后加入米饭。", "放入高压锅压熟。", "拌入青菜。"], "notes": "原记录未明确青菜中盐和味精的具体克数，因此保留0.75%的原始记录。"}, {"name": "烤南瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["南瓜", "600", "g", "切三角片，能立住"], ["糖", "20", "g", ""], ["水", "10", "g", ""], ["黄油", "", "适量", ""]], "prep": ["南瓜切成能立住的三角片。", "糖20g加水10g调成糖水。"], "cook": ["200°C烤至开始焦边。", "翻面并刷两面糖水。", "继续烤10分钟。", "正反面再次刷糖水，继续烤10分钟。", "最后仅正面刷黄油。"], "notes": ""}, {"name": "酸奶研究方案", "category": "其他/实验", "type": "实验", "ingredients": [["全脂奶粉", "105", "g", "现方案"], ["水", "750", "g", "现方案"], ["酸奶", "150", "g", "现方案"], ["糖", "7", "%", "现方案"], ["脱脂奶粉", "105", "g", "方案1"]], "prep": [], "cook": ["发酵12小时。"], "notes": "现方案：全脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。方案1：脱脂奶粉105g、水750g、酸奶150g、发酵12h、糖7%。"}, {"name": "Risotto", "category": "主食", "type": "菜谱", "ingredients": [["蘑菇片", "500", "g", ""], ["黄油", "95", "g", ""], ["白葡萄酒", "65", "ml", ""], ["帕马森芝士", "50", "g", ""], ["蒜泥", "1", "勺", ""], ["洋葱碎", "1", "个", ""], ["奶油", "125", "ml", ""], ["米饭", "300", "g", ""], ["鸡精", "1", "勺", ""]], "prep": [], "cook": ["热锅，加入小块黄油。", "加入蒜泥、洋葱。", "加入蘑菇、白葡萄酒、鸡精并混匀。", "关火，加入芝士。", "加入黄油和奶油。", "加入米饭搅匀。", "静置5分钟后上桌。"], "notes": ""}, {"name": "蛋挞", "category": "烘焙", "type": "菜谱", "ingredients": [["奶", "70", "g", ""], ["淡奶油", "60", "g", ""], ["鸡蛋", "1", "个", ""], ["糖", "30", "g", ""], ["炼乳", "15", "g", ""]], "prep": ["使用大塑料杯。"], "cook": [], "notes": "原记录未提供具体烘烤温度和时间。"}, {"name": "肯德基香辣鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "1000", "g", ""], ["盐", "10", "g", "腌料"], ["鸡精", "6.25", "g", "腌料"], ["辣椒粉", "17.5", "g", "腌料"], ["蒜粉", "1.25", "g", "腌料"], ["小苏打", "4", "g", "腌料"], ["水", "75", "g", "腌料"], ["自发粉", "300", "g", "裹粉"], ["盐", "3", "g", "裹粉"], ["鸡精", "1.875", "g", "裹粉"], ["蒜粉", "0.75", "g", "裹粉"], ["自发粉", "167", "g", "裹糊"], ["水", "250", "g", "裹糊"], ["盐", "4.17", "g", "裹糊"], ["鸡精", "2.6", "g", "裹糊"], ["蒜粉", "1.04", "g", "裹糊"]], "prep": ["鸡肉按腌料配方腌制。", "将裹粉材料混合。", "将裹糊材料混合。"], "cook": ["165°C预炸2分钟。", "复炸2分钟。"], "notes": ""}, {"name": "派克鸡排", "category": "肉类", "type": "菜谱", "ingredients": [["鸡肉", "600", "g", ""], ["水", "200", "g", "腌料"], ["盐", "10", "g", "腌料"], ["甜椒粉", "7.5", "g", "腌料"], ["辣椒粉", "7.5", "g", "腌料"], ["蒜粉", "5", "g", "腌料"], ["糖", "100", "g", "腌料"], ["自发粉", "100", "g", "粉浆"], ["太白粉", "70", "g", "粉浆"], ["水", "170", "g", "粉浆"], ["盐", "", "少量", "粉浆"]], "prep": ["按腌料配方混合鸡肉。", "粉浆材料混合。"], "cook": [], "notes": "原记录未提供具体烹饪温度和时间。"}, {"name": "腌咸鸭蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1500", "g", ""], ["盐", "650", "g", ""]], "prep": [], "cook": ["腌制40天。"], "notes": ""}, {"name": "腌皮蛋", "category": "其他/实验", "type": "配方", "ingredients": [["水", "1000", "g", ""], ["盐", "50", "g", ""], ["NaOH", "50", "g", ""]], "prep": [], "cook": ["腌制14天。"], "notes": "记录另注：六月底七月初，10°C室温20天。"}, {"name": "巴沙鱼片腌制", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "1000", "g", "先左右分开再切中等厚片"], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["盐", "5", "g", ""], ["味精", "3", "g", ""], ["水", "50-100", "g", ""]], "prep": ["巴沙鱼先左右分开，再切中等厚片。", "腌料先混匀。"], "cook": ["将腌料与鱼片混合。"], "notes": ""}, {"name": "鸡肉片腌制", "category": "肉类", "type": "配方", "ingredients": [["鸡腿肉片", "1000", "g", ""], ["木薯淀粉", "50", "g", ""], ["鸡蛋", "1", "个", ""], ["鸡精", "3", "g", ""], ["盐", "5", "g", ""], ["小苏打", "4", "g", ""], ["水", "50-100", "g", ""]], "prep": ["腌料混匀。"], "cook": ["将腌料与鸡肉片混合。"], "notes": ""}, {"name": "虾滑", "category": "海鲜", "type": "配方", "ingredients": [["巴沙鱼", "500", "g", ""], ["虾仁", "500", "g", "其中333g切小块"], ["木薯粉", "50", "g", ""], ["水", "50", "g", ""], ["盐", "5", "g", ""], ["味精", "5", "g", ""], ["鸡蛋", "1", "个", ""]], "prep": ["虾仁中333g切小块。", "调料混匀。"], "cook": ["将调料与虾滑材料混合。"], "notes": ""}, {"name": "齐齐哈尔烤肉", "category": "肉类", "type": "菜谱", "ingredients": [["牛肉", "800", "g", ""], ["洋葱", "160", "g", ""], ["香菜", "50", "g", ""], ["蚝油", "50", "g", ""], ["盐", "8", "g", "适合配菜"], ["孜然", "23", "g", ""], ["红椒粉", "2", "g", ""], ["油", "64", "g", ""]], "prep": [], "cook": ["按配方混合并烤制。"], "notes": "原记录未提供更具体烤制时间和温度。"}, {"name": "自制蚝油", "category": "酱料", "type": "配方", "ingredients": [["生抽", "15", "g", "不是鲜酱油"], ["糖", "6", "g", ""], ["鸡精", "5", "g", ""], ["水", "15", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "莫吉托", "category": "饮料", "type": "配方", "ingredients": [["薄荷叶", "10", "g", ""], ["糖", "6", "g", ""], ["青柠汁", "10", "g", ""], ["雪碧", "250", "g", ""]], "prep": [], "cook": ["混合饮用。"], "notes": ""}, {"name": "药膳鸡火锅蘸料", "category": "酱料", "type": "配方", "ingredients": [["生抽", "50", "g", "不是鲜酱油"], ["醋", "10-15", "g", ""], ["糖", "5", "g", ""], ["鸡精", "5", "g", ""], ["高汤/水", "15", "g", ""], ["小米辣", "4", "个", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "希腊酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["脱脂奶粉", "45", "g", ""], ["全脂奶粉", "119", "g", ""], ["水", "900", "g", ""], ["酸奶", "200", "g", ""], ["奶油", "100", "g", ""], ["糖", "95-109", "g", "7%-8%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["全脂奶粉", "140", "g", ""], ["水", "1000", "g", ""], ["酸奶", "200", "g", ""], ["糖", "94", "g", "7%"]], "prep": [], "cook": ["发酵12小时。"], "notes": ""}, {"name": "红枣酸奶", "category": "其他/实验", "type": "配方", "ingredients": [["无糖酸奶", "", "", ""], ["红枣浓缩液", "10", "%", ""], ["糖", "1", "%", ""], ["红糖", "", "", ""]], "prep": [], "cook": [], "notes": "红糖记录：白糖300g + 红印黑糖1 tbsp。"}, {"name": "可乐鸡翅", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅", "310", "g", ""], ["生抽", "18", "g", ""], ["老抽", "6", "g", ""], ["红糖", "18", "g", ""], ["白醋", "9", "g", ""], ["水", "18", "g", ""], ["桂皮", "", "两点点", ""], ["陈皮", "", "一点点", ""]], "prep": [], "cook": ["按配方烹制至熟透并收汁。"], "notes": ""}, {"name": "寿司米饭", "category": "主食", "type": "菜谱", "ingredients": [["寿司米", "300", "g", ""], ["水", "400", "g", ""], ["寿司醋", "50", "g", ""]], "prep": [], "cook": ["按米饭方式煮熟。", "拌入寿司醋。"], "notes": ""}, {"name": "寿司醋", "category": "酱料", "type": "配方", "ingredients": [["白醋", "200", "g", ""], ["糖", "100", "g", ""], ["盐", "10", "g", ""]], "prep": [], "cook": ["混合均匀。"], "notes": ""}, {"name": "烟熏三文鱼", "category": "海鲜", "type": "配方", "ingredients": [["三文鱼", "100", "g", "去皮后重量"], ["水", "100", "g", "基础卤水"], ["红糖", "3", "g", "基础卤水"], ["盐", "3", "g", "基础卤水"], ["红糖", "3", "g", ""], ["盐", "3", "g", ""], ["烟熏液", "1", "g", ""], ["盐糖水", "1", "g", ""], ["红糖", "3", "g", ""]], "prep": ["三文鱼去皮后称100g。", "基础卤水：水100g、红糖3g、盐3g。", "腌48小时，期间翻2次。", "加入烟熏液、盐糖水、红糖等继续处理，腌24小时，期间翻2次。"], "cook": [], "notes": ""}, {"name": "剁椒蒸鱼", "category": "海鲜", "type": "菜谱", "ingredients": [["鱼肉", "500", "g", "整鱼重900g"], ["葱姜水", "10", "g", "腌制"], ["蒸鱼豉油", "10", "g", "腌制"], ["味精", "2", "g", "腌制"], ["糖", "2", "g", "腌制"], ["料酒", "10", "g", "腌制"], ["盐", "2", "g", "腌制；下饭吃再加1g"], ["蒸鱼豉油", "5", "g", "炒料"], ["剁椒+泡椒", "75", "g", "炒料"], ["豆豉", "5", "g", "炒料"], ["大蒜", "15", "g", "炒料"], ["青红椒", "50", "g", "炒料"], ["葱", "5", "g", "炒料"], ["姜", "5", "g", "炒料"], ["糖", "5", "g", "炒料"], ["味精", "2", "g", "炒料"], ["油", "20", "g", ""]], "prep": ["用葱姜水等腌料腌鱼。", "炒料按配方准备。", "葱姜水：葱50g、姜25g、水200g。"], "cook": ["开水下锅。", "鱼身蒸4分钟，焖1分钟；鱼头蒸6分钟，焖1-2分钟；整鱼蒸6分钟，焖1-2分钟。", "出锅加葱花。", "淋油。"], "notes": ""}, {"name": "狮子头", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉末", "165", "g", ""], ["猪肥肉沫", "35", "g", ""], ["盐", "1", "g", ""], ["味精", "1", "g", ""], ["生抽", "5", "g", ""], ["面粉", "12", "g", ""], ["葱姜水", "12", "g", ""], ["水", "24", "g", ""], ["料酒", "6", "g", ""], ["马蹄", "50", "g", "切丁"]], "prep": ["马蹄切丁。", "按配方混合肉馅。"], "cook": ["油炸3分钟。", "高压锅25分钟。", "浸泡3小时。"], "notes": ""}, {"name": "巴斯克蛋糕", "category": "烘焙", "type": "菜谱", "ingredients": [["奶油奶酪", "375", "g", ""], ["糖", "90", "g", ""], ["鸡蛋", "3", "个", ""], ["蛋黄", "1.5", "个", ""], ["淡奶油", "180", "g", ""], ["面粉", "15", "g", ""]], "prep": ["使用8寸模具。"], "cook": ["220°C烤20-25分钟。"], "notes": ""}, {"name": "农家一碗香", "category": "肉类", "type": "菜谱", "ingredients": [["猪肉片", "400", "g", ""], ["生抽", "10", "g", ""], ["老抽", "5", "g", ""], ["料酒", "5", "g", ""], ["豆豉", "10", "g", ""], ["蚝油", "10", "g", ""], ["味精", "2", "g", ""], ["辣椒粉", "2", "g", ""], ["小苏打", "1.6", "g", ""], ["青椒", "600", "g", ""], ["盐", "8", "g", "青椒部分"], ["味精", "3", "g", "青椒部分"], ["辣椒粉", "5", "g", "青椒部分"], ["鸡蛋", "4", "个", ""], ["盐", "2", "g", "鸡蛋部分"], ["味精", "1", "g", "鸡蛋部分"]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "馅料调味", "category": "主食", "type": "配方", "ingredients": [["猪肉碎", "400", "g", ""], ["蔬菜", "1200", "g", ""], ["盐", "12+3", "g", ""], ["味精", "9", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "黑胡椒酱汁", "category": "酱料", "type": "配方", "ingredients": [["洋葱", "150", "g", ""], ["大蒜", "40", "g", ""], ["黄油", "40", "g", ""], ["老抽", "5", "g", ""], ["生抽", "20", "g", ""], ["蚝油", "24", "g", ""], ["蕃茄酱", "20", "g", ""], ["糖", "10", "g", ""], ["盐", "2", "g", ""], ["面粉", "4", "g", ""], ["黑胡椒", "10", "g", ""], ["奶粉", "28", "g", ""], ["水", "200", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "牛排", "category": "肉类", "type": "菜谱", "ingredients": [["牛排", "400", "g", ""], ["盐", "3", "g", ""], ["小苏打", "1.6", "g", ""], ["黑胡椒", "0.5", "g", ""]], "prep": [], "cook": [], "notes": "原记录未提供完整烹饪步骤。"}, {"name": "咖啡", "category": "饮料", "type": "配方", "ingredients": [["咖啡粉", "3", "g", ""], ["脱脂奶粉", "14", "g", ""], ["全脂奶粉", "7", "g", ""]], "prep": [], "cook": [], "notes": ""}, {"name": "快速饺子", "category": "主食", "type": "菜谱", "ingredients": [["蔬菜", "1200", "g", "搅碎、拧干"], ["肉碎", "400", "g", ""], ["盐", "9+3", "g", ""], ["味精", "6", "g", ""], ["白糖", "6", "g", ""], ["蔬菜汁", "165", "g", ""], ["面粉", "10", "g", ""]], "prep": ["1200g蔬菜搅碎并拧干，有时焯水；蔬菜汁收集。", "肉碎加入盐、味精、白糖、蔬菜汁、面粉，搅拌上劲。"], "cook": ["肉蔬菜混合，搓成丸子下锅。"], "notes": "原记录标题为“快速饺子”，但步骤中记录的是搓成丸子下锅。按原记录保留。"}, {"name": "烤地瓜", "category": "蔬菜", "type": "菜谱", "ingredients": [["地瓜", "", "", "去芽洗净"]], "prep": ["去芽、洗净，沿纵轴切两半。"], "cook": ["放烤箱最下层和蛋糕一起烤。"], "notes": ""}, {"name": "煮玉米", "category": "蔬菜", "type": "菜谱", "ingredients": [["玉米", "", "", ""]], "prep": [], "cook": ["沸水煮5分钟。", "焖2分钟。"], "notes": ""}, {"name": "卤菜", "category": "肉类", "type": "菜谱", "ingredients": [["鸡翅尖", "", "", ""], ["鸡脚", "", "", ""], ["鸭翅", "", "", ""]], "prep": [], "cook": ["鸡翅尖：3分钟后浸泡4-6小时。", "鸡脚：8分钟后浸泡4小时。", "鸭翅：20分钟，焖5分钟，再浸泡6小时。"], "notes": ""}];
-const APP_VERSION='v1.1.6';
+const APP_VERSION='v1.1.5';
 const KEY='my_recipe_app_v2';
 const LAST_RECIPE_KEY='my_recipe_last_selected_v1';
 const MENU_SCROLL_KEY='my_recipe_menu_scroll_v1';
@@ -595,44 +595,30 @@ const DRIVE_FILE_ID_KEY='my_recipe_drive_file_id_v1';
 const DRIVE_CONNECTED_KEY='my_recipe_drive_connected_v1';
 const DRIVE_LAST_SYNC_KEY='my_recipe_drive_last_sync_v1';
 const DRIVE_AUTO_SYNC_KEY='my_recipe_drive_auto_sync_v1';
-let driveToken=null,driveTokenExpiresAt=0,driveFileId=localStorage.getItem(DRIVE_FILE_ID_KEY)||null,driveBusy=false,driveGISPromise=null,driveTokenRequestPromise=null;
+let driveToken=null,driveTokenExpiresAt=0,driveFileId=localStorage.getItem(DRIVE_FILE_ID_KEY)||null,driveBusy=false,driveGISPromise=null;
 let driveAutoSyncTimer=null;
-// Preload Google Identity Services while the page is idle. This prevents the
-// OAuth popup from being opened only after an awaited script load, which Android
-// PWA/WebView may treat as a non-user-initiated popup and block.
-function drivePreloadGIS(){
-  if(window.google?.accounts?.oauth2)return Promise.resolve();
-  if(driveGISPromise)return driveGISPromise;
-  driveGISPromise=new Promise((resolve,reject)=>{
-    const old=document.querySelector('script[data-google-gis]');
-    if(old){
-      if(window.google?.accounts?.oauth2){resolve();return}
-      old.addEventListener('load',()=>resolve(),{once:true});
-      old.addEventListener('error',()=>reject(new Error('Google Identity Services 加载失败')),{once:true});
-      return;
-    }
-    const s=document.createElement('script');
-    s.src='https://accounts.google.com/gsi/client';s.async=true;s.defer=true;s.dataset.googleGis='1';
-    s.onload=()=>resolve();s.onerror=()=>reject(new Error('Google Identity Services 加载失败'));
-    document.head.appendChild(s);
-  });
-  return driveGISPromise;
-}
 function driveAutoSyncEnabled(){return localStorage.getItem(DRIVE_AUTO_SYNC_KEY)!=='0'}
 function setDriveAutoSync(v){localStorage.setItem(DRIVE_AUTO_SYNC_KEY,v?'1':'0');if(v)scheduleDriveAutoSync(500)}
 function driveRememberConnection(fileId){localStorage.setItem(DRIVE_CONNECTED_KEY,'1');if(fileId){driveFileId=fileId;localStorage.setItem(DRIVE_FILE_ID_KEY,fileId)}}
 function driveForgetConnection(){localStorage.removeItem(DRIVE_CONNECTED_KEY);localStorage.removeItem(DRIVE_FILE_ID_KEY);driveFileId=null}
 function driveRememberSync(){localStorage.setItem(DRIVE_LAST_SYNC_KEY,new Date().toISOString())}
 function driveLastSyncText(){const v=localStorage.getItem(DRIVE_LAST_SYNC_KEY);if(!v)return '尚未同步';const d=new Date(v);return '同步完成：'+d.toLocaleString()}
-function driveEnsureGIS(){return drivePreloadGIS()}
+function driveEnsureGIS(){
+  if(window.google?.accounts?.oauth2)return Promise.resolve();
+  if(driveGISPromise)return driveGISPromise;
+  driveGISPromise=new Promise((resolve,reject)=>{
+    const old=document.querySelector('script[data-google-gis]');
+    if(old){old.addEventListener('load',()=>resolve(),{once:true});old.addEventListener('error',reject,{once:true});return;}
+    const s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.async=true;s.defer=true;s.dataset.googleGis='1';
+    s.onload=()=>resolve();s.onerror=()=>reject(new Error('Google Identity Services 加载失败'));document.head.appendChild(s);
+  });
+  return driveGISPromise;
+}
 function driveTokenValid(){return !!driveToken&&Date.now()<driveTokenExpiresAt-60000}
 async function driveGetToken(interactive=true){
   if(driveTokenValid())return driveToken;
-  if(driveTokenRequestPromise)return driveTokenRequestPromise;
-  // GIS is preloaded during idle time; keep this await only as a fallback.
   await driveEnsureGIS();
-  if(!window.google?.accounts?.oauth2)throw new Error('Google Identity Services 尚未就绪，请稍后重试');
-  driveTokenRequestPromise=new Promise((resolve,reject)=>{
+  return await new Promise((resolve,reject)=>{
     let settled=false;
     const client=google.accounts.oauth2.initTokenClient({
       client_id:DRIVE_CLIENT_ID,scope:DRIVE_SCOPE,
@@ -642,13 +628,11 @@ async function driveGetToken(interactive=true){
         driveTokenExpiresAt=Date.now()+Number(resp.expires_in||3600)*1000;
         settled=true;resolve(driveToken);
       },
-      error_callback:(err)=>{if(!settled)reject(new Error(err?.message||'Google 授权窗口未完成或被浏览器拦截'))}
+      error_callback:(err)=>{if(!settled)reject(new Error(err?.message||'Google 登录窗口未完成'))}
     });
-    // Explicit connection uses the user's click; normal sync uses silent renewal.
-    // Never open a consent popup for automatic/background work.
-    client.requestAccessToken({prompt:interactive?'consent':'none'});
-  }).finally(()=>{driveTokenRequestPromise=null});
-  return driveTokenRequestPromise;
+    // 已经授权过的设备优先静默续期；只有明确连接/手动操作且静默失败时才需要交互。
+    client.requestAccessToken({prompt:interactive?'':'none'});
+  });
 }
 async function driveFetch(url,options={},interactive=true){
   const token=await driveGetToken(interactive);
@@ -749,10 +733,6 @@ async function driveConnect(){
   catch(e){driveSetStatus('连接失败：'+(e.message||e),'error');toast('Google Drive 连接失败：'+(e.message||e))}
 }
 function driveDisconnect(){driveToken=null;driveTokenExpiresAt=0;driveForgetConnection();driveSetStatus('尚未连接 Google Drive');settingsModal()}
-// Start loading GIS before the user taps the Connect button, so the eventual OAuth
-// request remains tied to the user's click rather than to a delayed script load.
-setTimeout(()=>{drivePreloadGIS().catch(()=>{})},0);
-
 function scheduleDriveAutoSync(delay=1200){
   if(!window.__recipeAppReady||localStorage.getItem(DRIVE_AUTO_SYNC_KEY)==='0'||localStorage.getItem(DRIVE_CONNECTED_KEY)!=='1'||window.__driveApplying)return;
   clearTimeout(driveAutoSyncTimer);driveAutoSyncTimer=setTimeout(()=>{if(!driveBusy&&!window.__driveApplying)driveUpload(false,true)},delay);
